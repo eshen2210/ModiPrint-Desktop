@@ -1,0 +1,283 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4A1D709E-0B26-462D-854C-2068CB5F28EA}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LilyV2._0</RootNamespace>
+    <AssemblyName>LilyV2.0</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>LilyV2._0.EntryPoint</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Enumerations\Enumerations.cs" />
+    <Compile Include="Models\GCodeConverterModels\GCodeConverterBGWModel.cs" />
+    <Compile Include="Models\GCodeConverterModels\ProcessModels\ProcessG00Models\CoordinateModel.cs" />
+    <Compile Include="Models\GCodeConverterModels\GCodeConverterMainModel.cs" />
+    <Compile Include="Models\GCodeConverterModels\ProcessModels\ProcessG00Models\ProcessG00CommandModel.cs" />
+    <Compile Include="Models\GCodeConverterModels\ProcessModels\ProcessMiscModels\ProcessG4CommandModel.cs" />
+    <Compile Include="Models\GCodeConverterModels\ProcessModels\ProcessGCodeModel.cs" />
+    <Compile Include="Models\GCodeConverterModels\ProcessModels\ProcessMiscModels\ProcessTCommandModel.cs" />
+    <Compile Include="Models\GCodeConverterModels\ReportingModels\ErrorReporterModel.cs" />
+    <Compile Include="Models\GCodeConverterModels\ReportingModels\LineConvertedEventArgs.cs" />
+    <Compile Include="Models\GCodeConverterModels\UtilitiesModels\StringProcessingModel.cs" />
+    <Compile Include="Models\GCodeModels\GCodeFileManager.cs" />
+    <Compile Include="Models\GCommandsModels\GCommandsModel.cs" />
+    <Compile Include="Models\PrintModels\MaterialModels\MaterialModel.cs" />
+    <Compile Include="Models\PrinterModels\MicrocontrollerModels\MicrocontrollerGPIOPinModel.cs" />
+    <Compile Include="Models\PrinterModels\MicrocontrollerModels\MicrocontrollerModel.cs" />
+    <Compile Include="Models\PrinterModels\MotorModels\MotorModel.cs" />
+    <Compile Include="Models\PrinterModels\PrinterModel.cs" />
+    <Compile Include="Models\PrinterModels\AxisModels\AxisModel.cs" />
+    <Compile Include="Models\PrintModels\PrintModel.cs" />
+    <Compile Include="Models\SerialCommunicationModels\ReportingModels\SerialMessageEventArgs.cs" />
+    <Compile Include="Models\SerialCommunicationModels\SerialCommunicationBGWModel.cs" />
+    <Compile Include="Models\SerialCommunicationModels\SerialCommunicationMessagesModel.cs" />
+    <Compile Include="Unit Tests\ModelsUnitTests\PrinterModelsUnitTests\AxisModelsUnitTests\AxisModelTest.cs" />
+    <Compile Include="Unit Tests\ModelsUnitTests\GCodeConverterModelsUnitTests\ProcessModelsUnitTests\ProcessG00ModelsUnitTests\GCodeConverterCoordinateModelTest.cs" />
+    <Compile Include="Unit Tests\ModelsUnitTests\GCodeConverterModelsUnitTests\GCodeConverterMainModelTest.cs" />
+    <Compile Include="Unit Tests\ModelsUnitTests\GCodeConverterModelsUnitTests\ProcessModelsUnitTests\ProcessG00ModelsUnitTests\GCodeConverterProcessG00CommandModelTest.cs" />
+    <Compile Include="Unit Tests\ModelsUnitTests\GCodeConverterModelsUnitTests\UtilitiesModelsUnitTests\GCodeConverterUtilitiesModelTest.cs" />
+    <Compile Include="Unit Tests\ModelsUnitTests\GCodeConverterModelsUnitTests\ProcessModelsUnitTests\ProcessMiscModelsUnitTests\GCodeConverterProcessTCommandModelTest.cs" />
+    <Compile Include="Unit Tests\ModelsUnitTests\GCodeModelsUnitTests\GCodeModelTest.cs" />
+    <Compile Include="Unit Tests\ModelsUnitTests\PrintModelsUnitTests\MaterialModelsUnitTests\MaterialModelTest.cs" />
+    <Compile Include="Unit Tests\ModelsUnitTests\PrinterModelsUnitTests\PrinterModelTest.cs" />
+    <Compile Include="Unit Tests\ModelsUnitTests\PrinterModelsUnitTests\PrintheadModelsUnitTests\PrintheadModelTest.cs" />
+    <Compile Include="Unit Tests\ModelsUnitTests\SerialCommunicationModelsUnitTests\SerialCommunicationModelTest.cs" />
+    <Compile Include="Utilities\ControlFunctions\AutoScrollBehavior.cs" />
+    <Compile Include="Utilities\ControlFunctions\ScrollSynchronizer.cs" />
+    <Compile Include="Utilities\IValueConverters\BoolToEnumerations.cs" />
+    <Compile Include="Utilities\IValueConverters\MathConverter.cs" />
+    <Compile Include="Utilities\IValueConverters\MathMultiConverter.cs" />
+    <Compile Include="Utilities\IValueConverters\ProgressBarDisplayMultiConverter.cs" />
+    <Compile Include="ViewModels\ErrorListViewModel.cs" />
+    <Compile Include="Models\GCodeModels\GCodeModel.cs" />
+    <Compile Include="Models\PrinterModels\PrintheadModels\PrintheadModel.cs" />
+    <Compile Include="Utilities\IValueConverters\TrueToFalseConverter.cs" />
+    <Compile Include="ViewModels\PrinterViewModels\AxisViewModels\AxisViewModel.cs" />
+    <Compile Include="ViewModels\PrintViewModels\MaterialViewModels\MaterialViewModel.cs" />
+    <Compile Include="ViewModels\PrinterViewModels\MicrocontrollerViewModels\MicrocontrollerGPIOPinViewModel.cs" />
+    <Compile Include="ViewModels\PrinterViewModels\MicrocontrollerViewModels\MicrocontrollerViewModel.cs" />
+    <Compile Include="ViewModels\PrinterViewModels\MotorViewModels\MotorViewModel.cs" />
+    <Compile Include="ViewModels\PrinterViewModels\PrinterViewModel.cs" />
+    <Compile Include="ViewModels\PrinterViewModels\PrintheadViewModels\PrintheadViewModel.cs" />
+    <Compile Include="ViewModels\PrintViewModels\PrintViewModel.cs" />
+    <Compile Include="ViewModels\SerialCommunicationViewModels\SerialMessageDisplayViewModel.cs" />
+    <Compile Include="Views\PrinterViews\AxisViews\AxisView.xaml.cs">
+      <DependentUpon>AxisView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ErrorListView.xaml.cs">
+      <DependentUpon>ErrorListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GCodeManagerViews\GCodeManagerView.xaml.cs">
+      <DependentUpon>GCodeManagerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PrintViews\MaterialViews\MaterialParametersView.xaml.cs">
+      <DependentUpon>MaterialParametersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PrinterViews\PrintheadViews\PrintheadParametersView.xaml.cs">
+      <DependentUpon>PrintheadParametersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SerialCommunicationViews\SerialCommunicationView.xaml.cs">
+      <DependentUpon>SerialCommunicationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SerialCommunicationViews\SerialMessageDisplayView.xaml.cs">
+      <DependentUpon>SerialMessageDisplayView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PrinterViews\MicrocontrollerViews\MicrocontrollerView.xaml.cs">
+      <DependentUpon>MicrocontrollerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PrinterViews\MotorViews\MotorParametersView.xaml.cs">
+      <DependentUpon>MotorParametersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\SerialCommunicationModels\SerialCommunicationMainModel.cs" />
+    <Compile Include="Utilities\RelayCommand.cs" />
+    <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="EntryPoint.cs" />
+    <Compile Include="ViewModels\GCodeManagerViewModels\GCodeManagerViewModel.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\SerialCommunicationViewModels\SerialCommunicationViewModel.cs" />
+    <Compile Include="Views\MainWindowView.xaml.cs">
+      <DependentUpon>MainWindowView.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Unit Tests\ModelsUnitTests\PrinterModelsUnitTests\MicrocontrollerModelsUnitTests\" />
+    <Folder Include="Unit Tests\ModelsUnitTests\PrinterModelsUnitTests\MotorModelsUnitTests\" />
+    <Folder Include="Unit Tests\ViewModelsUnitTests\" />
+    <Folder Include="Views\PrinterViews\CalibrationViews\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ItemGroup>
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Microsoft.CSharp.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\mscorlib.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\PresentationCore.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\PresentationFramework.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Core.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Data.DataSetExtensions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Data.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Drawing.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Net.Http.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Windows.Forms.dll" />
+    <ReferencePath Include="F:\Bioprinter\LilyV2.1\packages\Expression.Blend.Sdk.1.0.2\lib\net45\System.Windows.Interactivity.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Xaml.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Xml.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Xml.Linq.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\WindowsBase.dll" />
+    <ReferencePath Include="F:\Bioprinter\LilyV2.1\packages\xunit.runner.visualstudio.2.1.0\build\net20\..\_common\xunit.abstractions.dll" />
+    <ReferencePath Include="F:\Bioprinter\LilyV2.1\packages\xunit.assert.2.1.0\lib\dotnet\xunit.assert.dll" />
+    <ReferencePath Include="F:\Bioprinter\LilyV2.1\packages\xunit.extensibility.core.2.1.0\lib\dotnet\xunit.core.dll" />
+    <ReferencePath Include="F:\Bioprinter\LilyV2.1\packages\xunit.extensibility.execution.2.1.0\lib\net45\xunit.execution.desktop.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Collections.Concurrent.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Collections.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.ComponentModel.Annotations.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.ComponentModel.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.ComponentModel.EventBasedAsync.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Diagnostics.Contracts.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Diagnostics.Debug.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Diagnostics.Tools.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Diagnostics.Tracing.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Dynamic.Runtime.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Globalization.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.IO.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Linq.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Linq.Expressions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Linq.Parallel.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Linq.Queryable.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Net.NetworkInformation.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Net.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Net.Requests.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.ObjectModel.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Reflection.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Reflection.Emit.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Reflection.Emit.ILGeneration.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Reflection.Emit.Lightweight.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Reflection.Extensions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Reflection.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Resources.ResourceManager.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Runtime.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Runtime.Extensions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Runtime.InteropServices.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Runtime.InteropServices.WindowsRuntime.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Runtime.Numerics.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Runtime.Serialization.Json.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Runtime.Serialization.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Runtime.Serialization.Xml.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Security.Principal.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.ServiceModel.Duplex.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.ServiceModel.Http.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.ServiceModel.NetTcp.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.ServiceModel.Primitives.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.ServiceModel.Security.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Text.Encoding.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Text.Encoding.Extensions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Text.RegularExpressions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Threading.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Threading.Tasks.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Threading.Tasks.Parallel.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Threading.Timer.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Xml.ReaderWriter.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Xml.XDocument.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Xml.XmlSerializer.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="F:\Bioprinter\LilyV2.1\LilyV2.0\obj\Debug\Views\PrinterViews\AxisViews\AxisView.g.cs" />
+    <Compile Include="F:\Bioprinter\LilyV2.1\LilyV2.0\obj\Debug\Views\ErrorListView.g.cs" />
+    <Compile Include="F:\Bioprinter\LilyV2.1\LilyV2.0\obj\Debug\Views\GCodeManagerViews\GCodeManagerView.g.cs" />
+    <Compile Include="F:\Bioprinter\LilyV2.1\LilyV2.0\obj\Debug\Views\MainWindowView.g.cs" />
+    <Compile Include="F:\Bioprinter\LilyV2.1\LilyV2.0\obj\Debug\Views\PrintViews\MaterialViews\MaterialParametersView.g.cs" />
+    <Compile Include="F:\Bioprinter\LilyV2.1\LilyV2.0\obj\Debug\Views\PrinterViews\PrintheadViews\PrintheadParametersView.g.cs" />
+    <Compile Include="F:\Bioprinter\LilyV2.1\LilyV2.0\obj\Debug\Views\SerialCommunicationViews\SerialCommunicationView.g.cs" />
+    <Compile Include="F:\Bioprinter\LilyV2.1\LilyV2.0\obj\Debug\Views\SerialCommunicationViews\SerialMessageDisplayView.g.cs" />
+    <Compile Include="F:\Bioprinter\LilyV2.1\LilyV2.0\obj\Debug\Views\PrinterViews\MicrocontrollerViews\MicrocontrollerView.g.cs" />
+    <Compile Include="F:\Bioprinter\LilyV2.1\LilyV2.0\obj\Debug\Views\PrinterViews\MotorViews\MotorParametersView.g.cs" />
+    <Compile Include="F:\Bioprinter\LilyV2.1\LilyV2.0\obj\Debug\App.g.cs" />
+    <Compile Include="F:\Bioprinter\LilyV2.1\LilyV2.0\obj\Debug\LilyV2.0_Content.g.cs" />
+    <Compile Include="F:\Bioprinter\LilyV2.1\LilyV2.0\obj\Debug\GeneratedInternalTypeHelper.g.cs" />
+  </ItemGroup>
+</Project>

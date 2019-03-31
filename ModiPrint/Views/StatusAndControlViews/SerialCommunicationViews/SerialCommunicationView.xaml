@@ -1,0 +1,160 @@
+﻿<UserControl x:Class="ModiPrint.Views.StatusAndControlViews.SerialCommunicationViews.SerialCommunicationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:ModiPrint.Views.StatusAndControlViews.SerialCommunicationViews"
+             xmlns:vm="clr-namespace:ModiPrint.ViewModels"
+             mc:Ignorable="d">
+
+    <StackPanel Orientation="Vertical">
+        
+        <!--#region Serial Port Connection-->
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+
+            <StackPanel.Resources>
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="/Views/GlobalResources.xaml"/>
+                    </ResourceDictionary.MergedDictionaries>
+
+                    <Style x:Key="ConnectionButtonBorder" TargetType="{x:Type Border}" BasedOn="{StaticResource ThematicButtonBorder}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsPortOpen}" Value="True">
+                                <Setter Property="BorderBrush" Value="Gold"/>
+                                <Setter Property="BorderThickness" Value="10"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+
+                    <Style x:Key="DisconnectionButtonBorder" TargetType="{x:Type Border}" BasedOn="{StaticResource ThematicButtonBorder}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsPortOpen}" Value="False">
+                                <Setter Property="BorderBrush" Value="Gold"/>
+                                <Setter Property="BorderThickness" Value="10"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+
+                </ResourceDictionary>
+            </StackPanel.Resources>
+
+            <!--Select Serial Port-->
+            <TextBlock Text="Serial Port"
+                       Style="{DynamicResource ThematicTextBlock}"/>
+
+            <ComboBox Name="cboSerialPorts"
+                      ItemsSource="{Binding PortNames}"
+                      Height="{DynamicResource StandardControlHeight}" Width="{DynamicResource WideControlWidth}"
+                      Style="{DynamicResource ThematicComboBox}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="DropDownOpened">
+                        <i:InvokeCommandAction Command="{Binding RefreshPortNamesCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ComboBox>
+
+            <!--Connect-->
+            <Border HorizontalAlignment="Right"
+                    Style="{StaticResource ConnectionButtonBorder}">
+                <Button Content="Connect"
+                        Command="{Binding SerialConnectCommand}"
+                        CommandParameter="{Binding ElementName=cboSerialPorts, Path=Text}"
+                        Style="{DynamicResource ThematicButton}"
+                        Height="{DynamicResource StandardImageButtonHeight}">
+                    <Button.Template>
+                        <ControlTemplate>
+                            <StackPanel Orientation="Horizontal"
+                                        Background="Transparent">
+                                <Image Source="/Resources/Buttons/Connect.png"
+                                       Height="{DynamicResource StandardImageButtonHeight}"
+                                       Style="{DynamicResource ThematicControlImage}"
+                                       Margin="0, 0, 0, 0"/>
+                                <TextBlock Text="Connect"
+                                           VerticalAlignment="Center"
+                                           Style="{DynamicResource ThematicTextBlock}"/>
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Border>
+
+            <!--Disconnect-->
+            <Border HorizontalAlignment="Right"
+                    Style="{StaticResource DisconnectionButtonBorder}">
+                <Button Command="{Binding SerialDisconnectCommand}"
+                        Style="{DynamicResource ThematicButton}"
+                        Height="{DynamicResource StandardImageButtonHeight}">
+                    <Button.Template>
+                        <ControlTemplate>
+                            <StackPanel Orientation="Horizontal"
+                                        Background="Transparent">
+                                <Image Source="/Resources/Buttons/Disconnect.png"
+                                       Height="{DynamicResource StandardImageButtonHeight}"
+                                       Style="{DynamicResource ThematicControlImage}"
+                                       Margin="0, 0, 0, 0"/>
+                                <TextBlock Text="Disconnect"
+                                           VerticalAlignment="Center"
+                                           Style="{DynamicResource ThematicTextBlock}"/>
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Border>
+
+        </StackPanel>
+        <!--#endregion-->
+        
+        <!--#region SerialPort Manual Messaging-->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBox Grid.Column="0" 
+                        Name="tbManualCommand"
+                        Text="{Binding ManualSerialSendMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Height="{DynamicResource StandardControlHeight}"
+                        Style="{DynamicResource ThematicTextBox}"/>
+
+            <Border Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Style="{DynamicResource ThematicButtonBorder}">
+                <Button Command="{Binding ManualAppendMessageCommand}"
+                        CommandParameter="{Binding ElementName=tbManualCommand, Path=Text}"
+                        Style="{DynamicResource ThematicButton}"
+                        Height="{DynamicResource StandardImageButtonHeight}">
+                    <Button.Template>
+                        <ControlTemplate>
+                            <StackPanel Orientation="Horizontal"
+                                        Background="Transparent">
+                                <Image Source="/Resources/Buttons/SendFile.png"
+                                        Height="{DynamicResource StandardImageButtonHeight}"
+                                        Style="{DynamicResource ThematicControlImage}"
+                                        Margin="0, 0, 0, 0"/>
+                                <StackPanel Orientation="Vertical"
+                                            VerticalAlignment="Center"
+                                            Margin="5, 5, 5, 5">
+                                    <TextBlock Text="Send"
+                                                VerticalAlignment="Center"
+                                                Style="{DynamicResource ThematicTextBlock}"
+                                                Margin="0, 0, 0, 0"/>
+                                    <TextBlock Text="Message"
+                                                VerticalAlignment="Center"
+                                                Style="{DynamicResource ThematicTextBlock}"
+                                                Margin="0, 0, 0, 0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Border>
+
+        </Grid>
+        <!--#endregion-->
+        
+    </StackPanel>
+</UserControl>

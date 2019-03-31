@@ -1,0 +1,94 @@
+﻿<UserControl x:Class="ModiPrint.Views.StatusAndControlViews.AxesPrintViews.PrintSettingsViews.MotorizedDropletPrint"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ModiPrint.Views.StatusAndControlViews.AxesPrintViews.PrintSettingsViews"
+             mc:Ignorable="d">
+    
+    <StackPanel Orientation="Vertical">
+
+        <!--Interpolate Distance-->
+        <StackPanel Orientation="Horizontal"
+                    VerticalAlignment="Center"
+                    Height="{DynamicResource StandardControlHeight}">
+            <Image Source="/Resources/General/InterpolateDistance.png"
+                   Style="{DynamicResource ThematicControlImage}"
+                   Width="{DynamicResource NarrowControlWidth}"/>
+            <TextBlock Text="Interpolate Distance"
+                       Style="{DynamicResource ThematicTextBlock}"
+                       Width="{DynamicResource WideControlWidth}"/>
+            <TextBox Text="{Binding Path=InterpolateDistance, Mode=TwoWay, 
+                                    UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                     Style="{DynamicResource ThematicTextBox}"
+                     Width="{DynamicResource StandardControlWidth}"/>
+            <TextBlock Text="mm"
+                       Style="{DynamicResource ThematicTextBlock}"
+                       Width="{DynamicResource NarrowControlWidth}"/>
+        </StackPanel>
+
+        <!--Interpolate Rounding-->
+        <StackPanel Orientation="Horizontal"
+                    VerticalAlignment="Center"
+                    Height="{DynamicResource StandardControlHeight}">
+            <StackPanel.Resources>
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="/Views/GlobalResources.xaml"/>
+                    </ResourceDictionary.MergedDictionaries>
+
+                    <Style x:Key="ThematicInterpolateRoundingTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ThematicTextBlock}">
+                        <Setter Property="Text" Value=""/>
+                        <Setter Property="HorizontalAlignment" Value="Right"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=tgbtnInterpolateRounding, Path=IsChecked}" Value="False">
+                                <Setter Property="Text" Value="False"/>
+                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=tgbtnInterpolateRounding, Path=IsChecked}" Value="True">
+                                <Setter Property="Text" Value="True"/>
+                                <Setter Property="HorizontalAlignment" Value="Left"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ResourceDictionary>
+            </StackPanel.Resources>
+            
+            <Image Source="/Resources/General/InterpolateDistance.png"
+                   Style="{DynamicResource ThematicControlImage}"
+                   Width="{DynamicResource NarrowControlWidth}"/>
+            <TextBlock Text="Interpolate Rounding"
+                       Style="{DynamicResource ThematicTextBlock}"
+                       Width="{DynamicResource WideControlWidth}"/>
+            <Grid>
+                <ToggleButton Name="tgbtnInterpolateRounding"
+                          IsChecked="{Binding Path=InterpolateRoundUp}"
+                          Style="{DynamicResource ThematicToggleButton}"
+                          Width="{DynamicResource StandardToggleButtonWidth}"/>
+                <TextBlock Style="{StaticResource ThematicInterpolateRoundingTextBlock}"
+                           IsHitTestVisible="False"
+                           Width="{DynamicResource NarrowControlWidth}"/>
+            </Grid>
+        </StackPanel>
+        
+        <!--E Dispense Per Droplet-->
+        <StackPanel Orientation="Horizontal"
+                    VerticalAlignment="Center"
+                    Height="{DynamicResource StandardControlHeight}">
+            <Image Source="/Resources/General/MotorizedPrinthead.png"
+                   Style="{DynamicResource ThematicControlImage}"
+                   Width="{DynamicResource NarrowControlWidth}"/>
+            <TextBlock Text="E Dispense Per Droplet"
+                       Style="{DynamicResource ThematicTextBlock}"
+                       Width="{DynamicResource WideControlWidth}"/>
+            <TextBox Text="{Binding Path=EMoveAxisPositiveDistance, Mode=TwoWay, 
+                                    UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                     Style="{DynamicResource ThematicTextBox}"
+                     Width="{DynamicResource StandardControlWidth}"/>
+            <TextBlock Text="mm"
+                       Style="{DynamicResource ThematicTextBlock}"
+                       Width="{DynamicResource NarrowControlWidth}"/>
+        </StackPanel>
+    </StackPanel>
+    
+</UserControl>
