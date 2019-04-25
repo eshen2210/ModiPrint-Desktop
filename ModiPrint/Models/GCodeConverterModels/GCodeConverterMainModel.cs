@@ -15,7 +15,6 @@ using ModiPrint.Models.RealTimeStatusModels;
 using ModiPrint.Models.GCodeConverterModels.ProcessModels;
 using ModiPrint.Models.GCodeConverterModels.ProcessModels.WriteSetEquipmentModels;
 using ModiPrint.Models.GCodeConverterModels.CorneringModels;
-using ModiPrint.Models.GCodeConverterModels.ReportingModels;
 
 namespace ModiPrint.Models.GCodeConverterModels
 {
@@ -42,15 +41,10 @@ namespace ModiPrint.Models.GCodeConverterModels
 
         //Class containing pseudo-global parameters for the GCodeConverter that are passed around various GCodeConverter classes.
         private ParametersModel _parametersModel;
-
-        //Activates whenever the GCode Converter has processed more lines of code.
-        public event GCodeConverterLineConvertedEventHandler LineConverted;
-        private void OnLineConverted(LineConvertedEventArgs lineConvertedEventArgs)
+        public ParametersModel ParametersModel
         {
-            if (LineConverted != null)
-            { LineConverted(this, lineConvertedEventArgs); }
+            get { return _parametersModel; }
         }
-        private LineConvertedEventArgs _lineConvertedEventArgs;
         #endregion
 
         #region Constructors
@@ -70,12 +64,12 @@ namespace ModiPrint.Models.GCodeConverterModels
 
         #region Methods
         /// <summary>
-        /// Converts Slic3rGCode into ModiPrintGCode.
+        /// Converts RepRapGCode into ModiPrintGCode.
         /// </summary>
-        public string ConvertGCode(string slic3rGCodeInput)
+        public string ConvertGCode(string repRapGCodeInput)
         {
             //The input string is split into a 2D array, delimited first by linebreaks and then by whitespaces.
-            string[][] slic3rGCode = GCodeStringParsing.GCodeTo2DArr(slic3rGCodeInput);
+            string[][] repRapGCode = GCodeStringParsing.GCodeTo2DArr(repRapGCodeInput);
 
             //The return string which is the converted GCode.
             //Each line of the GCode is an index in the string.
@@ -88,26 +82,27 @@ namespace ModiPrint.Models.GCodeConverterModels
             //Set the current X and Y positions as the origin.
             convertedGCode.Add(new ConvertedGCodeLine(SerialMessageCharacters.SerialCommandSetCharacter + "OriginXY"));
 
-            //Iterates through each line of Slic3r's GCode and converts it to ModiPrint's flavor of GCode.
+            //Iterates through each line of RepRap's GCode and converts it to ModiPrint's flavor of GCode.
             convertedGCode.Add(new ConvertedGCodeLine("", "Print Start"));
-            for (_parametersModel.Slic3rLine = 0; (_parametersModel.Slic3rLine < slic3rGCode.Length) && (slic3rGCode != null); _parametersModel.Slic3rLine++)
+            for (_parametersModel.RepRapLine = 0; (_parametersModel.RepRapLine < repRapGCode.Length) && (repRapGCode != null); _parametersModel.RepRapLine++)
             {
-                if (slic3rGCode[_parametersModel.Slic3rLine] != null
-                && !String.IsNullOrWhiteSpace(slic3rGCode[_parametersModel.Slic3rLine][0]))
+                if (repRapGCode[_parametersModel.RepRapLine] != null
+                && !String.IsNullOrWhiteSpace(repRapGCode[_parametersModel.RepRapLine][0]))
                 {
                     //Processes the single line of GCode and returns a converted string.
                     List<ConvertedGCodeLine> appendModiPrintGCode;
-                    appendModiPrintGCode = _processGCodeModel.SetProcessGCodeCommand(RemoveGCodeComments(slic3rGCode[_parametersModel.Slic3rLine]));
+                    appendModiPrintGCode = _processGCodeModel.SetProcessGCodeCommand(RemoveGCodeComments(repRapGCode[_parametersModel.RepRapLine]));
 
                     //Adds a converted GCode line to the return string with line breaks and comments.
                     if ((appendModiPrintGCode != null) && (appendModiPrintGCode.Count != 0))
                     {
-                        //Comment the slic3r line at the end of the converted GCode line.
-                        appendModiPrintGCode[appendModiPrintGCode.Count - 1].Comment += " SL" + (_parametersModel.Slic3rLine + 1); //(slic3rLine + 1) because slic3rLine is index 0 where line count is index 1.
+                        //Comment the repRap line at the end of the converted GCode line.
+                        appendModiPrintGCode[appendModiPrintGCode.Count - 1].Comment += (_parametersModel.RepRapLine + 1); //(repRapLine + 1) because repRapLine is index 0 where line count is index 1.
                         convertedGCode.AddRange(appendModiPrintGCode);
                     }
                 }
-                ReportProgress(_parametersModel.Slic3rLine + 1, slic3rGCode.Length);
+                int percentCompleted = ((_parametersModel.RepRapLine + 1) * 100) / repRapGCode.Length;
+                _parametersModel.ReportProgress("Converting GCode", percentCompleted);
             }
 
             //Calculates the deceleration steps parameter in G00 commands.
@@ -116,6 +111,8 @@ namespace ModiPrint.Models.GCodeConverterModels
             //Retract this Z Axis.
             string retractZ = SerialMessageCharacters.SerialCommandSetCharacter + "RetractZ";
             convertedGCode.Add(new ConvertedGCodeLine(retractZ));
+
+            _parametersModel.ReportProgress("GCode Converted! (Large Bodies of Text May Take a Few Seconds to Load)", 100);
 
             return GCodeLinesConverter.GCodeLinesListToString(convertedGCode);
         }
@@ -155,19 +152,6 @@ namespace ModiPrint.Models.GCodeConverterModels
             }
 
             return uncommentedGCodeLine;
-        }
-
-        /// <summary>
-        /// Triggers the LineConverted event which displays information to the GUI.
-        /// </summary>
-        /// <param name="processedLines"></param>
-        /// <param name="totalLines"></param>
-        public void ReportProgress(int processedLines, int totalLines)
-        {
-            _lineConvertedEventArgs = new LineConvertedEventArgs(processedLines, totalLines);
-
-            Application.Current.Dispatcher.Invoke(() =>
-            OnLineConverted(_lineConvertedEventArgs));
         }
         #endregion
     }

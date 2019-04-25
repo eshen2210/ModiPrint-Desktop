@@ -22,11 +22,20 @@ namespace ModiPrint.ViewModels.RealTimeStatusViewModels
         //Fires events that updates the Position property of RealTimeStatusDataModel equipment.
         SerialCommunicationCommandSetsModel _serialCommunicationCommandSetsModel;
 
-        //Contains lists logging the various types of serial incoming messages.
-        RealTimeStatusMessageListsViewModel _realTimeStatusMessageListsViewModel;
-        public RealTimeStatusMessageListsViewModel RealTimeStatusMessageListsViewModel
+        //Displays errors.
+        ErrorListViewModel _errorListViewModel;
+
+        //Tasks that are in the process of execution by the microcontroller.
+        //These tasks are removed from the list as task completed messages are received.
+        public ObservableCollection<string> TaskQueuedMessagesList
         {
-            get { return _realTimeStatusMessageListsViewModel; }
+            get { return _realTimeStatusDataModel.TaskQueuedMessagesList; }
+        }
+
+        //Messages that arise out of the normal order of command -> execution (emergency messages, etc.)
+        public ObservableCollection<string> StatusMessagesList
+        {
+            get { return _realTimeStatusDataModel.StatusMessagesList; }
         }
 
         //Parameters of the Printer.
@@ -67,11 +76,11 @@ namespace ModiPrint.ViewModels.RealTimeStatusViewModels
         #endregion
 
         #region Constructor
-        public RealTimeStatusDataViewModel(RealTimeStatusDataModel RealTimeStatusDataModel, SerialCommunicationCommandSetsModel SerialCommunicationCommandSetsModel)
+        public RealTimeStatusDataViewModel(RealTimeStatusDataModel RealTimeStatusDataModel, SerialCommunicationCommandSetsModel SerialCommunicationCommandSetsModel, ErrorListViewModel ErrorListViewModel)
         {
             _realTimeStatusDataModel = RealTimeStatusDataModel;
             _serialCommunicationCommandSetsModel = SerialCommunicationCommandSetsModel;
-            _realTimeStatusMessageListsViewModel = new RealTimeStatusMessageListsViewModel(_realTimeStatusDataModel.RealTimeStatusMessageListsModel);
+            _errorListViewModel = ErrorListViewModel;
 
             _xRealTimeStatusAxisViewModel = new RealTimeStatusAxisViewModel(_realTimeStatusDataModel.XRealTimeStatusAxisModel);
             _yRealTimeStatusAxisViewModel = new RealTimeStatusAxisViewModel(_realTimeStatusDataModel.YRealTimeStatusAxisModel);
@@ -260,7 +269,7 @@ namespace ModiPrint.ViewModels.RealTimeStatusViewModels
         /// <summary>
         /// Calls the OnPropertyChanged event and updates the Task Queued Messages list.
         /// </summary>
-        private void UpdateTaskQueuedMessages()
+        private void UpdateTaskQueuedMessages(string taskQueuedMessage)
         {
             OnPropertyChanged("TaskQueuedMessages");
         }
@@ -268,7 +277,7 @@ namespace ModiPrint.ViewModels.RealTimeStatusViewModels
         /// <summary>
         /// Calls the OnPropertyChanged event and updates the Status Messages list.
         /// </summary>
-        private void UpdateStatusMessages()
+        private void UpdateStatusMessages(string statusMessage)
         {
             OnPropertyChanged("StatusMessages");
         }
@@ -276,9 +285,9 @@ namespace ModiPrint.ViewModels.RealTimeStatusViewModels
         /// <summary>
         /// Calls the OnPropertyChanged event and updates the Error Messages list.
         /// </summary>
-        private void UpdateErrorMessages()
+        private void UpdateErrorMessages(string errorMessage)
         {
-            OnPropertyChanged("ErrorMessages");
+            _errorListViewModel.AddError("Microcontroller Error: ", errorMessage);
         }
 
         /// <summary>
@@ -292,7 +301,7 @@ namespace ModiPrint.ViewModels.RealTimeStatusViewModels
             if ((_realTimeStatusDataModel.ActivePrintheadType == PrintheadType.Valve)
              && (_activePrintheadViewModel != null))
             {
-
+                //Nothing to do so far.
             }
         }
 

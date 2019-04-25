@@ -24,16 +24,16 @@ namespace ModiPrint.ViewModels.SerialCommunicationViewModels
     public class SerialMessageDisplayViewModel : ViewModel
     {
         #region Fields and Properties
-        //String that is meant to be bound to a display for outgoing serial messages
-        //This string is emptied as soon as it is retrieved and displayed
+        //String that is meant to be bound to a display for outgoing serial messages.
+        //This string is emptied as soon as it is retrieved and displayed.
         private ObservableCollection<string> _outgoingMessageList = new ObservableCollection<string>();
         public ObservableCollection<string> OutgoingMessageList
         {
             get { return _outgoingMessageList; }
         }
 
-        //String that is meant to be bound to a display for incoming serial messages
-        //This string is emptied as soon as it is retrieved and displayed
+        //String that is meant to be bound to a display for incoming serial messages.
+        //This string is emptied as soon as it is retrieved and displayed.
         private ObservableCollection<string> _incomingMessageList = new ObservableCollection<string>();
         public ObservableCollection<string> IncomingMessageList
         {
@@ -56,6 +56,11 @@ namespace ModiPrint.ViewModels.SerialCommunicationViewModels
         public void AppendIncomingMessage(string incomingMessage)
         {
             _incomingMessageList.Add(incomingMessage);
+            //Keep the list to the 300 most recent messages.
+            if (_incomingMessageList.Count > 300)
+            {
+                _incomingMessageList.RemoveAt(0);
+            }
             OnPropertyChanged("IncomingMessageList");
         }
 
@@ -73,6 +78,11 @@ namespace ModiPrint.ViewModels.SerialCommunicationViewModels
                 if (!String.IsNullOrWhiteSpace(message))
                 {
                     _outgoingMessageList.Add(message);
+                    //Keep the list to the 300 most recent messages.
+                    if (_outgoingMessageList.Count > 300)
+                    {
+                        _outgoingMessageList.RemoveAt(0);
+                    }
                 }
             }
             OnPropertyChanged("OutgoingMessageList");

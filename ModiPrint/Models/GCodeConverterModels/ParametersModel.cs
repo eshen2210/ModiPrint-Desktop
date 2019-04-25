@@ -1,15 +1,16 @@
-﻿using System;
+﻿using System.Windows;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Media.Media3D;
-
+using System.ComponentModel;
 using ModiPrint.Models.PrinterModels;
 using ModiPrint.Models.PrinterModels.PrintheadModels;
 using ModiPrint.Models.PrintModels.MaterialModels;
 using ModiPrint.Models.PrintModels.PrintStyleModels;
 using ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models;
+using ModiPrint.Models.GCodeConverterModels.ReportingModels;
 using ModiPrint.ViewModels;
 
 namespace ModiPrint.Models.GCodeConverterModels
@@ -59,15 +60,15 @@ namespace ModiPrint.Models.GCodeConverterModels
             set { _isPrinting = value; }
         }
 
-        //The E command in Slic3r represents extrusion rate.
+        //The E command in RepRap represents extrusion rate.
         //Here it may be used to determine if printing is suppose to occur.
-        private CoordinateModel _eSlic3rCoord;
-        public CoordinateModel ESlic3rCoord
+        private CoordinateModel _eRepRapCoord;
+        public CoordinateModel ERepRapCoord
         {
-            get { return _eSlic3rCoord; }
+            get { return _eRepRapCoord; }
         }
 
-        //The XYZ coordinates for Slic3r should match the XYZ coordinates in ModiPrint.
+        //The XYZ coordinates for RepRap should match the XYZ coordinates in ModiPrint.
         //However, the E coordinates are different for the different software.
         //Therefore, this program needs to track the E coordinates for each of its printheads.
         private List<CoordinateModel> _eModiPrintCoordList = new List<CoordinateModel>();
@@ -101,13 +102,22 @@ namespace ModiPrint.Models.GCodeConverterModels
             get { return _errorReporterViewModel; }
         }
 
-        //The current line of Slic3r GCode that is being processed.
-        private int _slic3rLine = 0;
-        public int Slic3rLine
+        //The current line of RepRap GCode that is being processed.
+        private int _repRapLine = 0;
+        public int RepRapLine
         {
-            get { return _slic3rLine; }
-            set { _slic3rLine = value; }
+            get { return _repRapLine; }
+            set { _repRapLine = value; }
         }
+
+        //Activates whenever the GCode Converter has processed more lines of code.
+        public event GCodeConverterLineConvertedEventHandler LineConverted;
+        private void OnLineConverted(LineConvertedEventArgs lineConvertedEventArgs)
+        {
+            if (LineConverted != null)
+            { LineConverted(this, lineConvertedEventArgs); }
+        }
+        private LineConvertedEventArgs _lineConvertedEventArgs;
         #endregion
 
         #region Constructor
@@ -118,7 +128,7 @@ namespace ModiPrint.Models.GCodeConverterModels
             _xCoord = new CoordinateModel(CoordinateType.X, true, this, 0, 0, 0);
             _yCoord = new CoordinateModel(CoordinateType.Y, true, this, 0, 0, 0);
             _zCoord = new CoordinateModel(CoordinateType.Z, true, this, 0, 0, 0);
-            _eSlic3rCoord = new CoordinateModel(CoordinateType.S, false, this, 0, 0, 0);
+            _eRepRapCoord = new CoordinateModel(CoordinateType.S, false, this, 0, 0, 0);
 
             // _dropletModel is not set yet. A new material must be set before this class is instantiated.
 
@@ -186,7 +196,7 @@ namespace ModiPrint.Models.GCodeConverterModels
         }
 
         /// <summary>
-        /// Returns an index for eModiPrintCoordList which contains the eModiPrintCoord associated with the current eSlic3rCoord.
+        /// Returns an index for eModiPrintCoordList which contains the eModiPrintCoord associated with the current eRepRapCoord.
         /// </summary>
         /// <param name="currentMaterial"></param>
         /// <returns></returns>
@@ -201,6 +211,19 @@ namespace ModiPrint.Models.GCodeConverterModels
                 { break; }
             }
             return eModiPrintCoordIndex;
+        }
+
+        /// <summary>
+        /// Triggers the LineConverted event which displays information to the GUI.
+        /// </summary>
+        /// <param name="taskName"></param>
+        /// <param name="percentCompleted"></param>
+        public void ReportProgress(string taskName, int percentCompleted)
+        {
+            _lineConvertedEventArgs = new LineConvertedEventArgs(taskName, percentCompleted);
+
+            Application.Current.Dispatcher.Invoke(() =>
+            OnLineConverted(_lineConvertedEventArgs));
         }
         #endregion
     }

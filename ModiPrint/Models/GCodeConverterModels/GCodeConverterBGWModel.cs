@@ -56,12 +56,18 @@ namespace ModiPrint.Models.GCodeConverterModels
         //The converted GCode at the end of the conversion.
         private string _convertedGCode;
 
-        //Tells the GCodeConverter whether or not to add Slic3r line numbers to the converted GCode.
+        //Tells the GCodeConverter whether or not to add RepRap line numbers to the converted GCode.
         private bool _commentLineNumber = true; //To Do: If this is set to true, then stuff breaks.
         public bool CommentLineNumber
         {
             get { return _commentLineNumber; }
             set { _commentLineNumber = value; }
+        }
+
+        //Returns true if BGW is already running.
+        public bool IsBusy
+        {
+            get { return _bGWGCodeConverter.IsBusy;  }
         }
         #endregion
 

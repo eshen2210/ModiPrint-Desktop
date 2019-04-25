@@ -55,8 +55,8 @@ namespace ModiPrint.Models.XMLSerializerModels.PrintXMLSerializerModels.Material
                             if (xmlReader.ReadElementContentAsString() != materialViewModel.Name)
                             { base.ReportErrorMismatchedEqupment(xmlReader); }
                             break;
-                        case "Slic3rID":
-                            materialViewModel.Slic3rID = xmlReader.ReadElementContentAsString();
+                        case "RepRapID":
+                            materialViewModel.RepRapID = xmlReader.ReadElementContentAsString();
                             break;
                         case "PrintheadName":
                             materialViewModel.PrintheadViewModel = _printerViewModel.FindPrinthead(xmlReader.ReadElementContentAsString());

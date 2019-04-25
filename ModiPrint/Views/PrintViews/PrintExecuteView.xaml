@@ -8,6 +8,7 @@
              xmlns:uc="clr-namespace:ModiPrint.Utilities.IValueConverters"
              xmlns:vmPrint="clr-namespace:ModiPrint.ViewModels.PrintViewModels"
              xmlns:vControl="clr-namespace:ModiPrint.Views.ControlViews"
+             xmlns:vGCodeManager="clr-namespace:ModiPrint.Views.PrintViews.GCodeManagerViews"
              xmlns:vSerialCommunications="clr-namespace:ModiPrint.Views.StatusAndControlViews.SerialCommunicationViews"
              mc:Ignorable="d">
 
@@ -18,12 +19,13 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!--#region Execute-->
         <StackPanel Grid.Row="0"  Orientation="Horizontal">
+
+            <!--#region Execute-->
             <Viewbox Stretch="Uniform">
                 <Grid>
                     <Grid.Resources>
@@ -120,6 +122,7 @@
 
                 </Grid>
             </Viewbox>
+            <!--#endregion-->
 
             <!--#region Printer Status Display-->
             <Grid>
@@ -147,7 +150,6 @@
                     </DataTemplate>
                 </Grid.Resources>
 
-                <!--#region Main Content Display Setter-->
                 <ContentControl Content="{Binding }">
                     <ContentControl.Style>
                         <Style TargetType="{x:Type ContentControl}">
@@ -175,96 +177,103 @@
             </Grid>
             <!--#endregion-->
 
-        </StackPanel>
-        <!--#endregion-->
+            <!--#region Print Ready Check-->
+            <StackPanel Orientation="Vertical"
+                        Margin="200, 0, 0, 0">
+                <StackPanel.Style>
+                    <Style TargetType="{x:Type StackPanel}">
+                        <Setter Property="Visibility" Value="Hidden"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding PrinterStatus}" Value="{x:Static vmPrint:PrinterStatus.Manual}">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
 
-        <vSerialCommunications:SerialMessageDisplayView 
+                <!--Display if the GCode has been uploaded or converter and is ready for a print-->
+                <StackPanel Orientation="Horizontal"
+                            Height="{DynamicResource StandardControlHeight}">
+                    <Image Width="{DynamicResource NarrowControlWidth}">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsModiPrintGCodeReadyToPrint}" Value="True">
+                                        <Setter Property="Source" Value="/Resources/GreenCheck.png"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsModiPrintGCodeReadyToPrint}" Value="False">
+                                        <Setter Property="Source" Value="/Resources/RedX.png"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                    <TextBlock Text="GCode is Uploaded/Converted"
+                               Width="{DynamicResource WideControlWidth}"
+                               Style="{DynamicResource ThematicTextBlock}"/>
+                </StackPanel>
+
+                <!--Display if the Serial Communication port is established-->
+                <StackPanel Orientation="Horizontal"
+                            Height="{DynamicResource StandardControlHeight}">
+                    <Image Width="{DynamicResource NarrowControlWidth}">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsSerialCommunicationReadyToPrint}" Value="True">
+                                        <Setter Property="Source" Value="/Resources/GreenCheck.png"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsSerialCommunicationReadyToPrint}" Value="False">
+                                        <Setter Property="Source" Value="/Resources/RedX.png"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                    <TextBlock Text="Connected to Microcontroller"
+                               Width="{DynamicResource WideControlWidth}"
+                               Style="{DynamicResource ThematicTextBlock}"/>
+                </StackPanel>
+
+                <!--Display is there is an active Printhead-->
+                <StackPanel Orientation="Horizontal"
+                            Height="{DynamicResource StandardControlHeight}">
+                    <Image Width="{DynamicResource NarrowControlWidth}">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsActivePrintheadReadyToPrint}" Value="True">
+                                        <Setter Property="Source" Value="/Resources/GreenCheck.png"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsActivePrintheadReadyToPrint}" Value="False">
+                                        <Setter Property="Source" Value="/Resources/RedX.png"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                    <TextBlock Text="Printhead Set"
+                               Width="{DynamicResource WideControlWidth}"
+                               Style="{DynamicResource ThematicTextBlock}"/>
+                </StackPanel>
+            </StackPanel>
+            <!--#endregion-->
+            
+        </StackPanel>
+
+        <vGCodeManager:GCodeManagerView
             Grid.Row="1"
             DataContext="{Binding RelativeSource={RelativeSource FindAncestor, 
                                   AncestorLevel=2,
                                   AncestorType={x:Type UserControl}}, 
+                                  Path=DataContext.GCodeManagerViewModel}"/>
+
+        <vSerialCommunications:SerialMessageDisplayView 
+            Grid.Row="2"
+            DataContext="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                  AncestorLevel=2,
+                                  AncestorType={x:Type UserControl}}, 
                                   Path=DataContext.SerialMessageDisplayViewModel}"/>
-
-        <!--#region Print Ready Checks-->
-        <StackPanel Grid.Row="2" Orientation="Vertical">
-            <StackPanel.Style>
-                <Style TargetType="{x:Type StackPanel}">
-                    <Setter Property="Visibility" Value="Hidden"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding PrinterStatus}" Value="{x:Static vmPrint:PrinterStatus.Manual}">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </StackPanel.Style>
-            
-            <!--Display if the GCode has been uploaded or converter and is ready for a print-->
-            <StackPanel Orientation="Horizontal"
-                        Height="{DynamicResource StandardControlHeight}">
-                <Image Width="{DynamicResource NarrowControlWidth}">
-                    <Image.Style>
-                        <Style TargetType="Image">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsModiPrintGCodeReadyToPrint}" Value="True">
-                                    <Setter Property="Source" Value="/Resources/GreenCheck.png"/>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding IsModiPrintGCodeReadyToPrint}" Value="False">
-                                    <Setter Property="Source" Value="/Resources/RedX.png"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Image.Style>
-                </Image>
-                <TextBlock Text="GCode is Uploaded/Converted"
-                           Width="{DynamicResource WideControlWidth}"
-                           Style="{DynamicResource ThematicTextBlock}"/>
-            </StackPanel>
-
-            <!--Display if the Serial Communication port is established-->
-            <StackPanel Orientation="Horizontal"
-                        Height="{DynamicResource StandardControlHeight}">
-                <Image Width="{DynamicResource NarrowControlWidth}">
-                    <Image.Style>
-                        <Style TargetType="Image">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsSerialCommunicationReadyToPrint}" Value="True">
-                                    <Setter Property="Source" Value="/Resources/GreenCheck.png"/>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding IsSerialCommunicationReadyToPrint}" Value="False">
-                                    <Setter Property="Source" Value="/Resources/RedX.png"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Image.Style>
-                </Image>
-                <TextBlock Text="Connected to Microcontroller"
-                           Width="{DynamicResource WideControlWidth}"
-                           Style="{DynamicResource ThematicTextBlock}"/>
-            </StackPanel>
-
-            <!--Display is there is an active Printhead-->
-            <StackPanel Orientation="Horizontal"
-                        Height="{DynamicResource StandardControlHeight}">
-                <Image Width="{DynamicResource NarrowControlWidth}">
-                    <Image.Style>
-                        <Style TargetType="Image">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsActivePrintheadReadyToPrint}" Value="True">
-                                    <Setter Property="Source" Value="/Resources/GreenCheck.png"/>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding IsActivePrintheadReadyToPrint}" Value="False">
-                                    <Setter Property="Source" Value="/Resources/RedX.png"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Image.Style>
-                </Image>
-                <TextBlock Text="Printhead Set"
-                           Width="{DynamicResource WideControlWidth}"
-                           Style="{DynamicResource ThematicTextBlock}"/>
-            </StackPanel>
-        </StackPanel>
-        <!--#endregion-->
 
     </Grid>
 </UserControl>

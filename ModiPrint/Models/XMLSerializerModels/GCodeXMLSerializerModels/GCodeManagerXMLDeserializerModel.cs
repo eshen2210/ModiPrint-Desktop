@@ -42,17 +42,14 @@ namespace ModiPrint.Models.XMLSerializerModels.GCodeXMLSerializerModels
 
                     switch (xmlReader.Name)
                     {
-                        case "Slic3rGCode":
-                            gCodeManagerViewModel.Slic3rGCode = xmlReader.ReadElementContentAsString();
-                            break;
-                        case "Slic3rGCodeFileName":
-                            gCodeManagerViewModel.Slic3rGCodeFileName = xmlReader.ReadElementContentAsString();
+                        case "RepRapGCode":
+                            gCodeManagerViewModel.RepRapGCode = xmlReader.ReadElementContentAsString();
                             break;
                         case "ModiPrintGCode":
                             gCodeManagerViewModel.ModiPrintGCode = xmlReader.ReadElementContentAsString();
                             break;
-                        case "ModiPrintGCodeFileName":
-                            gCodeManagerViewModel.ModiPrintGCodeFileName = xmlReader.ReadElementContentAsString();
+                        case "GCodeFileName":
+                            gCodeManagerViewModel.GCodeFileName = xmlReader.ReadElementContentAsString();
                             break;
                         default:
                             base.ReportErrorUnrecognizedElement(xmlReader);

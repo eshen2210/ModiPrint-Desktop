@@ -32,10 +32,10 @@ namespace ModiPrint.ViewModels.GCodeManagerViewModels
     {
         #region Fields and Properties
         //GCode and utilities related to the conversion of GCode.
-        private GCodeModel _slic3rGCodeModel;
-        public GCodeModel Slic3rGCodeModel
+        private GCodeModel _repRapGCodeModel;
+        public GCodeModel RepRapGCodeModel
         {
-            get { return _slic3rGCodeModel; }
+            get { return _repRapGCodeModel; }
         }
         private GCodeModel _modiPrintGCodeModel;
         public GCodeModel ModiPrintGCodeModel
@@ -45,65 +45,55 @@ namespace ModiPrint.ViewModels.GCodeManagerViewModels
         private GCodeFileManagerModel _gCodeFileManagerModel;
         private GCodeConverterBGWModel _gCodeConverterBGWModel;
 
-        //GCode from Slic3r.
-        //Adds the line count in front of each line.
-        public string Slic3rGCode
+        //GCode of the RepRap flavor.
+        public string RepRapGCode
         {
-            get { return AddLineNumberToGCode(_slic3rGCodeModel.GCodeArr); }
+            get { return _repRapGCodeModel.GCodeStr; }
             set
             {
-                _slic3rGCodeModel.GCodeStr = value;
-                OnPropertyChanged("Slic3rGCode");
+                _repRapGCodeModel.GCodeStr = value;
+                OnPropertyChanged("RepRapGCode");
             }
         }
 
-        //GCode converted from Slic3r GCode.
+        //GCode converted from RepRap GCode.
         public string ModiPrintGCode
         {
             get { return _modiPrintGCodeModel.GCodeStr; }
             set
             {
-                _modiPrintGCodeModel.SetGCode(value);
+                _modiPrintGCodeModel.GCodeStr = value;
                 OnModiPrintGCodeChanged();
                 OnPropertyChanged("ModiPrintGCode");
             }
         }
 
-        //Slic3r GCode's file name.
-        private string _slic3rGCodeFileName = "";
-        public string Slic3rGCodeFileName
+        //GCode file name of the most recently uploaded or uploaded GCode file.
+        private string _gCodeFileName = "";
+        public string GCodeFileName
         {
-            get { return _slic3rGCodeFileName; }
+            get { return _gCodeFileName; }
             set
             {
-                _slic3rGCodeFileName = value;
-                OnPropertyChanged("Slic3rGCodeFileName");
-            }
-        }
-
-        //ModiPrint GCode's file name.
-        private string _modiPrintGCodeFileName = "";
-        public string ModiPrintGCodeFileName
-        {
-            get { return _modiPrintGCodeFileName; }
-            set
-            {
-                _modiPrintGCodeFileName = value;
-                OnPropertyChanged("ModiPrintGCodeFileName");
+                _gCodeFileName = value;
+                OnPropertyChanged("GCodeFileName");
             }
         }
 
         //These properties indicate the progress made during GCode conversion.
-        private int _processedLines;
-        public int ProcessedLines
+        
+        //Name of the task being done.
+        private string _taskName;
+        public string TaskName
         {
-            get { return _processedLines; }
+            get { return _taskName; }
         }
 
-        private int _totalLines;
-        public int TotalLines
+        //Percentage of the task completed.
+        private int _percentCompleted;
+        public int PercentCompleted
         {
-            get { return _totalLines; }
+            get { return _percentCompleted; }
         }
 
         //Event that is fired when converted GCode is changed.
@@ -116,9 +106,9 @@ namespace ModiPrint.ViewModels.GCodeManagerViewModels
         #endregion
 
         #region Contructor
-        public GCodeManagerViewModel(GCodeModel Slic3rGCodeModel, GCodeModel ModiPrintGCodeModel, GCodeFileManagerModel GCodeFileManagerModel, GCodeConverterBGWModel GCodeConverterBGWModel)
+        public GCodeManagerViewModel(GCodeModel RepRapGCodeModel, GCodeModel ModiPrintGCodeModel, GCodeFileManagerModel GCodeFileManagerModel, GCodeConverterBGWModel GCodeConverterBGWModel)
         {
-            _slic3rGCodeModel = Slic3rGCodeModel;
+            _repRapGCodeModel = RepRapGCodeModel;
             _modiPrintGCodeModel = ModiPrintGCodeModel;
             _gCodeFileManagerModel = GCodeFileManagerModel;
             _gCodeConverterBGWModel = GCodeConverterBGWModel;
@@ -136,10 +126,10 @@ namespace ModiPrint.ViewModels.GCodeManagerViewModels
         /// <param name="lineConvertedEventArgs"></param>
         private void GCodeConverterBGWReportProgressLineCount(object sender, LineConvertedEventArgs lineConvertedEventArgs)
         {
-            _processedLines = lineConvertedEventArgs.ProcessedLines;
-            _totalLines = lineConvertedEventArgs.TotalLines;
-            OnPropertyChanged("ProcessedLines");
-            OnPropertyChanged("TotalLines");
+            _taskName = lineConvertedEventArgs.TaskName;
+            _percentCompleted = lineConvertedEventArgs.PercentCompleted;
+            OnPropertyChanged("TaskName");
+            OnPropertyChanged("PercentCompleted");
         }
 
         /// <summary>
@@ -153,83 +143,35 @@ namespace ModiPrint.ViewModels.GCodeManagerViewModels
             _modiPrintGCodeModel.GCodeStr = convertedGCode;
             OnPropertyChanged("ModiPrintGCode");
         }
-
-        /// <summary>
-        /// Adds GCode line count to the beginning of each GCode line.
-        /// </summary>
-        /// <param name="gCodeArr"></param>
-        /// <returns></returns>
-        private string AddLineNumberToGCode(string[] gCodeArr)
-        {
-            //Return value.
-            string gCodeWithLineNumber = "";
-
-            if (gCodeArr != null)
-            {
-                //Add GCode line count to the beginning of each GCode line.
-                int gCodeLineCount = 1;
-                foreach (string gCodeLine in gCodeArr)
-                {
-                    gCodeWithLineNumber += gCodeLineCount++ + "; ";
-                    gCodeWithLineNumber += gCodeLine + "\r\n";
-                }
-            }
-
-            return gCodeWithLineNumber;
-        }
         #endregion
 
         #region Commands
         /// <summary>
-        /// Reads and saves a .gcode file into Slic3rGCode.
+        /// Reads and saves a .gcode file into RepRapGCode.
         /// </summary>
-        private RelayCommand<object> _uploadSlic3rGCodeFileCommand;
-        public ICommand UploadSlic3rGCodeFileCommand
+        private RelayCommand<object> _uploadGCodeFileCommand;
+        public ICommand UploadGCodeFileCommand
         {
             get
             {
-                if (_uploadSlic3rGCodeFileCommand == null)
-                { _uploadSlic3rGCodeFileCommand = new RelayCommand<object>(ExecuteUploadSlic3rGCodeFileCommand, CanExecuteUploadSlic3rGCodeFileCommand); }
-                return _uploadSlic3rGCodeFileCommand;
+                if (_uploadGCodeFileCommand == null)
+                { _uploadGCodeFileCommand = new RelayCommand<object>(ExecuteUploadGCodeFileCommand, CanExecuteUploadGCodeFileCommand); }
+                return _uploadGCodeFileCommand;
             }
         }
 
-        public bool CanExecuteUploadSlic3rGCodeFileCommand(object notUsed)
+        public bool CanExecuteUploadGCodeFileCommand(object notUsed)
         {
             return true;
         }
 
-        public void ExecuteUploadSlic3rGCodeFileCommand(object notUsed)
+        public void ExecuteUploadGCodeFileCommand(object notUsed)
         {
-            _gCodeFileManagerModel.UploadGCodeFile(_slic3rGCodeModel, "GCode Files (.gcode)|*.gcode|Text Files (.txt)|*.txt|All Files (*.*)|*.*", ref _slic3rGCodeFileName);
-            OnPropertyChanged("Slic3rGCodeFileName");
-            OnPropertyChanged("Slic3rGCode");
-        }
-
-        /// <summary>
-        /// Reads and saves a .mdpt file into ModiPrintGCode.
-        /// </summary>
-        private RelayCommand<object> _uploadModiPrintGCodeFileCommand;
-        public ICommand UploadModiPrintGCodeFileCommand
-        {
-            get
-            {
-                if (_uploadModiPrintGCodeFileCommand == null)
-                { _uploadModiPrintGCodeFileCommand = new RelayCommand<object>(ExecuteUploadModiPrintGCodeFileCommand, CanExecuteUploadModiPrintGCodeFileCommand); }
-                return _uploadModiPrintGCodeFileCommand;
-            }
-        }
-
-        public bool CanExecuteUploadModiPrintGCodeFileCommand(object notUsed)
-        {
-            return true;
-        }
-
-        public void ExecuteUploadModiPrintGCodeFileCommand(object notUsed)
-        {
-            _gCodeFileManagerModel.UploadGCodeFile(_modiPrintGCodeModel, "ModiPrint GCode Files (.mdpt)|*.mdpt", ref _modiPrintGCodeFileName);
-            OnPropertyChanged("ModiPrintGCodeFileName");
+            _gCodeFileName = _gCodeFileManagerModel.UploadGCodeFile();
+            OnPropertyChanged("GCodeFileName");
+            OnPropertyChanged("RepRapGCode");
             OnPropertyChanged("ModiPrintGCode");
+            _convertGCodeCommand.RaiseCanExecuteChanged();
         }
 
         /// <summary>
@@ -253,13 +195,13 @@ namespace ModiPrint.ViewModels.GCodeManagerViewModels
 
         public void ExecuteSaveModiPrintGCodeFileCommand(object notUsed)
         {
-            _gCodeFileManagerModel.SaveGCodeFile(_modiPrintGCodeModel, ".mdpt", "ModiPrint GCode Files (.mdpt)|*.mdpt", ref _modiPrintGCodeFileName);
+            _gCodeFileManagerModel.SaveGCodeFile(_modiPrintGCodeModel, ".mdpt", "ModiPrint GCode Files (.mdpt)|*.mdpt", ref _gCodeFileName);
             OnPropertyChanged("ModiPrintGCodeFileName");
             OnPropertyChanged("ModiPrintGCode");
         }
 
         /// <summary>
-        /// Converts Slic3r GCode into ModiPrint GCode based on user input parameters.
+        /// Converts RepRap GCode into ModiPrint GCode based on user input parameters.
         /// </summary>
         private RelayCommand<object> _convertGCodeCommand;
         public ICommand ConvertGCodeCommand
@@ -274,16 +216,16 @@ namespace ModiPrint.ViewModels.GCodeManagerViewModels
 
         public bool CanExecuteConvertGCodeCommand(object notUsed)
         {
-            return (!String.IsNullOrWhiteSpace(_slic3rGCodeFileName)
-                && !String.IsNullOrWhiteSpace(_slic3rGCodeModel.GCodeStr)) ? true : false;
+            return (!String.IsNullOrWhiteSpace(_gCodeFileName))
+                && (!String.IsNullOrWhiteSpace(_repRapGCodeModel.GCodeStr)
+                && (_gCodeConverterBGWModel.IsBusy == false)) ? true : false;
         }
 
         public void ExecuteConvertGCodeCommand(object notUsed)
         {
-            _gCodeConverterBGWModel.StartConversion(_slic3rGCodeModel.GCodeStr);
+            _gCodeConverterBGWModel.StartConversion(_repRapGCodeModel.GCodeStr);
             while (_gCodeConverterBGWModel.GCodeConverterMainModel == null) { } //Wait for the class to instantiate before trying to subscribe to its event.
-            _gCodeConverterBGWModel.GCodeConverterMainModel.LineConverted += new GCodeConverterLineConvertedEventHandler(GCodeConverterBGWReportProgressLineCount);
-
+            _gCodeConverterBGWModel.GCodeConverterMainModel.ParametersModel.LineConverted += new GCodeConverterLineConvertedEventHandler(GCodeConverterBGWReportProgressLineCount);
         }
         #endregion
     }

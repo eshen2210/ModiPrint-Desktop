@@ -141,6 +141,7 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
             {
                 for (int i = 0; i < printDistancesList.Count; i++)
                 {
+                    //First droplet.
                     if (i == 0)
                     {
                         List<ConvertedGCodeLine> appendList = WriteAxesMovement(xmmPerStep, ymmPerStep, zmmPerStep,
@@ -156,7 +157,7 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
                         if (appendList != null) { convertedGCodeLinesList.AddRange(appendList); }
                     }
 
-                    //Print.
+                    //Droplets 2+.
                     if (dropletModel.GradientShape != GradientShape.None) //Gradient print.
                     {
                         double ePrint = dropletModel.GradientModel.PrintParameterAtDistance(eDistance,
@@ -218,7 +219,11 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
                 convertedGCodeLine += G00Calculator.WriteSteps('Y', yCurrent - yPrevious, ymmPerStep, yInvertDirection);
                 convertedGCodeLine += G00Calculator.WriteSteps('Z', zCurrent - zPrevious, zmmPerStep, zInvertDirection);
 
-                convertedGCodeLinesList.Add(new ConvertedGCodeLine(convertedGCodeLine));
+                //Catch the corner case where there is movement that is less than one step.
+                if (convertedGCodeLine != SerialCommands.ValvePrintWithMovement)
+                {
+                    convertedGCodeLinesList.Add(new ConvertedGCodeLine(convertedGCodeLine));
+                }
                 return convertedGCodeLinesList;
             }
 
@@ -259,6 +264,7 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
             {
                 for (int i = 0; i < printDistancesList.Count; i++)
                 {
+                    //First droplet.
                     if (i == 0)
                     {
                         List<ConvertedGCodeLine> appendList = WriteAxesMovement(xmmPerStep, ymmPerStep, zmmPerStep,
@@ -275,7 +281,7 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
                         if (appendList != null) { convertedGCodeLinesList.AddRange(appendList); }
                     }
 
-                    //Print.
+                    //Droplets 2+.
                     if (dropletModel.GradientShape != GradientShape.None) //Gradient print.
                     {
                         int valvePrintTime = (int)dropletModel.GradientModel.PrintParameterAtDistance(valveOpenTime,

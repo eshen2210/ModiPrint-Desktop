@@ -10,11 +10,16 @@
 
     <StackPanel Orientation="Vertical">
         
-        <!--#region Serial Port Connection-->
-        <StackPanel Orientation="Horizontal"
-                    HorizontalAlignment="Right">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-            <StackPanel.Resources>
+            <!--#region Serial Port Connection-->
+            <Grid.Resources>
                 <ResourceDictionary>
                     <ResourceDictionary.MergedDictionaries>
                         <ResourceDictionary Source="/Views/GlobalResources.xaml"/>
@@ -39,25 +44,27 @@
                     </Style>
 
                 </ResourceDictionary>
-            </StackPanel.Resources>
+            </Grid.Resources>
 
             <!--Select Serial Port-->
-            <TextBlock Text="Serial Port"
-                       Style="{DynamicResource ThematicTextBlock}"/>
+            <StackPanel Grid.Column="0" Orientation="Vertical">
+                <TextBlock Text="Serial Port"
+                           Style="{DynamicResource ThematicTextBlock}"/>
 
-            <ComboBox Name="cboSerialPorts"
-                      ItemsSource="{Binding PortNames}"
-                      Height="{DynamicResource StandardControlHeight}" Width="{DynamicResource WideControlWidth}"
-                      Style="{DynamicResource ThematicComboBox}">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="DropDownOpened">
-                        <i:InvokeCommandAction Command="{Binding RefreshPortNamesCommand}"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </ComboBox>
+                <ComboBox Name="cboSerialPorts"
+                          ItemsSource="{Binding PortNames}"
+                          Height="{DynamicResource StandardControlHeight}" Width="{DynamicResource WideControlWidth}"
+                          Style="{DynamicResource ThematicComboBox}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="DropDownOpened">
+                            <i:InvokeCommandAction Command="{Binding RefreshPortNamesCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
+            </StackPanel>
 
             <!--Connect-->
-            <Border HorizontalAlignment="Right"
+            <Border Grid.Column="1" HorizontalAlignment="Right"
                     Style="{StaticResource ConnectionButtonBorder}">
                 <Button Content="Connect"
                         Command="{Binding SerialConnectCommand}"
@@ -82,7 +89,7 @@
             </Border>
 
             <!--Disconnect-->
-            <Border HorizontalAlignment="Right"
+            <Border Grid.Column="2" HorizontalAlignment="Right"
                     Style="{StaticResource DisconnectionButtonBorder}">
                 <Button Command="{Binding SerialDisconnectCommand}"
                         Style="{DynamicResource ThematicButton}"
@@ -103,56 +110,55 @@
                     </Button.Template>
                 </Button>
             </Border>
+            <!--#endregion-->
 
-        </StackPanel>
-        <!--#endregion-->
-        
-        <!--#region SerialPort Manual Messaging-->
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+            <!--#region SerialPort Manual Messaging-->
+            <Grid Grid.Column="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" 
-                        Name="tbManualCommand"
-                        Text="{Binding ManualSerialSendMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        Height="{DynamicResource StandardControlHeight}"
-                        Style="{DynamicResource ThematicTextBox}"/>
+                <TextBox Grid.Column="0" 
+                         Name="tbManualCommand"
+                         Text="{Binding ManualSerialSendMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Height="{DynamicResource StandardControlHeight}"
+                         Style="{DynamicResource ThematicTextBox}"/>
 
-            <Border Grid.Column="1"
-                    HorizontalAlignment="Right"
-                    Style="{DynamicResource ThematicButtonBorder}">
-                <Button Command="{Binding ManualAppendMessageCommand}"
-                        CommandParameter="{Binding ElementName=tbManualCommand, Path=Text}"
-                        Style="{DynamicResource ThematicButton}"
-                        Height="{DynamicResource StandardImageButtonHeight}">
-                    <Button.Template>
-                        <ControlTemplate>
-                            <StackPanel Orientation="Horizontal"
-                                        Background="Transparent">
-                                <Image Source="/Resources/Buttons/SendFile.png"
-                                        Height="{DynamicResource StandardImageButtonHeight}"
-                                        Style="{DynamicResource ThematicControlImage}"
-                                        Margin="0, 0, 0, 0"/>
-                                <StackPanel Orientation="Vertical"
-                                            VerticalAlignment="Center"
-                                            Margin="5, 5, 5, 5">
-                                    <TextBlock Text="Send"
+                <Border Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Style="{DynamicResource ThematicButtonBorder}">
+                    <Button Command="{Binding ManualAppendMessageCommand}"
+                            CommandParameter="{Binding ElementName=tbManualCommand, Path=Text}"
+                            Style="{DynamicResource ThematicButton}"
+                            Height="{DynamicResource StandardImageButtonHeight}">
+                        <Button.Template>
+                            <ControlTemplate>
+                                <StackPanel Orientation="Horizontal"
+                                            Background="Transparent">
+                                    <Image Source="/Resources/Buttons/SendFile.png"
+                                           Height="{DynamicResource StandardImageButtonHeight}"
+                                           Style="{DynamicResource ThematicControlImage}"
+                                           Margin="0, 0, 0, 0"/>
+                                    <StackPanel Orientation="Vertical"
                                                 VerticalAlignment="Center"
-                                                Style="{DynamicResource ThematicTextBlock}"
-                                                Margin="0, 0, 0, 0"/>
-                                    <TextBlock Text="Message"
-                                                VerticalAlignment="Center"
-                                                Style="{DynamicResource ThematicTextBlock}"
-                                                Margin="0, 0, 0, 0"/>
+                                                Margin="5, 5, 5, 5">
+                                        <TextBlock Text="Send"
+                                                   VerticalAlignment="Center"
+                                                   Style="{DynamicResource ThematicTextBlock}"
+                                                   Margin="0, 0, 0, 0"/>
+                                        <TextBlock Text="Message"
+                                                   VerticalAlignment="Center"
+                                                   Style="{DynamicResource ThematicTextBlock}"
+                                                   Margin="0, 0, 0, 0"/>
+                                    </StackPanel>
                                 </StackPanel>
-                            </StackPanel>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
-            </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Border>
 
+            </Grid>
         </Grid>
         <!--#endregion-->
         

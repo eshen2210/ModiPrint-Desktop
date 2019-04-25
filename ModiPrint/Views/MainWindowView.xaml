@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:ModiPrint"
         xmlns:v="clr-namespace:ModiPrint.Views"
         xmlns:vControl="clr-namespace:ModiPrint.Views.ControlViews"
-        xmlns:vGCodeManager="clr-namespace:ModiPrint.Views.GCodeManagerViews"
+        xmlns:vGCodeManager="clr-namespace:ModiPrint.Views.PrintViews.GCodeManagerViews"
         xmlns:vStatusAndControl="clr-namespace:ModiPrint.Views.StatusAndControlViews"
         xmlns:vPrinter="clr-namespace:ModiPrint.Views.PrinterViews"
         xmlns:vPrint="clr-namespace:ModiPrint.Views.PrintViews"

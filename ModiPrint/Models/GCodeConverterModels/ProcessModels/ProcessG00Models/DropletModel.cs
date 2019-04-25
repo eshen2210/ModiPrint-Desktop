@@ -17,6 +17,12 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
         //In mm.
         private double _distanceTravelled = 0;
 
+        //Distances to travel before executing the next droplet print.
+        //These distances will be a non-zero number whenever there is some movement but not enough movement to reach the next droplet.
+        //Like the coordinate fields, the 0th index will be X, 1st Y, adn 2nd Z.
+        //In mm.
+        private double[] _preDistance = { 0, 0, 0 };
+
         //Distance in between each droplet.
         private double _interpolateDistance;
 
@@ -90,6 +96,9 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
         /// <summary>
         /// Returns a list of relative positions that should be droplet printed.
         /// Positions are relative and in units of mm.
+        /// Movement by relative PreDistance values should be executed before droplet printing.
+        /// PreDistance values should be an array of 3 where the XPreDistance value is in the 0th index, Y in 1st, Z in 2nd.
+        /// If return value or PreDistances are null, then no printing or movement is required.
         /// </summary>
         /// <param name="xDistance"></param>
         /// <param name="yDistance"></param>
@@ -104,7 +113,7 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
             yDistance = Math.Round(yDistance, 8);
             zDistance = Math.Round(zDistance, 8);
 
-            double distanceToPrint = Math.Round(_interpolateDistance - _distanceTravelled, 8);
+            double distanceToPrint = Math.Round(_interpolateDistance - _distanceTravelled, 8); //Distance until the next droplet in mm.
             double maxDistance = Math.Round(G00Calculator.CalculateDistance(xDistance, yDistance, zDistance), 8);
             List<double[]> printDistancesList = new List<double[]>(); //Relative coordinates in units of mm.
 
@@ -125,6 +134,9 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
             if (distanceToPrint > maxDistance)
             {
                 _distanceTravelled += maxDistance;
+                _preDistance[0] += xDistance;
+                _preDistance[1] += yDistance;
+                _preDistance[2] += zDistance;
                 return null;
             }
             //Movement is exactly the length needed for the next droplet.
@@ -134,9 +146,11 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
                 _distanceTravelled = 0;
 
                 double[] printCoord = new double[3];
-                printCoord[0] = xDistance;
-                printCoord[1] = yDistance;
-                printCoord[2] = zDistance;
+                printCoord[0] = _preDistance[0] + xDistance;
+                printCoord[1] = _preDistance[1] + yDistance;
+                printCoord[2] = _preDistance[2] + zDistance;
+
+                _preDistance[0] = _preDistance[1] = _preDistance[2] = 0;
 
                 printDistancesList.Add(printCoord);
                 return printDistancesList;
@@ -149,15 +163,23 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
                 double xPrintPosition = 0; //Last position printed at.
                 double yPrintPosition = 0;
                 double zPrintPosition = 0;
+                bool firstDroplet = true;
+
                 for (percentMovementTravelled = Math.Abs(distanceToPrint / maxDistance); Math.Round(percentMovementTravelled, 10) <= 1; percentMovementTravelled += (_interpolateDistance / maxDistance))
                 {
-                    double xMovementTravelled = percentMovementTravelled * (xDistance);
-                    double yMovementTravelled = percentMovementTravelled * (yDistance);
-                    double zMovementTravelled = percentMovementTravelled * (zDistance);
+                    xPrintPosition = percentMovementTravelled * (xDistance);
+                    yPrintPosition = percentMovementTravelled * (yDistance);
+                    zPrintPosition = percentMovementTravelled * (zDistance);
 
-                    xPrintPosition = xMovementTravelled;
-                    yPrintPosition = yMovementTravelled;
-                    zPrintPosition = zMovementTravelled;
+                    if (firstDroplet == true)
+                    {
+                        xPrintPosition += _preDistance[0];
+                        yPrintPosition += _preDistance[1];
+                        zPrintPosition += _preDistance[2];
+
+                        _preDistance[0] = _preDistance[1] = _preDistance[2] = 0;
+                        firstDroplet = false;
+                    }
 
                     double[] printCoord = new double[3];
                     printCoord[0] = xPrintPosition;

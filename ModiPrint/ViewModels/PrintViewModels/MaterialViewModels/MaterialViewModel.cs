@@ -30,14 +30,14 @@ namespace ModiPrint.ViewModels.PrintViewModels.MaterialViewModels
             get { return _materialModel.Name; }
         }
 
-        //How Slic3r identifies this material (e.g. "T0" for the first material).
-        public string Slic3rID
+        //How RepRap identifies this material (e.g. "T0" for the first material).
+        public string RepRapID
         {
-            get { return _materialModel.Slic3rID; }
+            get { return _materialModel.RepRapID; }
             set
             {
-                _materialModel.Slic3rID = value;
-                OnPropertyChanged("Slic3rID");
+                _materialModel.RepRapID = value;
+                OnPropertyChanged("RepRapID");
             }
         }
 

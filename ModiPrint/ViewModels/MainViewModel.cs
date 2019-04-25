@@ -58,7 +58,7 @@ namespace ModiPrint.ViewModels
 
         private SerialCommunicationBGWModel _serialCommunicationBGWModel;
 
-        private GCodeModel _slic3rGCodeModel;
+        private GCodeModel _repRapGCodeModel;
 
         private GCodeModel _modiPrintGCodeModel;
 
@@ -179,7 +179,7 @@ namespace ModiPrint.ViewModels
 
             //Real Time Status.
             _realTimeStatusSerialInterpreterModel = new RealTimeStatusSerialInterpreterModel(_serialCommunicationMainModel, _printerModel, _printerViewModel, _realTimeStatusDataModel, _errorListViewModel);
-            _realTimeStatusDataViewModel = new RealTimeStatusDataViewModel(_realTimeStatusDataModel, _serialCommunicationCommandSetsModel);
+            _realTimeStatusDataViewModel = new RealTimeStatusDataViewModel(_realTimeStatusDataModel, _serialCommunicationCommandSetsModel, _errorListViewModel);
 
             //Manual Commmands and Calibration.
             _manualControlModel = new ManualControlModel(_printerModel, _serialCommunicationOutgoingMessagesModel, _realTimeStatusDataModel);
@@ -188,11 +188,11 @@ namespace ModiPrint.ViewModels
             _calibrationViewModel = new CalibrationViewModel(_calibrationModel, _manualControlViewModel, _realTimeStatusDataViewModel, _printerViewModel);
 
             //GCode.
-            _slic3rGCodeModel = new GCodeModel();
+            _repRapGCodeModel = new GCodeModel();
             _modiPrintGCodeModel = new GCodeModel();
-            _gCodeFileManagerModel = new GCodeFileManagerModel(_errorListViewModel);
+            _gCodeFileManagerModel = new GCodeFileManagerModel(_repRapGCodeModel, _modiPrintGCodeModel, _errorListViewModel);
             _gCodeConverterBGWModel = new GCodeConverterBGWModel(_printerModel, _printModel, _realTimeStatusDataModel, _errorListViewModel);
-            _gcodeManagerViewModel = new GCodeManagerViewModel(_slic3rGCodeModel, _modiPrintGCodeModel, _gCodeFileManagerModel, _gCodeConverterBGWModel);
+            _gcodeManagerViewModel = new GCodeManagerViewModel(_repRapGCodeModel, _modiPrintGCodeModel, _gCodeFileManagerModel, _gCodeConverterBGWModel);
 
             //Printing.
             _printExecuteViewModel = new PrintExecuteViewModel(_modiPrintGCodeModel, _gcodeManagerViewModel, _realTimeStatusDataModel, _serialCommunicationViewModel, _serialCommunicationOutgoingMessagesModel, _serialMessageDisplayViewModel);

@@ -25,6 +25,10 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
 
         //Contains pseudo-global parameters for the GCodeConverter that are passed around various GCodeConverter classes.
         private ParametersModel _parametersModel;
+
+        //Numerator value for the progress bar.
+        //Should tick up every time a continuous movement has a set of parameters calculated.
+        private int _progressBarTick = 0;
         #endregion
 
         #region Contructor
@@ -45,6 +49,8 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
         /// <param name="convertedGCodeLinesList"></param>
         public void AddDecelerationStepsParameter(ref List<ConvertedGCodeLine> convertedGCodeLinesList)
         {
+            //Reset the progress bar.
+            _progressBarTick = 0;
             //A list of all the indeces where a new Material is set.
             List<int> materialIndecesList = new List<int>();
             //The reference of the corresponding Material of the same index in the MaterialIndecesList.
@@ -79,7 +85,7 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
         }
 
         /// <summary>
-        /// Find all of the coordinates of a continuous movement in units of mm and in relative positions.
+        /// Find all of the coordinates of a continuous movement in relative positions.
         /// A continuous movement is defined any series of individual movements where each movement can be executed consecutively without coming to a complete stop.
         /// Continuous movements enable the XYZ stage to transition between each movement without coming to a complete stop.
         /// </summary>
@@ -147,7 +153,7 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
             //In other words, the more continous movement length remaining, the higher the junction speed. 
             //The faster the stepper's acceleration/deceleration, the higher the junction speed.
             //The higher the junction deviation, the higher the junction speed.
-            //Junction speed is in units of mm / s.
+            //Junction speed is in units of steps / s.
 
             //For each continuous movement...
             for (int i = 0; i < continuousMovementsList.Count; i++)
@@ -182,6 +188,11 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
                         //Ensure neither movement's max speed is exceeded.
                         double junctionMaxSpeed = Math.Min(previousMovement.MaxSpeed, currentMovement.MaxSpeed);
                         previousMovement.ExitSpeed = Math.Min(junctionMaxSpeed, previousMovement.ExitSpeed);
+
+                        if (j == 1)
+                        {
+
+                        }
                     }
                     else
                     {
@@ -214,6 +225,8 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
                         currentMovement.ExitSpeed = Math.Min(exitSpeedFromAcceleration, currentMovement.ExitSpeed);
                     }
                 }
+
+                TickProgressBar(continuousMovementsList);
             }
         }
 
@@ -247,10 +260,10 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
                         : 0;
 
                     //Account for the rounding errors of floating point variables.
-                    presumedEntryToExitDistance = Math.Round(presumedEntryToExitDistance, 10);
-                    presumedEntryToCruiseDistance = Math.Round(presumedEntryToCruiseDistance, 10);
-                    presumedCruiseToExitDistance = Math.Round(presumedCruiseToExitDistance, 10);
-                    double totalDistanceRounded = Math.Round(continuousMovement[j].TotalDistance, 10);
+                    presumedEntryToExitDistance = Math.Round(presumedEntryToExitDistance, 8);
+                    presumedEntryToCruiseDistance = Math.Round(presumedEntryToCruiseDistance, 8);
+                    presumedCruiseToExitDistance = Math.Round(presumedCruiseToExitDistance, 8);
+                    double totalDistanceRounded = Math.Round(continuousMovement[j].TotalDistance, 8);
 
                     //Is there enough distance to accelerate to max speed and form a trapezoid velocity profile?
                     if ((presumedEntryToCruiseDistance + presumedCruiseToExitDistance) < totalDistanceRounded)
@@ -299,6 +312,8 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
                         _parametersModel.ErrorReporterViewModel.ReportError("GCodeConverter: Junction Calculations Error", "LL:" + continuousMovement[j].GCodeIndex + " ");
                     }
                 }
+
+                TickProgressBar(continuousMovementsList);
             }
         }
 
@@ -350,7 +365,7 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
                 }
             }
 
-            MovementModel movementModel = new MovementModel(xDistance, yDistance, zDistance, eDistance, gCodeIndex, materialModel);
+            MovementModel movementModel = new MovementModel(xDistance, yDistance, zDistance, eDistance, gCodeIndex, materialModel, _printerModel);
             return movementModel;
         }
 
@@ -365,11 +380,11 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
         /// <returns></returns>
         private double CalculateJunctionSpeed(double acceleration, double junctionDeviation, double angleRadians)
         {
-            //Radius in mm.
+            //Radius is in whatever length unit given in the acceleration parameter.
             //Angle in degrees.
 
-            double radius = Math.Sin(angleRadians / 2) / (1 - Math.Sin(angleRadians / 2));
-            return Math.Sqrt(Math.Abs(acceleration * junctionDeviation * radius));
+            double radius = junctionDeviation * Math.Sin(angleRadians / 2) / (1 - Math.Sin(angleRadians / 2));
+            return Math.Sqrt(Math.Abs(acceleration * radius));
         }
 
         /// <summary>
@@ -382,35 +397,14 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
         private double CalculateJunctionAngle(MovementModel movement1, MovementModel movement2)
         {
             //The E Axis is not taken into account here because I don't want to implement a Vector4D.
-            //Why an angle does not need to be calculated is because the E Axis's distance moved should be always proportional to the distance moved by XYZ.
-
+            //Why an E angle does not need to be calculated is because the E Axis's distance moved should be always proportional to the distance moved by XYZ.
+                
             //Find the angle between the line created by the new movement and the previous movement.
-            Vector3D line1 = new Vector3D(movement1.X, movement1.Y, movement1.Z);
+            Vector3D line1 = new Vector3D(movement1.X *-1, movement1.Y *-1, movement1.Z * -1);
             Vector3D line2 = new Vector3D(movement2.X, movement2.Y, movement2.Z);
 
-            double angleRadians = Math.Acos(Vector3D.DotProduct(line1, line2) / (line1.Length * line2.Length));
-
-            //Account for the directionality of movements.
-            //If any axes have changed directions, then their junction angle is less than PI.
-            //Otherwise, their junction angle is PI or greater and the actual angle needs to be subtracted from PI/2 for the actual angle.
-            if (((movement1.X * movement2.X) < 0)
-             || ((movement1.Y * movement2.Y) < 0)
-             || ((movement1.Z * movement2.Z) < 0))
-            {
-                //The junction angle is tighter than PI/2 (90 degrees).
-                if (angleRadians > (Math.PI/2))
-                {
-                    angleRadians = Math.PI - angleRadians;
-                }
-            }
-            else
-            {
-                //The angle is wider than PI/2.
-                if (angleRadians < (Math.PI/2))
-                {
-                    angleRadians = Math.PI - angleRadians;
-                }
-            }
+            double dotProduct = Vector3D.DotProduct(line1, line2);
+            double angleRadians = Math.Acos(dotProduct / (line1.Length * line2.Length));
 
             if (angleRadians != double.NaN) //Should not fail this check.
             {
@@ -458,40 +452,30 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
             {
                 foreach (MovementModel movement in movementsList)
                 {
-                    //Find the exit speed of each Axis in steps/s.
-                    AxisModel xAxis = _printerModel.AxisModelList[0];
-                    double xExitSpeed = movement.ExitSpeed * movement.X / movement.TotalDistance;
-                    double xExitSpeedSteps = Math.Abs(Math.Round(G00Calculator.DistanceToSteps(xExitSpeed, xAxis.MmPerStep, xAxis.IsDirectionInverted)));
-
-                    AxisModel yAxis = _printerModel.AxisModelList[1];
-                    double yExitSpeed = movement.ExitSpeed * movement.Y / movement.TotalDistance;
-                    double yExitSpeedSteps = Math.Abs(Math.Round(G00Calculator.DistanceToSteps(yExitSpeed, yAxis.MmPerStep, yAxis.IsDirectionInverted)));
-
-                    AxisModel zAxis = materialModel.PrintheadModel.AttachedZAxisModel;
-                    double zExitSpeed = movement.ExitSpeed * movement.Z / movement.TotalDistance;
-                    double zExitSpeedSteps = Math.Abs(Math.Round(G00Calculator.DistanceToSteps(zExitSpeed, zAxis.MmPerStep, zAxis.IsDirectionInverted)));
-
-                    MotorizedPrintheadTypeModel motorizedPrintheadTypeModel = null;
-                    double eExitSpeed = 0;
-                    double eExitSpeedSteps = 0;
-                    if (materialModel.PrintheadModel.PrintheadType == PrintheadType.Motorized)
-                    {
-                        motorizedPrintheadTypeModel = (MotorizedPrintheadTypeModel)materialModel.PrintheadModel.PrintheadTypeModel;
-                        eExitSpeed = movement.ExitSpeed * movement.E / movement.TotalDistance;
-                        eExitSpeedSteps = Math.Abs(Math.Round(G00Calculator.DistanceToSteps(eExitSpeed, motorizedPrintheadTypeModel.MmPerStep, motorizedPrintheadTypeModel.IsDirectionInverted)));
-                    }
-
-                    //Find the movement's exit speed in steps/s.
-                    int movementExitSpeedSteps = (int)Math.Sqrt(Math.Pow(xExitSpeedSteps, 2) + Math.Pow(yExitSpeedSteps, 2) + Math.Pow(zExitSpeedSteps, 2) + Math.Pow(eExitSpeedSteps, 2));
-
                     //Append the 'T' exit speed parameter to this movement's converted GCode.
-                    if (movementExitSpeedSteps != 0)
+                    if (movement.ExitSpeed != 0)
                     {
-                        string exitSpeedParameter = " T" + movementExitSpeedSteps.ToString();
+                        int intExitSpeed = Convert.ToInt32(Math.Floor(movement.ExitSpeed));
+                        string exitSpeedParameter = " T" + intExitSpeed.ToString();
                         convertedGCodeLinesList[movement.GCodeIndex].GCode += (exitSpeedParameter.ToString());
                     }
                 }
+
+                TickProgressBar(continuousMovementsList);
             }
+        }
+
+        /// <summary>
+        /// Increases the progress bar and reports it to the GUI.
+        /// </summary>
+        private void TickProgressBar(List<List<MovementModel>> continuousMovementsList)
+        {
+            //The numerator is the number of time a continuous movement was processed.
+            //Processed can mean any function calculating some parameter for the continuous movement.
+            //Since there are three functions going through the entire list, the denominator is total continuous movements times 3.
+            _progressBarTick++;
+            int percentCompleted = (_progressBarTick * 100) / (continuousMovementsList.Count * 3);
+            _parametersModel.ReportProgress("Calculating Cornering Speeds", percentCompleted);
         }
         #endregion
     }

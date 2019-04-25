@@ -1,0 +1,89 @@
+﻿<UserControl x:Class="ModiPrint.Views.PrintViews.PrintReadyChecks"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ModiPrint.Views.PrintViews"
+             xmlns:vmPrint="clr-namespace:ModiPrint.ViewModels.PrintViewModels"
+             mc:Ignorable="d">
+
+    <StackPanel Orientation="Vertical">
+        <StackPanel.Style>
+            <Style TargetType="{x:Type StackPanel}">
+                <Setter Property="Visibility" Value="Hidden"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding PrinterStatus}" Value="{x:Static vmPrint:PrinterStatus.Manual}">
+                        <Setter Property="Visibility" Value="Visible"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </StackPanel.Style>
+
+        <!--Display if the GCode has been uploaded or converter and is ready for a print-->
+        <StackPanel Orientation="Horizontal"
+                    Height="{DynamicResource StandardControlHeight}">
+            <Image Width="{DynamicResource NarrowControlWidth}">
+                <Image.Style>
+                    <Style TargetType="Image">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsModiPrintGCodeReadyToPrint}" Value="True">
+                                <Setter Property="Source" Value="/Resources/GreenCheck.png"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsModiPrintGCodeReadyToPrint}" Value="False">
+                                <Setter Property="Source" Value="/Resources/RedX.png"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>
+            <TextBlock Text="GCode is Uploaded/Converted"
+                       Width="{DynamicResource WideControlWidth}"
+                       Style="{DynamicResource ThematicTextBlock}"/>
+        </StackPanel>
+
+        <!--Display if the Serial Communication port is established-->
+        <StackPanel Orientation="Horizontal"
+                    Height="{DynamicResource StandardControlHeight}">
+            <Image Width="{DynamicResource NarrowControlWidth}">
+                <Image.Style>
+                    <Style TargetType="Image">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsSerialCommunicationReadyToPrint}" Value="True">
+                                <Setter Property="Source" Value="/Resources/GreenCheck.png"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsSerialCommunicationReadyToPrint}" Value="False">
+                                <Setter Property="Source" Value="/Resources/RedX.png"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>
+            <TextBlock Text="Connected to Microcontroller"
+                       Width="{DynamicResource WideControlWidth}"
+                       Style="{DynamicResource ThematicTextBlock}"/>
+        </StackPanel>
+
+        <!--Display is there is an active Printhead-->
+        <StackPanel Orientation="Horizontal"
+                    Height="{DynamicResource StandardControlHeight}">
+            <Image Width="{DynamicResource NarrowControlWidth}">
+                <Image.Style>
+                    <Style TargetType="Image">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsActivePrintheadReadyToPrint}" Value="True">
+                                <Setter Property="Source" Value="/Resources/GreenCheck.png"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsActivePrintheadReadyToPrint}" Value="False">
+                                <Setter Property="Source" Value="/Resources/RedX.png"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>
+            <TextBlock Text="Printhead Set"
+                       Width="{DynamicResource WideControlWidth}"
+                       Style="{DynamicResource ThematicTextBlock}"/>
+        </StackPanel>
+    </StackPanel>
+    
+</UserControl>

@@ -10,34 +10,31 @@
             mc:Ignorable="d">
 
     <!--Displays error messages-->
-    <StackPanel Orientation="Vertical">
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="40*"/>
+            <ColumnDefinition Width="60*"/>
+        </Grid.ColumnDefinitions>
 
-        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="40*"/>
-                <ColumnDefinition Width="60*"/>
-            </Grid.ColumnDefinitions>
+        <ScrollViewer Grid.Column="0"
+                      VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden"
+                      uc:AutoScrollBehavior.AutoScroll="True"
+                      Style="{DynamicResource ThematicScrollViewer}">
+            <ListView ItemsSource="{Binding ErrorTypeList}"
+                      Style="{DynamicResource ThematicListView}"
+                      BorderThickness="0"
+                      Margin="0, 0, 0, 0"/>
+        </ScrollViewer>
 
-            <ScrollViewer Grid.Column="0"
-                            VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden"
-                            uc:AutoScrollBehavior.AutoScroll="True"
-                            Margin="5, 5, 0, 5">
-                <ListView ItemsSource="{Binding ErrorTypeList}"
-                            Style="{DynamicResource ThematicListView}"
-                            BorderThickness="0"
-                            Margin="0, 0, 0, 0"/>
-            </ScrollViewer>
-
-            <ScrollViewer Grid.Column="1"
-                            VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden"
-                            uc:AutoScrollBehavior.AutoScroll="True"
-                            Margin="0, 5, 5, 5">
-                <ListView ItemsSource="{Binding ErrorMessageList}"
-                            Style="{DynamicResource ThematicListView}"
-                            BorderThickness="0"
-                            Margin="0, 0, 0, 0"/>
-            </ScrollViewer>
-        </Grid>
-    </StackPanel>
+        <ScrollViewer Grid.Column="1"
+                      VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden"
+                      uc:AutoScrollBehavior.AutoScroll="True"
+                      Style="{DynamicResource ThematicScrollViewer}">
+            <ListView ItemsSource="{Binding ErrorMessageList}"
+                      Style="{DynamicResource ThematicListView}"
+                      BorderThickness="0"
+                      Margin="0, 0, 0, 0"/>
+        </ScrollViewer>
+    </Grid>
     
 </UserControl>

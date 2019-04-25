@@ -52,14 +52,14 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessTCommandMod
         /// <summary>
         /// Processes the command of setting a printhead.
         /// </summary>
-        public List<ConvertedGCodeLine> ProcessTCommand(string[] slic3rLine, ref MaterialModel currentMaterial)
+        public List<ConvertedGCodeLine> ProcessTCommand(string[] repRapLine, ref MaterialModel currentMaterial)
         {
             //The return GCode.
             List<ConvertedGCodeLine> convertedGCodeLinesList = new List<ConvertedGCodeLine>();
 
             //Finds the material that matches the TCommand.
-            string slic3rTCommand = slic3rLine[0];
-            MaterialModel matchingMaterial = _printModel.FindMaterial(slic3rTCommand);
+            string repRapTCommand = repRapLine[0];
+            MaterialModel matchingMaterial = _printModel.FindMaterial(repRapTCommand);
 
             //Appends the converted GCode line with a command that sets the Printhead.
             //Also appends the converted GCode line with a command that sets the new Z Axis associated with the new Printhead.
@@ -104,21 +104,21 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessTCommandMod
             catch when ((currentMaterial.Name == "Unset") || (matchingMaterial == null) || (currentMaterial == null)) //Catch unset Material.
             {
                 //Catching and error reporting should have happened earlier.
-                _parametersModel.ErrorReporterViewModel.ReportError("GCode Converter: Print Unset", "Material Unset " + '"' + matchingMaterial.Slic3rID + '"');
+                _parametersModel.ErrorReporterViewModel.ReportError("GCode Converter: Print Unset", "Material Unset");
                 return null;
             }
             catch when (matchingMaterial == null)
             {
-                _parametersModel.ErrorReporterViewModel.ReportError("GCode Converter: Print Unset", "T Command Not Found: " + slic3rTCommand);
+                _parametersModel.ErrorReporterViewModel.ReportError("GCode Converter: Print Unset", "T Command Not Found: " + repRapTCommand);
             }
             catch when (matchingMaterial.PrintheadModel == null) //Catch unset Printhead.
             {
-                _parametersModel.ErrorReporterViewModel.ReportError("GCode Converter: Print Unset", "No Matching Material for Slic3r ID " + '"' + matchingMaterial.Slic3rID + '"');
+                _parametersModel.ErrorReporterViewModel.ReportError("GCode Converter: Print Unset", "No Matching Material for RepRap ID " + '"' + matchingMaterial.RepRapID + '"');
                 return null;
             }
             catch when (currentMaterial.PrintheadModel == null) //Catch unset Printhead.
             {
-                _parametersModel.ErrorReporterViewModel.ReportError("GCode Converter: Print Unset", "No Matching Material for Slic3r ID " + '"' + currentMaterial.Slic3rID + '"');
+                _parametersModel.ErrorReporterViewModel.ReportError("GCode Converter: Print Unset", "No Matching Material for RepRap ID " + '"' + currentMaterial.RepRapID + '"');
                 return null;
             }
             catch when (matchingMaterial.PrintheadModel.AttachedZAxisModel == null) //Catch unset Z Axis.

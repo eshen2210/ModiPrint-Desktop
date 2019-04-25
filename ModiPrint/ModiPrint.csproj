@@ -171,7 +171,6 @@
     <Compile Include="Models\PrintModels\PrintModel.cs" />
     <Compile Include="Models\RealTimeStatusModels\RealTimeStatusAxisModels\RealTimeStatusAxisModel.cs" />
     <Compile Include="Models\RealTimeStatusModels\RealTimeStatusDataModel.cs" />
-    <Compile Include="Models\RealTimeStatusModels\RealTimeStatusMessageListsModel.cs" />
     <Compile Include="Models\RealTimeStatusModels\RealTimeStatusPrintheadModels\RealTimeStatusCustomPrintheadModel.cs" />
     <Compile Include="Models\RealTimeStatusModels\RealTimeStatusPrintheadModels\RealTimeStatusMotorizedPrintheadModel.cs" />
     <Compile Include="Models\RealTimeStatusModels\RealTimeStatusPrintheadModels\RealTimeStatusPrintheadModel.cs" />
@@ -221,7 +220,6 @@
     <Compile Include="Utilities\IValueConverters\IsNotBaseConverter.cs" />
     <Compile Include="Utilities\IValueConverters\MathConverter.cs" />
     <Compile Include="Utilities\IValueConverters\MathMultiConverter.cs" />
-    <Compile Include="Utilities\IValueConverters\ProgressBarDisplayMultiConverter.cs" />
     <Compile Include="ViewModels\ErrorListViewModel.cs" />
     <Compile Include="Models\GCodeModels\GCodeModel.cs" />
     <Compile Include="Models\PrinterModels\PrintheadModels\PrintheadModel.cs" />
@@ -257,7 +255,6 @@
     <Compile Include="ViewModels\PrintViewModels\PrintViewModel.cs" />
     <Compile Include="ViewModels\RealTimeStatusViewModels\RealTimeStatusAxisViewModels\RealTimeStatusAxisViewModel.cs" />
     <Compile Include="ViewModels\RealTimeStatusViewModels\RealTimeStatusDataViewModel.cs" />
-    <Compile Include="ViewModels\RealTimeStatusViewModels\RealTimeStatusMessageListsViewModel.cs" />
     <Compile Include="ViewModels\RealTimeStatusViewModels\RealTimeStatusPrintheadViewModels\RealTimeStatusCustomPrintheadViewModel.cs" />
     <Compile Include="ViewModels\RealTimeStatusViewModels\RealTimeStatusPrintheadViewModels\RealTimeStatusMotorizedPrintheadViewModel.cs" />
     <Compile Include="ViewModels\RealTimeStatusViewModels\RealTimeStatusPrintheadViewModels\RealTimeStatusPrintheadViewModel.cs" />
@@ -273,7 +270,7 @@
     <Compile Include="Views\ErrorListView.xaml.cs">
       <DependentUpon>ErrorListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\GCodeManagerViews\GCodeManagerView.xaml.cs">
+    <Compile Include="Views\PrintViews\GCodeManagerViews\GCodeManagerView.xaml.cs">
       <DependentUpon>GCodeManagerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PrinterViews\MicrocontrollerViews\GPIOPinView.xaml.cs">
@@ -302,6 +299,9 @@
     </Compile>
     <Compile Include="Views\PrintViews\PrintExecuteView.xaml.cs">
       <DependentUpon>PrintExecuteView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PrintViews\PrintReadyChecks.xaml.cs">
+      <DependentUpon>PrintReadyChecks.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PrintViews\PrintStyleViews\ContinuousPrintStyles\ContinuousMotorizedPrintStyleView.xaml.cs">
       <DependentUpon>ContinuousMotorizedPrintStyleView.xaml</DependentUpon>
@@ -460,7 +460,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\GCodeManagerViews\GCodeManagerView.xaml">
+    <Page Include="Views\PrintViews\GCodeManagerViews\GCodeManagerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -520,6 +520,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PrintViews\PrintExecuteView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PrintViews\PrintReadyChecks.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models;
 using ModiPrint.Models.PrintModels.MaterialModels;
+using ModiPrint.Models.PrinterModels;
 using ModiPrint.Models.PrinterModels.PrintheadModels;
 using ModiPrint.Models.PrinterModels.PrintheadModels.PrintheadTypeModels;
 
@@ -27,8 +28,12 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
     public class MovementModel
     {
         #region Fields and Properties
+        //Contains parameters for the Printer.
+        private MaterialModel _materialModel;
+        private PrinterModel _printerModel;
+        
         //Relative distances for this movement.
-        //In mm.
+        //In steps.
         private double _x;
         public double X
         {
@@ -58,7 +63,7 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
         }
 
         //Maximum speed of this movement.
-        //In units of mm / s.
+        //In units of steps / s.
         private double _maxSpeed = double.MaxValue;
         public double MaxSpeed
         {
@@ -67,7 +72,7 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
         }
 
         //Acceleration of this movement.
-        //In units of mm / s^2.
+        //In units of steps / s^2.
         private double _acceleration = double.MaxValue;
         public double Acceleration
         {
@@ -77,7 +82,7 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
 
         //Exit speed of this movement.
         //Will be calculated based on junction speeds.
-        //In units of mm / s.
+        //In units of steps / s.
         private double _exitSpeed = 0;
         public double ExitSpeed
         {
@@ -86,7 +91,7 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
         }
 
         //Total distance travelled by the movement.
-        //In units of mm.
+        //In units of steps.
         //Absolute value.
         private double _totalDistance = 0;
         public double TotalDistance
@@ -124,45 +129,68 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
         #endregion
 
         #region Constructor
-        public MovementModel(double X, double Y, double Z, double E, int GCodeIndex, MaterialModel MaterialModel)
+        /// <summary>
+        /// Takes in distance values in units of mm.
+        /// </summary>
+        /// <param name="X"></param>
+        /// <param name="Y"></param>
+        /// <param name="Z"></param>
+        /// <param name="E"></param>
+        /// <param name="GCodeIndex"></param>
+        /// <param name="MaterialModel"></param>
+        public MovementModel(double X, double Y, double Z, double E, int GCodeIndex, MaterialModel MaterialModel, PrinterModel PrinterModel)
         {
-            _x = X;
-            _y = Y;
-            _z = Z;
-            _e = E;
+            _materialModel = MaterialModel;
+            _printerModel = PrinterModel;
+            
+            //Record movement distances in steps.
+            _x = X / _printerModel.AxisModelList[0].MmPerStep;
+            _y = Y / _printerModel.AxisModelList[1].MmPerStep;
+            _z = Z / _materialModel.PrintheadModel.AttachedZAxisModel.MmPerStep;
+            if (_materialModel.PrintheadModel.PrintheadType == PrintheadType.Motorized)
+            {
+                MotorizedPrintheadTypeModel motorizedPrintheadTypeModel = (MotorizedPrintheadTypeModel)MaterialModel.PrintheadModel.PrintheadTypeModel;
+                _e = E / motorizedPrintheadTypeModel.MmPerStep;
+            }
+            else
+            {
+                _e = 0;
+            }
+
             _gCodeIndex = GCodeIndex;
+
+            //Calculate total distance and speeds for this movement in steps / s.
             _totalDistance = Math.Sqrt(Math.Pow(_x, 2) + Math.Pow(_y, 2) + Math.Pow(_z, 2) + Math.Pow(_e, 2));
-            CalculateSpeeds(MaterialModel, ref _maxSpeed, ref _acceleration);
+            CalculateSpeeds(MaterialModel);
         }
         #endregion
 
         #region Methods
         /// <summary>
-        /// Calculate max speed and acceleration such that these values do not exceed the invidual max speed and acceleration values of each Axis.
+        /// Calculate max speed and acceleration such that these values do not exceed the individual max speed and acceleration values of each Axis.
         /// </summary>
         /// <param name="materialModel"></param>
-        /// <param name="maxSpeed"></param>
-        /// <param name="acceleration"></param>
-        private void CalculateSpeeds(MaterialModel materialModel, ref double maxSpeed, ref double acceleration)
+        private void CalculateSpeeds(MaterialModel materialModel)
         {
+            //Store all distance and speed values in arrays for easy calculation later.
             double[] distanceArr = new double[4];
             distanceArr[0] = Math.Abs(_x);
             distanceArr[1] = Math.Abs(_y);
             distanceArr[2] = Math.Abs(_z);
             distanceArr[3] = Math.Abs(_e);
             double[] maxSpeedArr = new double[4];
-            maxSpeedArr[0] = materialModel.XPrintSpeed;
-            maxSpeedArr[1] = materialModel.YPrintSpeed;
-            maxSpeedArr[2] = materialModel.ZPrintSpeed;
+            maxSpeedArr[0] = materialModel.XPrintSpeed / _printerModel.AxisModelList[0].MmPerStep;
+            maxSpeedArr[1] = materialModel.YPrintSpeed / _printerModel.AxisModelList[1].MmPerStep;
+            maxSpeedArr[2] = materialModel.ZPrintSpeed / _materialModel.PrintheadModel.AttachedZAxisModel.MmPerStep;
             double[] accelerationArr = new double[4];
-            accelerationArr[0] = materialModel.XPrintAcceleration;
-            accelerationArr[1] = materialModel.YPrintAcceleration;
-            accelerationArr[2] = materialModel.ZPrintAcceleration;
+            accelerationArr[0] = materialModel.XPrintAcceleration / _printerModel.AxisModelList[0].MmPerStep;
+            accelerationArr[1] = materialModel.YPrintAcceleration / _printerModel.AxisModelList[1].MmPerStep;
+            accelerationArr[2] = materialModel.ZPrintAcceleration / _materialModel.PrintheadModel.AttachedZAxisModel.MmPerStep;
             if (materialModel.PrintheadModel.PrintheadType == PrintheadType.Motorized)
             {
                 MotorizedPrintheadTypeModel motorizedPrintheadTypeModel = (MotorizedPrintheadTypeModel)materialModel.PrintheadModel.PrintheadTypeModel;
-                maxSpeedArr[3] = motorizedPrintheadTypeModel.MaxSpeed;
-                accelerationArr[3] = motorizedPrintheadTypeModel.MaxAcceleration;
+                maxSpeedArr[3] = motorizedPrintheadTypeModel.MaxSpeed / motorizedPrintheadTypeModel.MmPerStep;
+                accelerationArr[3] = motorizedPrintheadTypeModel.MaxAcceleration / motorizedPrintheadTypeModel.MmPerStep;
             }
             else
             {
@@ -170,18 +198,19 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
                 accelerationArr[3] = 0;
             }
 
+            //Calculate the maximum speeds and accelerations such that these values do not exceed the individual speed values of each Axis.
             for (int k = 0; k < 4; k++)
             {
                 if (maxSpeedArr[k] != 0)
                 {
                     double scaledMaxSpeed = maxSpeedArr[k] * _totalDistance / distanceArr[k];
-                    maxSpeed = (scaledMaxSpeed < maxSpeed) ? scaledMaxSpeed : maxSpeed;
+                    _maxSpeed = (scaledMaxSpeed < _maxSpeed) ? scaledMaxSpeed : _maxSpeed;
                 }
 
                 if (accelerationArr[k] != 0)
                 {
                     double scaledAcceleration = accelerationArr[k] * _totalDistance / distanceArr[k];
-                    acceleration = (scaledAcceleration < acceleration) ? scaledAcceleration : acceleration;
+                    _acceleration = (scaledAcceleration < _acceleration) ? scaledAcceleration : _acceleration;
                 }
             }
         } 

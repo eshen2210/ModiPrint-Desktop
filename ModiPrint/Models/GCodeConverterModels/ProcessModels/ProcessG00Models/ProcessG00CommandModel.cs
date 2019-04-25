@@ -50,8 +50,8 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
               || (_parametersModel.YCoord.Changed == true)
               || (_parametersModel.ZCoord.Changed == true)))
             {
-                //Does this Slic3r line indicate printing?
-                _parametersModel.IsPrinting = ((isPrinting == true) || (_parametersModel.ESlic3rCoord.Changed == true)) ? true : false;
+                //Does this RepRap line indicate printing?
+                _parametersModel.IsPrinting = ((isPrinting == true) || (_parametersModel.ERepRapCoord.Changed == true)) ? true : false;
 
                 try
                 {
@@ -85,7 +85,7 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
             _parametersModel.XCoord.ResolveCoord();
             _parametersModel.YCoord.ResolveCoord();
             _parametersModel.ZCoord.ResolveCoord();
-            _parametersModel.ESlic3rCoord.ResolveCoord();
+            _parametersModel.ERepRapCoord.ResolveCoord();
             foreach(CoordinateModel eModiPrintCoord in _parametersModel.EModiPrintCoordList)
             { eModiPrintCoord.ResolveCoord(); }
 
@@ -112,15 +112,15 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
                         _parametersModel.ZCoord.SetCoord(GCodeStringParsing.ParseDouble(gCodeLine[phrase]), _parametersModel.AbsCoordAxis);
                         break;
                     case 'E':
-                        _parametersModel.ESlic3rCoord.SetCoord(GCodeStringParsing.ParseDouble(gCodeLine[phrase]), _parametersModel.AbsCoordExtruder);
+                        _parametersModel.ERepRapCoord.SetCoord(GCodeStringParsing.ParseDouble(gCodeLine[phrase]), _parametersModel.AbsCoordExtruder);
                         break;
                     case 'F':
-                        //Irrelevant Slic3r command. Do nothing.
+                        //Irrelevant RepRap command. Do nothing.
                         break;
                     default:
                         string gCodeLineStr = GCodeStringParsing.GCodeLineArrToStr(gCodeLine);
-                        string movementCommand = (_parametersModel.IsPrinting ? "G01" : "G00"); //Not using global values for these because they are Slic3r commands.
-                        _parametersModel.ErrorReporterViewModel.ReportError("GCodeConverter: Unrecognized " + movementCommand + " Command", "SL:" + _parametersModel.Slic3rLine + " " + gCodeLineStr);
+                        string movementCommand = (_parametersModel.IsPrinting ? "G01" : "G00"); //Not using global values for these because they are RepRap commands.
+                        _parametersModel.ErrorReporterViewModel.ReportError("GCodeConverter: Unrecognized " + movementCommand + " Command", "SL:" + _parametersModel.RepRapLine + " " + gCodeLineStr);
                         return false;
                 }
             }

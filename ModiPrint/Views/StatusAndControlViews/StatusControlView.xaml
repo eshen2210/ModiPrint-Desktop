@@ -19,129 +19,77 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            
-            <TabControl Grid.Row="0" 
-                        Style="{DynamicResource ThematicTabControl}">
 
-                <!--#region Serial Communication-->
-                <TabItem>
-                    <TabItem.Header>
-                        <StackPanel Orientation="Horizontal"
-                                    Height="{DynamicResource StandardControlHeight}">
-                            <Image Source="/Resources/General/USB.png"
-                                   Style="{DynamicResource ThematicControlImage}"
-                                   Width="{DynamicResource NarrowControlWidth}"
-                                   Margin="0, 0, 0, 0"/>
-                            <StackPanel Orientation="Vertical"
-                                        VerticalAlignment="Center">
-                                <TextBlock Text="Serial"
-                                           HorizontalAlignment="Center"
-                                           Style="{DynamicResource ThematicTabControlTextBlock}"
-                                           Margin="0, 0, 0, 0"/>
-                                <TextBlock Text="Communication"
-                                           HorizontalAlignment="Center"
-                                           Style="{DynamicResource ThematicTabControlTextBlock}"
-                                           Margin="0, 0, 0, 0"/>
-                            </StackPanel>
-                        </StackPanel>
-                    </TabItem.Header>
+            <StackPanel Orientation="Vertical"
+                        Grid.Row="0">
 
-                    <vSerialCommunication:SerialCommunicationView
+                <vSerialCommunication:SerialCommunicationView
                         DataContext="{Binding SerialCommunicationViewModel}"
                         Margin="5, 5, 5, 5"/>
-                </TabItem>
-                <!--#endregion-->
-                
-                <!--#region Control And Status-->
-                <TabItem>
-                    <TabItem.Header>
-                        <StackPanel Orientation="Horizontal"
-                                    Height="{DynamicResource StandardControlHeight}">
-                            <Image Source="/Resources/General/Microcontroller.png"
-                                   Style="{DynamicResource ThematicControlImage}"
-                                   Width="{DynamicResource NarrowControlWidth}"
-                                   Margin="0, 0, 0, 0"/>
-                            <StackPanel Orientation="Vertical"
-                                        VerticalAlignment="Center">
-                                <TextBlock Text="Status &amp;"
-                                           HorizontalAlignment="Center"
-                                           Style="{DynamicResource ThematicTabControlTextBlock}"
-                                           Margin="0, 0, 0, 0"/>
-                                <TextBlock Text="Control"
-                                           HorizontalAlignment="Center"
-                                           Style="{DynamicResource ThematicTabControlTextBlock}"
-                                           Margin="0, 0, 0, 0"/>
-                            </StackPanel>
-                        </StackPanel>
-                    </TabItem.Header>
 
-                    <Grid Margin="5, 5, 5, 5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
 
-                        <Grid.Resources>
-                            <vc:IsNotBaseConverter x:Key="IsNotBaseConverter"/>
+                <Grid Margin="5, 5, 5, 5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-                            <!--#region Status and Control Display Templates-->
-                            <DataTemplate x:Key="AxesPrint">
-                                <vAxesPrint:AxesPrintStatusControlView
-                                    DataContext="{Binding }"
-                                    Margin="5, 5, 5, 5"/>
-                            </DataTemplate>
+                    <Grid.Resources>
+                        <vc:IsNotBaseConverter x:Key="IsNotBaseConverter"/>
 
-                            <DataTemplate x:Key="CommandSettings">
-                                <local:CommandSettingsView
-                                    DataContext="{Binding ManualControlViewModel}"
-                                    Margin="5, 5, 5, 5"/>
-                            </DataTemplate>
-                            <!--#endregion-->
+                        <!--#region Status and Control Display Templates-->
+                        <DataTemplate x:Key="AxesPrint">
+                            <vAxesPrint:AxesPrintStatusControlView
+                                DataContext="{Binding }"
+                                Margin="5, 5, 5, 5"/>
+                        </DataTemplate>
 
-                        </Grid.Resources>
-
-                        <!--#region Status and Control Display-->
-                        <Grid Grid.Column="0">
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="4*"/>
-                                <ColumnDefinition Width="8*"/>
-                            </Grid.ColumnDefinitions>
-                            
-                            <Grid Grid.Column="0">
-                                <vEquipmentSelectionViews:EquipmentSelectionView
-                                    DataContext="{Binding }"
-                                    Margin="5, 5, 5, 5"/>
-                            </Grid>
-
-                            <ContentControl Grid.Column="1" Content="{Binding }">
-                                <ContentControl.Style>
-                                    <Style TargetType="{x:Type ContentControl}">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ManualControlViewModel.Menu}" Value="Base">
-                                                <Setter Property="ContentTemplate" Value="{StaticResource AxesPrint}"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding Path=ManualControlViewModel.Menu, Converter={StaticResource IsNotBaseConverter}}" Value="true">
-                                                <Setter Property="ContentTemplate" Value="{StaticResource CommandSettings}"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </ContentControl.Style>
-                            </ContentControl>
-
-                        </Grid>
-
-                        <vCalibration:CalibrationView
-                            Grid.Column="1"
-                            DataContext="{Binding CalibrationViewModel}"
-                            Margin="5, 5, 5, 5"/>
+                        <DataTemplate x:Key="CommandSettings">
+                            <local:CommandSettingsView
+                                DataContext="{Binding ManualControlViewModel}"
+                                Margin="5, 5, 5, 5"/>
+                        </DataTemplate>
                         <!--#endregion-->
 
-                    </Grid>
-                </TabItem>
-                <!--#endregion-->
+                    </Grid.Resources>
 
-            </TabControl>
+                    <!--#region Status and Control Display-->
+                    <Grid Grid.Column="0">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="4*"/>
+                            <ColumnDefinition Width="8*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid Grid.Column="0">
+                            <vEquipmentSelectionViews:EquipmentSelectionView
+                                DataContext="{Binding }"
+                                Margin="5, 5, 5, 5"/>
+                        </Grid>
+
+                        <ContentControl Grid.Column="1" Content="{Binding }">
+                            <ContentControl.Style>
+                                <Style TargetType="{x:Type ContentControl}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ManualControlViewModel.Menu}" Value="Base">
+                                            <Setter Property="ContentTemplate" Value="{StaticResource AxesPrint}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Path=ManualControlViewModel.Menu, Converter={StaticResource IsNotBaseConverter}}" Value="true">
+                                            <Setter Property="ContentTemplate" Value="{StaticResource CommandSettings}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ContentControl.Style>
+                        </ContentControl>
+                    </Grid>
+
+                    <vCalibration:CalibrationView
+                        Grid.Column="1"
+                        DataContext="{Binding CalibrationViewModel}"
+                        Margin="5, 5, 5, 5"/>
+                    <!--#endregion-->
+                </Grid>
+            </StackPanel>
 
             <vSerialCommunication:SerialMessageDisplayView
                 Grid.Row="1"            

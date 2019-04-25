@@ -60,9 +60,12 @@
         <Setter Property="FontSize" Value="{StaticResource StandardFontSize}"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Style.Triggers>
+            <!--To Do: Disable button and grey the background if canexecute is false-->
+        </Style.Triggers>
     </Style>
 
-    <Style x:Key="ThematicButtonBorder" TargetType="{x:Type Border}">
+    <Style x:Key="ThematicButtonBorder" TargetType="{x:Type Border}" x:Name="ThematicButtonBorder">
         <Setter Property="Background" Value="{StaticResource PrimaryColor}"/>
         <Setter Property="BorderThickness" Value="3, 3, 3, 3"/>
         <Setter Property="Padding" Value="5"/>

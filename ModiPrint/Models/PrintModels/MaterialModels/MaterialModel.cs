@@ -19,12 +19,12 @@ namespace ModiPrint.Models.PrintModels.MaterialModels
             get { return _name; }
         }
         
-        //How Slic3r identifies this material (e.g. "T0" for the first material).
-        private string _slic3rID;
-        public string Slic3rID
+        //How RepRap identifies this material (e.g. "T0" for the first material).
+        private string _repRapID;
+        public string RepRapID
         {
-            get { return _slic3rID; }
-            set { _slic3rID = value; }
+            get { return _repRapID; }
+            set { _repRapID = value; }
         }
 
         //Contains parameters regarding the printer.
@@ -242,7 +242,7 @@ namespace ModiPrint.Models.PrintModels.MaterialModels
         /// <returns></returns>
         public bool ReadyToPrint()
         {
-            if(!String.IsNullOrWhiteSpace(_slic3rID)
+            if(!String.IsNullOrWhiteSpace(_repRapID)
             && (_printheadModel != null)
             && (_printStyle != PrintStyle.Unset)
             && (_xPrintSpeed > 0)

@@ -12,44 +12,63 @@ namespace ModiPrint.Models.GCodeModels
     public class GCodeFileManagerModel
     {
         #region Fields and Properties
+        //References to the two GCode classes that this will interact with.
+        GCodeModel _repRapGCodeModel;
+        GCodeModel _modiPrintGCodeModel;
+
         //Contains functions to display errors to the GUI.
         ErrorListViewModel _errorListViewModel;
         #endregion
 
         #region Constructor
-        public GCodeFileManagerModel(ErrorListViewModel ErrorListViewModel)
+        public GCodeFileManagerModel(GCodeModel RepRapGCodeModel, GCodeModel ModiPrintGCodeModel, ErrorListViewModel ErrorListViewModel)
         {
+            _repRapGCodeModel = RepRapGCodeModel;
+            _modiPrintGCodeModel = ModiPrintGCodeModel;
             _errorListViewModel = ErrorListViewModel;
         }
         #endregion
 
         #region Methods
         /// <summary>
-        /// Loads a .gcode file into the GCode properties with OpenFileDialog.
+        /// Loads a .gcode file into the program with OpenFileDialog.
+        /// Determines which GCode file to load into depending on the file extension.
+        /// Returns the name of the file.
         /// </summary>
-        /// <param name="gCode"></param>
-        /// <param name="fileName"></param>
-        public void UploadGCodeFile(GCodeModel gCodeModel, string fileFilter, ref string fileName)
+        public string UploadGCodeFile()
         {
-            string gCode = gCodeModel.GCodeStr;
             try
             {
                 //Open file.
                 OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = fileFilter;
+                openFileDialog.Filter = "GCode Files (.gcode)|*.gcode;|  ModiPrint GCode Files (.mdpt)|*.mdpt";
 
                 //Reads file.
                 if (openFileDialog.ShowDialog() == true)
                 {
-                    gCode = File.ReadAllText(openFileDialog.FileName);
-                    fileName = Path.GetFileName(openFileDialog.FileName);
-                    gCodeModel.SetGCode(gCode);
+                    string extenstion = Path.GetExtension(openFileDialog.FileName);
+                    if (extenstion == ".gcode")
+                    {
+                        _repRapGCodeModel.GCodeStr = File.ReadAllText(openFileDialog.FileName);
+                    }
+                    else if (extenstion == ".mdpt")
+                    {
+                        _modiPrintGCodeModel.GCodeStr = File.ReadAllText(openFileDialog.FileName);
+                    }
+                    else
+                    {
+                        _errorListViewModel.AddError("GCode File Manager", "Unrecognized Extension");
+                    }
+
+                    return Path.GetFileName(openFileDialog.FileName);
                 }
             }
             catch
             {
                 _errorListViewModel.AddError("GCode File Manager", "Unable to Upload GCode File");
             }
+
+            return "";
         }
 
         /// <summary>

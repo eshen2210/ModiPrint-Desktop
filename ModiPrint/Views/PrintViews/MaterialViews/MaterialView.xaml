@@ -76,7 +76,7 @@
                 <DataTemplate>
                     <StackPanel Orientation="Vertical">
 
-                        <!--#region Slic3r ID-->
+                        <!--#region RepRap ID-->
                         <StackPanel Orientation="Horizontal"
                                     Height="{DynamicResource StandardControlHeight}">
                             <Image Source="/Resources/General/TextFile.png"
@@ -85,7 +85,7 @@
                             <TextBlock Text="GCode ID" 
                                        Width="{DynamicResource StandardControlWidth}"
                                        Style="{DynamicResource ThematicTextBlock}"/>
-                            <TextBox Text="{Binding Path=Slic3rID, Mode=TwoWay, 
+                            <TextBox Text="{Binding Path=RepRapID, Mode=TwoWay, 
                                                     UpdateSourceTrigger=PropertyChanged, Delay=250}" 
                                      Width="{DynamicResource WideControlWidth}"
                                      Style="{DynamicResource ThematicTextBox}"/>

@@ -24,11 +24,20 @@ namespace ModiPrint.Models.PrinterModels.MicrocontrollerModels
             //Create PWN Pins
             for (int pinID = 2; pinID <= 13; pinID++)
             {
-                string pinName = "PWM " + pinID;
+                string pinName = pinID.ToString();
+                //string pinName = "PWM " + pinID;
                 _gPIOPinModelList.Add(new PWMPinModel(pinName, pinID));
             }
 
             //Create Communication Pins
+            _gPIOPinModelList.Add(new CommunicationPinModel("1", 1));
+            _gPIOPinModelList.Add(new CommunicationPinModel("0", 1));
+            for (int pinID = 14; pinID <= 21; pinID++)
+            {
+                string pinName = pinID.ToString();
+                _gPIOPinModelList.Add(new PWMPinModel(pinName, pinID));
+            }
+            /*
             _gPIOPinModelList.Add(new CommunicationPinModel("TX0 1", 1));
             _gPIOPinModelList.Add(new CommunicationPinModel("RX0 0", 0));
             _gPIOPinModelList.Add(new CommunicationPinModel("TX3 14", 14));
@@ -39,18 +48,21 @@ namespace ModiPrint.Models.PrinterModels.MicrocontrollerModels
             _gPIOPinModelList.Add(new CommunicationPinModel("RX1 19", 19));
             _gPIOPinModelList.Add(new CommunicationPinModel("SDA 20", 20));
             _gPIOPinModelList.Add(new CommunicationPinModel("SDA 21", 21));
+            */
 
             //Create AnalogIn Pins
             for (int pinID = 54; pinID <= 69; pinID++)
             {
-                string pinName = "AnalogIn " + pinID;
+                string pinName = pinID.ToString();
+                //string pinName = "AnalogIn " + pinID;
                 _gPIOPinModelList.Add(new AnalogInPinModel(pinName, pinID));
             }
 
             //Create Digital Pins
             for (int pinID = 22; pinID <= 53; pinID++)
             {
-                string pinName = "Digital " + pinID;
+                string pinName = pinID.ToString();
+                //string pinName = "Digital " + pinID;
                 _gPIOPinModelList.Add(new DigitalPinModel(pinName, pinID));
             }
         }

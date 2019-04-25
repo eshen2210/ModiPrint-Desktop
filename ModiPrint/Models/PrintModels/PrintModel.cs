@@ -53,13 +53,13 @@ namespace ModiPrint.Models.PrintModels
         public void AddMaterial()
         {
             string newName = "Material " + ++_materialsCreatedCount;
-            //Slic3rID starts at 0 then increments one for each Material created.
-            string newMaterialSlic3rID = "T" + (_materialsCreatedCount - 1); 
+            //RepRapID starts at 0 then increments one for each Material created.
+            string newMaterialRepRapID = "T" + (_materialsCreatedCount - 1); 
 
             if (_materialsCreatedCount < 10000)
             {
                 _materialModelList.Add(new MaterialModel(newName, _printerModel));
-                _materialModelList[_materialModelList.Count - 1].Slic3rID = newMaterialSlic3rID;
+                _materialModelList[_materialModelList.Count - 1].RepRapID = newMaterialRepRapID;
             }
             else if (_materialsCreatedCount >= 10000)
             { System.Windows.MessageBox.Show("Why the hell did you create 10000 materials?"); }
@@ -75,13 +75,13 @@ namespace ModiPrint.Models.PrintModels
         /// </remarks>
         public void AddMaterial(string newMaterialName)
         {
-            //Slic3rID starts at 0 then increments one for each Material created.
-            string newMaterialSlic3rID = "T" + (_materialsCreatedCount - 1);
+            //RepRapID starts at 0 then increments one for each Material created.
+            string newMaterialRepRapID = "T" + (_materialsCreatedCount - 1);
 
             if (_materialsCreatedCount < 10000)
             {
                 _materialModelList.Add(new MaterialModel(newMaterialName, _printerModel));
-                _materialModelList[_materialModelList.Count - 1].Slic3rID = newMaterialSlic3rID;
+                _materialModelList[_materialModelList.Count - 1].RepRapID = newMaterialRepRapID;
             }
             else if (_materialsCreatedCount >= 10000)
             { System.Windows.MessageBox.Show("Why the hell did you create 10000 materials?"); }
@@ -109,15 +109,15 @@ namespace ModiPrint.Models.PrintModels
         }
 
         /// <summary>
-        /// Finds and returns a reference of a material with the matching Slic3rID.
+        /// Finds and returns a reference of a material with the matching RepRapID.
         /// </summary>
-        /// <param name="slic3rID"></param>
+        /// <param name="repRapID"></param>
         /// <returns></returns>
-        public MaterialModel FindMaterial(string slic3rID)
+        public MaterialModel FindMaterial(string repRapID)
         {
             foreach(MaterialModel materialModel in _materialModelList)
             {
-                if (materialModel.Slic3rID == slic3rID)
+                if (materialModel.RepRapID == repRapID)
                 { return materialModel; }
             }
             return null;

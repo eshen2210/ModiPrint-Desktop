@@ -84,6 +84,7 @@ namespace ModiPrint.Models.PrintModels.PrintStyleModels.GradientModels
             //Exponential increase of the print parameter with increasing distance.
             else if (_gradientScaling == GradientScaling.Exponential)
             {
+                double x = DistanceToPoint(xPoint, yPoint, zPoint);
                 printMagnitude = printParameter * Math.Pow((1 + _rateOfChangePercent), DistanceToPoint(xPoint, yPoint, zPoint));
             }
             return (printMagnitude > 0) ? printMagnitude : 0;

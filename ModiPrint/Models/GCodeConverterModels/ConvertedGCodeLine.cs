@@ -52,26 +52,24 @@ namespace ModiPrint.Models.GCodeConverterModels
         /// <returns></returns>
         public static string GCodeLinesListToString(List<ConvertedGCodeLine> convertedGCodeLinesList)
         {
-            //Return value.
-            string returnString = "";
+            //Using StringBuilder instead of String here for significant performance improvements in long strings.
+            StringBuilder sbConvertedGCode = new StringBuilder();
             if (convertedGCodeLinesList != null)
             {
                 for (int i = 0; i < convertedGCodeLinesList.Count; i++)
                 {
-                    returnString += convertedGCodeLinesList[i].GCode;
-
                     if (!String.IsNullOrWhiteSpace(convertedGCodeLinesList[i].Comment))
                     {
-                        returnString += " ; " + convertedGCodeLinesList[i].Comment;
+                        sbConvertedGCode.Append(convertedGCodeLinesList[i].GCode);
+                        sbConvertedGCode.AppendLine("; " + convertedGCodeLinesList[i].Comment);
                     }
-
-                    if (i != (convertedGCodeLinesList.Count - 1))
+                    else
                     {
-                        returnString += "\r\n";
+                        sbConvertedGCode.AppendLine(convertedGCodeLinesList[i].GCode);
                     }
                 }
             }
-            return returnString;
+            return sbConvertedGCode.ToString();
         }
     }
 }

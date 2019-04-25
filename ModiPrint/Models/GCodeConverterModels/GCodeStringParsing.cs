@@ -13,12 +13,12 @@ namespace ModiPrint.Models.GCodeConverterModels
     public static class GCodeStringParsing
     {
         /// <summary>
-        /// Takes a string and returns only the first number within the string.
-        /// Supports negative/positive, integer/decimal numbers.
+        /// Takes a GCode parameter and returns the double value in it.
+        /// Supports negative/positive, integer/decimal numbers in the format of "X#" where X is any letter and # is the double.
         /// </summary>
         public static double ParseDouble(string phrase)
         {
-            return double.Parse(Regex.Match(phrase, @"-?\d+(\.\d+)?$").Value);
+            return Convert.ToDouble(phrase.Substring(1));
         }
 
         /// <summary>

@@ -60,72 +60,72 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels
         /// Sets processGCodeCommand to a ProcessGCodeCommand method.
         /// Executes processGCodeCommand and returns the resulting string.
         /// </summary>
-        public List<ConvertedGCodeLine> SetProcessGCodeCommand(string[] slic3rLine)
+        public List<ConvertedGCodeLine> SetProcessGCodeCommand(string[] repRapLine)
         {
             //Return null if the input parameter is invalid.
-            if ((slic3rLine.Length == 0) || (String.IsNullOrWhiteSpace(slic3rLine[0])))
+            if ((repRapLine.Length == 0) || (String.IsNullOrWhiteSpace(repRapLine[0])))
             { return null; }
             
             //The return GCode.
             List<ConvertedGCodeLine> convertedGCodeLinesList = null;
 
-            if ((slic3rLine[0] == "G00") //Axes movement
-             || (slic3rLine[0] == "G0"))
+            if ((repRapLine[0] == "G00") //Axes movement
+             || (repRapLine[0] == "G0"))
             {
-                convertedGCodeLinesList = _processG00CommandModel.ProcessG00Command(slic3rLine, _currentMaterial, false);
+                convertedGCodeLinesList = _processG00CommandModel.ProcessG00Command(repRapLine, _currentMaterial, false);
             }
-            else if (slic3rLine[0] == "G01" //Printing with movement.
-             || slic3rLine[0] == "G1")
+            else if (repRapLine[0] == "G01" //Printing with movement.
+             || repRapLine[0] == "G1")
             {
-                convertedGCodeLinesList = _processG00CommandModel.ProcessG00Command(slic3rLine, _currentMaterial, true);
+                convertedGCodeLinesList = _processG00CommandModel.ProcessG00Command(repRapLine, _currentMaterial, true);
             }
-            else if (slic3rLine[0][0] == 'T') //Switch printheads.
+            else if (repRapLine[0][0] == 'T') //Switch printheads.
             {
-                convertedGCodeLinesList = _processTCommandModel.ProcessTCommand(slic3rLine, ref _currentMaterial);
+                convertedGCodeLinesList = _processTCommandModel.ProcessTCommand(repRapLine, ref _currentMaterial);
             }
-            else if (slic3rLine[0] == "G90") //Absolute coordinates for Axes.
+            else if (repRapLine[0] == "G90") //Absolute coordinates for Axes.
             {
                 _parametersModel.AbsCoordAxis = true;
             }
-            else if (slic3rLine[0] == "G91") //Relative coordinates for Axes.
+            else if (repRapLine[0] == "G91") //Relative coordinates for Axes.
             {
                 _parametersModel.AbsCoordAxis = false;
             }
-            else if (slic3rLine[0] == "M82") //Absolute coordinates for Motor Printheads.
+            else if (repRapLine[0] == "M82") //Absolute coordinates for Motor Printheads.
             {
                 _parametersModel.AbsCoordExtruder = true;
             }
-            else if (slic3rLine[0] == "M83") //Relative coordinates for Motor Printheads.
+            else if (repRapLine[0] == "M83") //Relative coordinates for Motor Printheads.
             {
                 _parametersModel.AbsCoordExtruder = false;
             }
             //ModiPrint will ignore these commands.
-            else if (String.IsNullOrWhiteSpace(slic3rLine[0])
-                || (slic3rLine[0][0] == SerialMessageCharacters.SerialTerminalCharacter) //Comments from Slic3r.
-                || (slic3rLine[0] == "M104") //The command to set printer temperature. This is unneeded.
-                || (slic3rLine[0] == "M106") //The command to turn the fan on. ModiPrint printers do not have fans by default.
-                || (slic3rLine[0] == "M107") //The command to turn the fan off. ModiPrint printers do not have fans by default.
-                || (slic3rLine[0] == "M109") //The command to set extruder temperature. ModiPrint printers do not have fans by default.
-                || (slic3rLine[0] == "G04") //The command to pause. ModiPrint has its own built in pausing features.
-                || (slic3rLine[0] == "G21") //The command to set units to milimeters. ModiPrint only operates in milimeters so this is irrelevant.
-                || (slic3rLine[0] == "G28") //The command to home to the origin. ModiPrint keeps track of positioning, not the microcontroller.
-                || (slic3rLine[0] == "G92") //The command to program the zero point. This is unneeded as ModiPrint will control this process.
+            else if (String.IsNullOrWhiteSpace(repRapLine[0])
+                || (repRapLine[0][0] == SerialMessageCharacters.SerialTerminalCharacter) //Comments from RepRap.
+                || (repRapLine[0] == "M104") //The command to set printer temperature. This is unneeded.
+                || (repRapLine[0] == "M106") //The command to turn the fan on. ModiPrint printers do not have fans by default.
+                || (repRapLine[0] == "M107") //The command to turn the fan off. ModiPrint printers do not have fans by default.
+                || (repRapLine[0] == "M109") //The command to set extruder temperature. ModiPrint printers do not have fans by default.
+                || (repRapLine[0] == "G04") //The command to pause. ModiPrint has its own built in pausing features.
+                || (repRapLine[0] == "G21") //The command to set units to milimeters. ModiPrint only operates in milimeters so this is irrelevant.
+                || (repRapLine[0] == "G28") //The command to home to the origin. ModiPrint keeps track of positioning, not the microcontroller.
+                || (repRapLine[0] == "G92") //The command to program the zero point. This is unneeded as ModiPrint will control this process.
                 )
             {
                 return null;
             }
-            //The command to set units to inches. ModiPrint operates in milimeters. The user should set Slic3r to output milimeters only.
-            else if (slic3rLine[0] == "G20") 
+            //The command to set units to inches. ModiPrint operates in milimeters. The user should set RepRap to output milimeters only.
+            else if (repRapLine[0] == "G20") 
             {
-                string slic3rLineStr = GCodeStringParsing.GCodeLineArrToStr(slic3rLine);
-                _parametersModel.ErrorReporterViewModel.ReportError("GCode Converter: Inches Not Supported, set Slic3r param to milimeters", slic3rLineStr);
+                string repRapLineStr = GCodeStringParsing.GCodeLineArrToStr(repRapLine);
+                _parametersModel.ErrorReporterViewModel.ReportError("GCode Converter: Inches Not Supported, set RepRap param to milimeters", repRapLineStr);
                 return null;
             }
             //ModiPrint will throw errors for unrecognized commands.
             else
             {
-                string slic3rLineStr = GCodeStringParsing.GCodeLineArrToStr(slic3rLine);
-                _parametersModel.ErrorReporterViewModel.ReportError("GCode Converter: Unrecognized Command", slic3rLineStr);
+                string repRapLineStr = GCodeStringParsing.GCodeLineArrToStr(repRapLine);
+                _parametersModel.ErrorReporterViewModel.ReportError("GCode Converter: Unrecognized Command", repRapLineStr);
                 return null;
             }
 

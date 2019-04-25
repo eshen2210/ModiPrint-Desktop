@@ -134,9 +134,10 @@ namespace ModiPrint.ViewModels.PrintViewModels
         public void Print()
         {
             //Queue each line of GCode for printing.
-            for (int line = 0; line < _modiPrintGCodeModel.GCodeArr.Length; line++)
+            string[] modiPrintGCodeArr = _modiPrintGCodeModel.GCodeStrToArr();
+            for (int line = 0; line < modiPrintGCodeArr.Length; line++)
             {
-                _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(_modiPrintGCodeModel.GCodeArr[line]);
+                _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(modiPrintGCodeArr[line]);
             }
         }
 

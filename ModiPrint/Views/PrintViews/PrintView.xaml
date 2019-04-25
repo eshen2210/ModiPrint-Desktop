@@ -4,34 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ModiPrint.Views.PrintViews"
-             xmlns:vGCodeManager="clr-namespace:ModiPrint.Views.GCodeManagerViews"
              xmlns:vMaterial="clr-namespace:ModiPrint.Views.PrintViews.MaterialViews"
              mc:Ignorable="d">
     
     <TabControl Style="{DynamicResource ThematicTabControl}">
 
-        <!--Print-->
-        <TabItem>
-            <TabItem.Header>
-                <StackPanel Orientation="Horizontal"
-                            Height="{DynamicResource StandardControlHeight}">
-                    <Image Source="/Resources/General/Continuous.png"
-                           Style="{DynamicResource ThematicControlImage}"
-                           Width="{DynamicResource NarrowControlWidth}"
-                           Margin="0, 0, 0, 0"/>
-                    <TextBlock Text="Print"
-                               VerticalAlignment="Center"
-                               Style="{DynamicResource ThematicTabControlTextBlock}"
-                               Margin="0, 0, 0, 0"/>
-                </StackPanel>
-            </TabItem.Header>
-
-            <local:PrintExecuteView
-                DataContext="{Binding PrintExecuteViewModel}"
-                Margin="10, 10, 10, 10"/>
-        </TabItem>
-        
-        <!--GCode-->
+        <!--Print & GCode-->
         <TabItem>
             <TabItem.Header>
                 <StackPanel Orientation="Horizontal"
@@ -40,18 +18,18 @@
                            Style="{DynamicResource ThematicControlImage}"
                            Width="{DynamicResource NarrowControlWidth}"
                            Margin="0, 0, 0, 0"/>
-                    <TextBlock Text="GCode"
+                    <TextBlock Text="Print and GCode"
                                VerticalAlignment="Center"
                                Style="{DynamicResource ThematicTabControlTextBlock}"
                                Margin="0, 0, 0, 0"/>
                 </StackPanel>
             </TabItem.Header>
-            
-            <vGCodeManager:GCodeManagerView 
-                DataContext="{Binding GCodeManagerViewModel}"
+
+            <local:PrintExecuteView 
+                DataContext="{Binding PrintExecuteViewModel}"
                 Margin="10, 10, 10, 10"/>
         </TabItem>
-        
+
         <!--Material-->
         <TabItem>
             <TabItem.Header>

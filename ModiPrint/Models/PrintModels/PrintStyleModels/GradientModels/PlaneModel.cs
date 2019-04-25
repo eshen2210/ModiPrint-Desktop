@@ -51,7 +51,7 @@ namespace ModiPrint.Models.PrintModels.PrintStyleModels.GradientModels
             get { return _point3; }
         }
 
-        //Normal vector of the plane.
+        //Unit normal vector of the plane.
         private Vector3D _normalVector;
         public Vector3D NormalVector
         {
@@ -71,9 +71,10 @@ namespace ModiPrint.Models.PrintModels.PrintStyleModels.GradientModels
             _point3 = Point3;
 
             Vector3D vector1 = Point3D.Subtract(_point2, _point1);
-            Vector3D vector2 = Point3D.Subtract(_point3, _point2);
+            Vector3D vector2 = Point3D.Subtract(_point2, _point3);
 
             _normalVector = Vector3D.CrossProduct(vector1, vector2);
+            _normalVector.Normalize();
 
             _a = _normalVector.X;
             _b = _normalVector.Y;
@@ -91,7 +92,7 @@ namespace ModiPrint.Models.PrintModels.PrintStyleModels.GradientModels
         public override double DistanceToPoint(double xPoint, double yPoint, double zPoint)
         {
             Point3D point = new Point3D(xPoint, yPoint, zPoint);
-            Vector3D pointToPlane = Point3D.Subtract(_point1, point);
+            Vector3D pointToPlane = Point3D.Subtract(point, _point1);
             return Math.Abs(Vector3D.DotProduct(_normalVector, pointToPlane));
         }
     }

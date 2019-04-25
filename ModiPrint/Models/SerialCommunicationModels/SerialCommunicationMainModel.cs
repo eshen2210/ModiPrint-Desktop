@@ -150,6 +150,18 @@ namespace ModiPrint.Models.SerialCommunicationModels
             _realTimeStatusDataModel = RealTimeStatusDataModel;
             _errorReporterViewModel = new ErrorReporterViewModel(ErrorListViewModel);
 
+            InitializeSerialPort();
+
+            _realTimeStatusDataModel.RecordLimitExecuted += new RecordLimitExecutedEventHandler(LimitSwitchHit);
+        }
+        #endregion
+
+        #region Methods
+        /// <summary>
+        /// Initializes and sets parameters for the serial port.
+        /// </summary>
+        private void InitializeSerialPort()
+        {
             _serialPort = new SerialPort();
             _serialPort.BaudRate = GlobalValues.BaudRate;
             _serialPort.Parity = Parity.None;
@@ -157,12 +169,8 @@ namespace ModiPrint.Models.SerialCommunicationModels
             _serialPort.WriteTimeout = 500;
             _serialPort.NewLine = SerialMessageCharacters.SerialTerminalCharacter.ToString();
             _serialPort.DataReceived += new SerialDataReceivedEventHandler(ReceiveMessage); //Subscribe to DataReceived event handler.
-
-            _realTimeStatusDataModel.RecordLimitExecuted += new RecordLimitExecutedEventHandler(LimitSwitchHit);
         }
-        #endregion
-
-        #region Methods
+        
         /// <summary>
         /// Continually sends outgoing messages through the serial port.
         /// </summary>
@@ -299,7 +307,8 @@ namespace ModiPrint.Models.SerialCommunicationModels
 
                     if (!String.IsNullOrWhiteSpace(incomingMessage))
                     {
-                        //If the micrcontroller has interpreted the previous command, then go ahead and send it new commands,
+                        //If the micrcontroller has interpreted the previous command, then go ahead and send it new commands.
+                        //To Do: Pause on error?
                         if ((incomingMessage[0] == SerialMessageCharacters.SerialTaskQueuedCharacter) || (incomingMessage[0] == SerialMessageCharacters.SerialErrorCharacter))
                         {
                             _shouldSend = true;

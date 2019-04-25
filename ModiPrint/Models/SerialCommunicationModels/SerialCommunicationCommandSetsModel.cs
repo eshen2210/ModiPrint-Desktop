@@ -57,7 +57,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
         {
             get
             {
-                return (_realTimeStatusDataModel.RealTimeStatusMessageListsModel.TaskQueuedMessagesList.Count == 0) ? true : false;
+                return (_realTimeStatusDataModel.TaskQueuedMessagesList.Count == 0) ? true : false;
             }
         }
 

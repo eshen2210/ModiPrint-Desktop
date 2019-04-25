@@ -8,7 +8,7 @@ using ModiPrint.ViewModels.SerialCommunicationViewModels;
 namespace ModiPrint.Models.SerialCommunicationModels
 {
     /// <summary>
-    /// Manages the message that have been sent and received through the serial port.
+    /// Manages the message that need to be sent through the serial port.
     /// </summary>
     public class SerialCommunicationOutgoingMessagesModel
     {
@@ -58,7 +58,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
             string prospectiveOutgoingMessage = "";
 
             prospectiveOutgoingMessage = _prospectiveOutgoingMessageList[0];
-            System.Threading.Thread.Sleep(10); //Some hacked together solution because of weird out of range errors.
+            System.Threading.Thread.Sleep(10); //To Do: Some hacked together solution because of weird out of range errors.
             _prospectiveOutgoingMessageList.Remove(prospectiveOutgoingMessage); //Using RemoveAt(0) somehow gives an out of range error.
 
             return prospectiveOutgoingMessage;

@@ -35,8 +35,8 @@ namespace ModiPrint.Models.XMLSerializerModels.PrintXMLSerializerModels.Material
             //Name.
             xmlWriter.WriteAttributeString("Name", materialViewModel.Name);
 
-            //Slic3r ID.
-            xmlWriter.WriteElementString("Slic3rID", materialViewModel.Slic3rID);
+            //RepRap ID.
+            xmlWriter.WriteElementString("RepRapID", materialViewModel.RepRapID);
 
             //Printhead.
             if (materialViewModel.PrintheadViewModel != null)

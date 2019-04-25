@@ -11,6 +11,7 @@ using ModiPrint.Models.PrinterModels.PrintheadModels.PrintheadTypeModels;
 using ModiPrint.DataTypes.GlobalValues;
 using ModiPrint.Models.RealTimeStatusModels.RealTimeStatusPrintheadModels;
 using ModiPrint.Models.RealTimeStatusModels.RealTimeStatusAxisModels;
+using ModiPrint.ViewModels;
 
 namespace ModiPrint.Models.RealTimeStatusModels
 {
@@ -29,9 +30,9 @@ namespace ModiPrint.Models.RealTimeStatusModels
     public delegate void RecordLimitExecutedEventHandler();
 
     //Event that is fired when the respective notification lists are updated.
-    public delegate void TaskQueuedMessagesUpdatedEventHandler();
-    public delegate void StatusMessagesUpdatedEventHandler();
-    public delegate void ErrorMessagesUpdatedEventHandler();
+    public delegate void TaskQueuedMessagesUpdatedEventHandler(string taskQueuedMessage);
+    public delegate void StatusMessagesUpdatedEventHandler(string statusMessage);
+    public delegate void ErrorMessagesUpdatedEventHandler(string errorMessage);
 
     //Associated with RealTimeStatus equipment models.
     //States the status of the Limit Switch during operation.
@@ -51,11 +52,19 @@ namespace ModiPrint.Models.RealTimeStatusModels
         //Contains data and functions related to the Printer.
         private PrinterModel _printerModel;
 
-        //Contains lists logging the various types of serial incoming messages.
-        private RealTimeStatusMessageListsModel _realTimeStatusMessageListsModel;
-        public RealTimeStatusMessageListsModel RealTimeStatusMessageListsModel
+        //Tasks that are in the process of execution by the microcontroller.
+        //These tasks are removed from the list as task completed messages are received.
+        private ObservableCollection<string> _taskQueuedMessagesList = new ObservableCollection<string>();
+        public ObservableCollection<string> TaskQueuedMessagesList
         {
-            get { return _realTimeStatusMessageListsModel; }
+            get { return _taskQueuedMessagesList; }
+        }
+
+        //Messages that arise out of the normal order of command -> execution (emergency messages, etc.)
+        private ObservableCollection<string> _statusMessagesList = new ObservableCollection<string>();
+        public ObservableCollection<string> StatusMessagesList
+        {
+            get { return _statusMessagesList; }
         }
 
         //Parameters of the Printer.
@@ -167,24 +176,24 @@ namespace ModiPrint.Models.RealTimeStatusModels
         }
 
         public event TaskQueuedMessagesUpdatedEventHandler TaskQueuedMessagesUpdated;
-        private void OnTaskQueuedMessagesUpdated()
+        private void OnTaskQueuedMessagesUpdated(string taskQueuedMessage)
         {
             if (TaskQueuedMessagesUpdated != null)
-            { TaskQueuedMessagesUpdated(); }
+            { TaskQueuedMessagesUpdated(taskQueuedMessage); }
         }
 
         public event StatusMessagesUpdatedEventHandler StatusMessagesUpdated;
-        private void OnStatusMessagesUpdated()
+        private void OnStatusMessagesUpdated(string statusMessage)
         {
             if (StatusMessagesUpdated != null)
-            { StatusMessagesUpdated(); }
+            { StatusMessagesUpdated(statusMessage); }
         }
 
         public event ErrorMessagesUpdatedEventHandler ErrorMessagesUpdated;
-        private void OnErrorMessagesUpdated()
+        private void OnErrorMessagesUpdated(string errorMessage)
         {
             if (ErrorMessagesUpdated != null)
-            { ErrorMessagesUpdated(); }
+            { ErrorMessagesUpdated(errorMessage); }
         }
         #endregion
 
@@ -192,7 +201,6 @@ namespace ModiPrint.Models.RealTimeStatusModels
         public RealTimeStatusDataModel(PrinterModel PrinterModel)
         {
             _printerModel = PrinterModel;
-            _realTimeStatusMessageListsModel = new RealTimeStatusMessageListsModel();
 
             _xRealTimeStatusAxisModel = new RealTimeStatusAxisModel("Unset", 0, 0, 0);
             _yRealTimeStatusAxisModel = new RealTimeStatusAxisModel("Unset", 0, 0, 0);
@@ -210,9 +218,9 @@ namespace ModiPrint.Models.RealTimeStatusModels
         /// <param name="taskQueuedMessage"></param>
         public void RecordTaskQueued(string taskQueuedMessage)
         {
-            _realTimeStatusMessageListsModel.TaskQueuedMessagesList.Add(taskQueuedMessage);
+            TaskQueuedMessagesList.Add(taskQueuedMessage);
 
-            OnTaskQueuedMessagesUpdated();
+            OnTaskQueuedMessagesUpdated(taskQueuedMessage);
         }
         
         /// <summary>
@@ -220,9 +228,10 @@ namespace ModiPrint.Models.RealTimeStatusModels
         /// </summary>
         public void RecordTaskCompleted()
         {
-            _realTimeStatusMessageListsModel.TaskQueuedMessagesList.RemoveAt(0);
+            string taskQueuedMessage = TaskQueuedMessagesList[0];
+            TaskQueuedMessagesList.RemoveAt(0);
 
-            OnTaskQueuedMessagesUpdated();
+            OnTaskQueuedMessagesUpdated(taskQueuedMessage);
         }
 
         /// <summary>
@@ -231,9 +240,9 @@ namespace ModiPrint.Models.RealTimeStatusModels
         /// <param name="statusMessage"></param>
         public void RecordStatusMessage(string statusMessage)
         {
-            _realTimeStatusMessageListsModel.StatusMessagesList.Add(statusMessage);
+            StatusMessagesList.Add(statusMessage);
 
-            OnStatusMessagesUpdated();
+            OnStatusMessagesUpdated(statusMessage);
         }
 
         /// <summary>
@@ -242,9 +251,7 @@ namespace ModiPrint.Models.RealTimeStatusModels
         /// <param name="errorMessage"></param>
         public void RecordErrorMessage(string errorMessage)
         {
-            _realTimeStatusMessageListsModel.ErrorMessagesList.Add(errorMessage);
-
-            OnErrorMessagesUpdated();
+            OnErrorMessagesUpdated(errorMessage);
         }
         
         /// <summary>

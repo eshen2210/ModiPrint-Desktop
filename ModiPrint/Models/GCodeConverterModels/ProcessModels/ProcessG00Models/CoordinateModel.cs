@@ -17,7 +17,7 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
         Y, //This Coordinate tracks the position of the Y Axis.
         Z, //This Coordinate tracks the position of the Z Axes.
         E, //This Coordinate tracks the position of Motorized Printheads.
-        S, //This Coordinate tracks the position of Slic3r's extrusion position.
+        S, //This Coordinate tracks the position of RepRap's extrusion position.
         T //Used during unit tests.
     }
 
@@ -104,14 +104,14 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
             _currentCoord = (absCoord == true) ? currentCoordInput : _previousCoord + currentCoordInput;
 
             //If the new Coord exceeds the maximum allowable position...
-            //CoordinateModels that track Slic3r coordinates would always have Max and Min Position values of zero. 
-            //Therefore, ignore range for Slic3r CoordinateModels.
+            //CoordinateModels that track RepRap coordinates would always have Max and Min Position values of zero. 
+            //Therefore, ignore range for RepRap CoordinateModels.
             if (((_currentCoord < _minPosition) || (_currentCoord > _maxPosition))
                 && (_type != CoordinateType.S))
             {
                 //Report error.
                 string errorType = "GCode Converter: " + SerialCommands.AxesMovement + " Command";
-                string errorMessage = "SL:" + _parametersModel.Slic3rLine + " Range Exceeded For ";
+                string errorMessage = "SL:" + _parametersModel.RepRapLine + " Range Exceeded For ";
                 if (_type == CoordinateType.E)
                 {
                     errorMessage += "Motor Printhead";
