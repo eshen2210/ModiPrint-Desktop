@@ -84,11 +84,6 @@ namespace ModiPrint.Models.SerialCommunicationModels
         //Flagged true when the microcontroller is ready to receive another message.
         //Toggled when a task queued message is received or when a new message is sent.
         private bool _shouldSend = true;
-        public bool ShouldSend
-        {
-            set { _shouldSend = value; }
-            get { return _shouldSend; }
-        }
 
         //If flagged true, send a serial message to pause hardware operations.
         private bool _shouldPause = false;
@@ -361,9 +356,6 @@ namespace ModiPrint.Models.SerialCommunicationModels
                         outgoingMessage = outgoingMessage.Substring(0, terminalIndex + 1);
                     }
 
-                    //Sends a message through the serial ports.
-                    _serialPort.WriteLine(outgoingMessage);
-
                     //Wait until the microcontroller inteprets the sent message before sending a new message.
                     //Pause and resume messages do not need a reply.
                     if (!((outgoingMessage[0] == SerialMessageCharacters.SerialPauseHardwareCharacter)
@@ -372,6 +364,9 @@ namespace ModiPrint.Models.SerialCommunicationModels
                     {
                         _shouldSend = false;
                     }
+
+                    //Sends a message through the serial ports.
+                    _serialPort.WriteLine(outgoingMessage);
 
                     //Triggers the message sent event.
                     SerialMessageEventArgs serialMessageEventArgs = new SerialMessageEventArgs(outgoingMessage);
