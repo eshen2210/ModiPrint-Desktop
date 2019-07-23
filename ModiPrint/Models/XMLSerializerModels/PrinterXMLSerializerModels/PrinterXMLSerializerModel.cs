@@ -7,7 +7,6 @@ using System.Xml;
 using System.IO;
 using ModiPrint.Models.XMLSerializerModels.PrinterXMLSerializerModels.AxisXMLSerializerModels;
 using ModiPrint.Models.XMLSerializerModels.PrinterXMLSerializerModels.PrintheadXMLSerializerModels;
-using ModiPrint.Models.XMLSerializerModels.PrinterXMLSerializerModels.PrinterSettingsXMLSerializerModels;
 using ModiPrint.ViewModels.PrinterViewModels;
 using ModiPrint.ViewModels.PrinterViewModels.AxisViewModels;
 using ModiPrint.ViewModels.PrinterViewModels.PrintheadViewModels;
@@ -20,7 +19,6 @@ namespace ModiPrint.Models.XMLSerializerModels.PrinterXMLSerializerModels
         //Contains functions to generate XML from Printer equipment classes.
         AxisXMLSerializerModel _axisXMLSerializerModel;
         PrintheadXMLSerializerModel _printheadXMLSerializerModel;
-        PrinterSettingsXMLSerializerModel _printerSettingsXMLSerializerModel;
         #endregion
 
         #region Constructor
@@ -28,7 +26,6 @@ namespace ModiPrint.Models.XMLSerializerModels.PrinterXMLSerializerModels
         {
             _axisXMLSerializerModel = new AxisXMLSerializerModel();
             _printheadXMLSerializerModel = new PrintheadXMLSerializerModel();
-            _printerSettingsXMLSerializerModel = new PrinterSettingsXMLSerializerModel();
         }
         #endregion
 
@@ -54,9 +51,6 @@ namespace ModiPrint.Models.XMLSerializerModels.PrinterXMLSerializerModels
             {
                 _printheadXMLSerializerModel.SerializePrinthead(xmlWriter, printheadViewModel);
             }
-
-            //Printer Settings.
-            _printerSettingsXMLSerializerModel.SerializeSettings(xmlWriter, printerViewModel.PrinterSettingsViewModel);
 
             //Number of Z Axes Created.
             xmlWriter.WriteElementString("ZAxesCreatedCount", printerViewModel.ZAxesCreatedCount.ToString());

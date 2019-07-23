@@ -50,6 +50,24 @@ namespace ModiPrint.Models.SerialCommunicationModels
         }
 
         /// <summary>
+        /// Adds a series of entries tot he beginning of ProspectiveOutgoingMessageList.
+        /// </summary>
+        /// <param name="prospectiveOutgoingMessageList"></param>
+        public void QueueNextProspectiveOutgoingMessage(List<string> prospectiveOutgoingMessages)
+        {
+            if ((prospectiveOutgoingMessages != null)
+             && (prospectiveOutgoingMessages.Count > 0))
+            {
+                //Inserts the outgoing messages in reverse order to the front of the list.
+                //This preserves the ordering of the outgoing messages while still shoving them all to the front.
+                for (int i = prospectiveOutgoingMessages.Count - 1; i >= 0; i--)
+                {
+                    _prospectiveOutgoingMessageList.Insert(0, prospectiveOutgoingMessages[i]);
+                }
+            }
+        }
+
+        /// <summary>
         /// Returns the earliest entry of the ProspectiveOutgoingMessageList and then removes it from the list.
         /// </summary>
         /// <returns></returns>
@@ -58,8 +76,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
             string prospectiveOutgoingMessage = "";
 
             prospectiveOutgoingMessage = _prospectiveOutgoingMessageList[0];
-            System.Threading.Thread.Sleep(10); //To Do: Some hacked together solution because of weird out of range errors.
-            _prospectiveOutgoingMessageList.Remove(prospectiveOutgoingMessage); //Using RemoveAt(0) somehow gives an out of range error.
+            _prospectiveOutgoingMessageList.RemoveAt(0); 
 
             return prospectiveOutgoingMessage;
         }

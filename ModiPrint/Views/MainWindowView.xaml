@@ -7,7 +7,6 @@
         xmlns:local="clr-namespace:ModiPrint"
         xmlns:v="clr-namespace:ModiPrint.Views"
         xmlns:vControl="clr-namespace:ModiPrint.Views.ControlViews"
-        xmlns:vGCodeManager="clr-namespace:ModiPrint.Views.PrintViews.GCodeManagerViews"
         xmlns:vStatusAndControl="clr-namespace:ModiPrint.Views.StatusAndControlViews"
         xmlns:vPrinter="clr-namespace:ModiPrint.Views.PrinterViews"
         xmlns:vPrint="clr-namespace:ModiPrint.Views.PrintViews"
@@ -278,6 +277,29 @@
                 </Grid>
             </Viewbox>
         </Grid>
+
+        <!--#region Execute Print Sequence-->
+        <Grid Grid.Row="2" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10*"/>
+                <RowDefinition Height="2.6*"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10*"/>
+                <ColumnDefinition Width="6*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Row="1" Grid.Column="1">
+
+                <vPrint:PrintExecuteView 
+                    DataContext="{Binding PrintExecuteViewModel}"
+                    Margin="10, 10, 10, 10"/>
+
+            </Grid>
+            
+        </Grid>
+        <!--#endregion-->
 
         <Grid Grid.Row="2" Grid.Column="1">
 

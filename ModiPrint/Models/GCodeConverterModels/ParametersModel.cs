@@ -60,7 +60,7 @@ namespace ModiPrint.Models.GCodeConverterModels
             set { _isPrinting = value; }
         }
 
-        //The E command in RepRap represents extrusion rate.
+        //The E command in RepRap represents extrusion.
         //Here it may be used to determine if printing is suppose to occur.
         private CoordinateModel _eRepRapCoord;
         public CoordinateModel ERepRapCoord
@@ -182,17 +182,37 @@ namespace ModiPrint.Models.GCodeConverterModels
         }
 
         /// <summary>
-        /// Reset parameters when a new Material is used.
+        /// Reset parameters when a non-Droplet Print action is used.
+        /// Returns the remaining movement (in mm) that has not yet been covered by droplet printing.
+        /// Index 0 of the return value is X, 1 is Y, 2 is Z.
+        /// When calling this method, the remaining movement in the return value should be executed.
         /// </summary>
         /// <param name="materialModel"></param>
-        public void SetNewMaterial(MaterialModel materialModel)
+        public double[] ResetDropletPrintParameters(MaterialModel currentMaterial, MaterialModel newMaterial)
         {
-            //Reset DropletModel.
-            if (materialModel.PrintStyle == PrintStyle.Droplet)
+            //Return the remaining movement (in mm) from the previous material that was not covered by droplet printing.
+            double[] remainingDistanceToMove = { 0, 0, 0 };
+            if ((currentMaterial != null)
+             && (currentMaterial.PrintStyle == PrintStyle.Droplet))
             {
-                DropletPrintStyleModel dropletPrintStyleModel = (DropletPrintStyleModel)materialModel.PrintStyleModel;
+                remainingDistanceToMove = _dropletModel.PreDistance;
+            }
+
+            //Set new droplet parameters if applicable.
+            if (newMaterial == null)
+            {
+                //A new material is not being set but Droplet parameters still need to be reset.
+                DropletPrintStyleModel dropletPrintStyleModel = (DropletPrintStyleModel)currentMaterial.PrintStyleModel;
                 _dropletModel = new DropletModel(dropletPrintStyleModel);
             }
+            else if (newMaterial.PrintStyle == PrintStyle.Droplet)
+            {
+                //A new material is being set. Create new Droplet parameters.
+                DropletPrintStyleModel dropletPrintStyleModel = (DropletPrintStyleModel)newMaterial.PrintStyleModel;
+                _dropletModel = new DropletModel(dropletPrintStyleModel);
+            }
+
+            return remainingDistanceToMove;
         }
 
         /// <summary>

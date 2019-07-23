@@ -240,7 +240,7 @@ namespace ModiPrint.ViewModels.SerialCommunicationViewModels
 
         public void ExecuteManualAppendMessageCommand(string outgoingMessage)
         {
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(outgoingMessage);
+            _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(outgoingMessage);
             ManualSerialSendMessage = "";
         }
         #endregion

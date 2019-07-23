@@ -21,11 +21,12 @@ namespace ModiPrint.ViewModels.PrintViewModels
     /// Associated with PrintExecuteViewModel.
     /// Represents the current actions of the Printer.
     /// </summary>
-    public enum PrinterStatus
+    public enum PrintStatus
     {
         Manual, //Idle or executing manual/calibration commands.
         Printing, //In the process of printing.
-        Paused //In the process of printing but paused.
+        MicrocontrollerPaused, //In the process of printing but the microcontroller protocol is on pause. No actions can be taken except unpausing.
+        PrintSequencePaused //In the process of printing but this program's protocol is on pause. Manual actions may be taken before resuming.
     }
     
     /// <summary>
@@ -46,30 +47,30 @@ namespace ModiPrint.ViewModels.PrintViewModels
         private SerialMessageDisplayViewModel _serialMessageDisplayViewModel;
 
         //Current state of operations of the Printer.
-        private PrinterStatus _printerStatus = PrinterStatus.Manual;
-        public PrinterStatus PrinterStatus
+        private PrintStatus _printStatus = PrintStatus.Manual;
+        public PrintStatus PrintStatus
         {
-            get { return _printerStatus; }
+            get { return _printStatus; }
             set
             {
-                _printerStatus = value;
-                OnPropertyChanged("PrinterStatus");
+                _printStatus = value;
+                OnPropertyChanged("PrintStatus");
                 OnPropertyChanged("IsReadyToPrint");
             }
         }
 
         //Set to true if all serial communication should be halted.
-        public bool ShouldPause
+        public bool ShouldPauseMicrocontroller
         {
-            get { return _serialCommunicationViewModel.SerialCommunicationMainModel.ShouldPause; }
-            set { _serialCommunicationViewModel.SerialCommunicationMainModel.ShouldPause = value; }
+            get { return _serialCommunicationViewModel.SerialCommunicationMainModel.ShouldPauseMicrocontroller; }
+            set { _serialCommunicationViewModel.SerialCommunicationMainModel.ShouldPauseMicrocontroller = value; }
         }
 
         //Set to true to resume hardware operations after pausing.
         public bool ShouldResume
         {
-            get { return _serialCommunicationViewModel.SerialCommunicationMainModel.ShouldResume; }
-            set { _serialCommunicationViewModel.SerialCommunicationMainModel.ShouldResume = value; }
+            get { return _serialCommunicationViewModel.SerialCommunicationMainModel.ShouldResumeMicrocontroller; }
+            set { _serialCommunicationViewModel.SerialCommunicationMainModel.ShouldResumeMicrocontroller = value; }
         }
 
         //Are various aspects of this program ready to execute a Print?
@@ -80,7 +81,7 @@ namespace ModiPrint.ViewModels.PrintViewModels
                 if ((IsModiPrintGCodeReadyToPrint == true)
                  && (IsSerialCommunicationReadyToPrint == true)
                  && (IsActivePrintheadReadyToPrint)
-                 && (PrinterStatus == PrinterStatus.Manual))
+                 && (PrintStatus == PrintStatus.Manual))
                 {
                     return true;
                 }
@@ -121,6 +122,7 @@ namespace ModiPrint.ViewModels.PrintViewModels
             _gCodeManagerViewModel.ModiPrintGCodeChanged += new ModiPrintGCodeChangedEventHandler(UpdateModiPrintGCode);
             _serialCommunicationViewModel.SerialCommunicationMainModel.SerialConnectionChanged += new SerialConnectionChangedEventHandler(UpdateSerialConnection);
             _serialCommunicationViewModel.SerialCommunicationMainModel.SerialCommunicationCompleted += new SerialCommunicationCompletedEventHandler(UpdatePrintFinished);
+            _serialCommunicationViewModel.SerialCommunicationMainModel.SerialCommunicationPrintSequencePaused += new SerialCommunicationPrintSequencePausedEventHandler(UpdatePrintSequencePaused);
             _realTimeStatusDataModel.RecordSetMotorizedPrintheadExecuted += new RecordSetMotorizedPrintheadExecutedEventHandler(UpdateActivePrintheadType);
             _realTimeStatusDataModel.RecordSetValvePrintheadExecuted += new RecordSetValvePrintheadExecutedEventHandler(UpdateActivePrintheadType);
             _realTimeStatusDataModel.RecordLimitExecuted += new RecordLimitExecutedEventHandler(UpdateLimitHit);
@@ -148,7 +150,7 @@ namespace ModiPrint.ViewModels.PrintViewModels
         /// <param name="sender"></param>
         private void UpdateModiPrintGCode(object sender)
         {
-            OnPropertyChanged("IsGCodeReadyToPrint");
+            OnPropertyChanged("IsModiPrintGCodeReadyToPrint");
         }
 
         /// <summary>
@@ -172,13 +174,27 @@ namespace ModiPrint.ViewModels.PrintViewModels
 
         /// <summary>
         /// Linked to SerialCommunicationFinishedEventHandler.
-        /// Fires when a Print sequence is finished,
+        /// Fires when a print sequence is finished.
         /// </summary>
         private void UpdatePrintFinished(object sender)
         {
-            PrinterStatus = PrinterStatus.Manual;
+            PrintStatus = PrintStatus.Manual;
+            OnPropertyChanged("PrintStatus");
             if (_printCommand != null)
             { _printCommand.RaiseCanExecuteChanged(); }
+        }
+
+        /// <summary>
+        /// Linked to SerialCommunicationPrintSequencePausedEventHandler.
+        /// Fires when a print sequence is paused.
+        /// </summary>
+        /// <param name="sender"></param>
+        private void UpdatePrintSequencePaused(object sender)
+        {
+            PrintStatus = PrintStatus.PrintSequencePaused;
+            OnPropertyChanged("PrintStatus");
+            if (_resumeCommand != null)
+            { _resumeCommand.RaiseCanExecuteChanged(); }
         }
 
         /// <summary>
@@ -187,15 +203,15 @@ namespace ModiPrint.ViewModels.PrintViewModels
         /// </summary>
         private void UpdateLimitHit()
         {
-            if (_printerStatus == PrinterStatus.Printing)
+            if (_printStatus == PrintStatus.Printing)
             {
-                PrinterStatus = PrinterStatus.Paused;
+                PrintStatus = PrintStatus.MicrocontrollerPaused;
                 if (_pauseCommand != null)
                 { _pauseCommand.RaiseCanExecuteChanged(); }
                 if (_resumeCommand != null)
                 { _resumeCommand.RaiseCanExecuteChanged(); }
             }
-            else if (_printerStatus == PrinterStatus.Manual)
+            else if (_printStatus == PrintStatus.Manual)
             {
                 ShouldResume = true;
             }
@@ -225,7 +241,7 @@ namespace ModiPrint.ViewModels.PrintViewModels
 
         public void ExecutePrintCommand(object notUsed)
         {
-            PrinterStatus = PrinterStatus.Printing;
+            PrintStatus = PrintStatus.Printing;
             Print();
         }
 
@@ -245,13 +261,13 @@ namespace ModiPrint.ViewModels.PrintViewModels
 
         public bool CanExecutePauseCommand(object notUsed)
         {
-            return (_printerStatus == PrinterStatus.Printing) ? true : false;
+            return (_printStatus == PrintStatus.Printing) ? true : false;
         }
 
         public void ExecutePauseCommand(object notUsed)
         {
-            _serialCommunicationViewModel.SerialCommunicationMainModel.ShouldPause = true;
-            PrinterStatus = PrinterStatus.Paused;
+            _serialCommunicationViewModel.SerialCommunicationMainModel.ShouldPauseMicrocontroller = true;
+            PrintStatus = PrintStatus.MicrocontrollerPaused;
         }
 
         /// <summary>
@@ -270,13 +286,21 @@ namespace ModiPrint.ViewModels.PrintViewModels
 
         public bool CanExecuteResumeCommand(object notUsed)
         {
-            return (_printerStatus == PrinterStatus.Paused) ? true : false;
+            return ((_printStatus == PrintStatus.MicrocontrollerPaused) || (_printStatus == PrintStatus.PrintSequencePaused)) ? true : false;
         }
 
         public void ExecuteResumeCommand(object notUsed)
         {
-            _serialCommunicationViewModel.SerialCommunicationMainModel.ShouldPause = false;
-            PrinterStatus = PrinterStatus.Printing;
+            if (_printStatus == PrintStatus.MicrocontrollerPaused)
+            {
+                _serialCommunicationViewModel.SerialCommunicationMainModel.ShouldPauseMicrocontroller = false;
+            }
+            else if (_printStatus == PrintStatus.PrintSequencePaused)
+            {
+                _serialCommunicationViewModel.SerialCommunicationMainModel.ShouldResumePrintSequence = true;
+            }
+            
+            PrintStatus = PrintStatus.Printing;
         }
         #endregion
     }

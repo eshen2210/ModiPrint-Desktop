@@ -77,6 +77,14 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
         {
             get { return _changed; }
         }
+
+        //If the coordinates did change, then was the change positive or negative?
+        //Only relevant to E Coordinates.
+        private bool _positiveChanged = false;
+        public bool PositiveChanged
+        {
+            get { return _positiveChanged; }
+        }
         #endregion
 
         #region Constructor
@@ -103,6 +111,8 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
             //Set the new Coord.
             _currentCoord = (absCoord == true) ? currentCoordInput : _previousCoord + currentCoordInput;
 
+            /* To Do: This feature is broken as hell because it does not know the starting location of the print and cannot judge whether or not it will go out of bounds.
+             * Also To Do: Motorized Printheads should follow the negative E values given by RepRap slicing programs.
             //If the new Coord exceeds the maximum allowable position...
             //CoordinateModels that track RepRap coordinates would always have Max and Min Position values of zero. 
             //Therefore, ignore range for RepRap CoordinateModels.
@@ -124,9 +134,21 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
 
                 //Allow GCode to be converted regardless of outofrange error.
             }
+            */
 
             //If the position changed, then mark that change occurred.
             _changed = (_previousCoord != _currentCoord) ? true : false;
+            _positiveChanged = (_currentCoord > _previousCoord) ? true : false;
+        }
+
+        /// <summary>
+        /// Sets new a new absolute value for the coordinate.
+        /// Meant to be called and used with the RepRap G92 command.
+        /// </summary>
+        /// <param name="newCoordInput"></param>
+        public void NewCoord(double newCoordInput)
+        {
+            _currentCoord = newCoordInput;
         }
 
         /// <summary>
@@ -144,6 +166,7 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
         {
             _previousCoord = _currentCoord;
             _changed = false;
+            _positiveChanged = false;
         }
         #endregion
     }

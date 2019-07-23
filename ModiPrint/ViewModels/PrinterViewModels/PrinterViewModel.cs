@@ -119,13 +119,6 @@ namespace ModiPrint.ViewModels.PrinterViewModels
         {
             get { return (_printheadViewModelList.Count > 1) ? true : false; }
         }
-
-        //General settings that belong to the Printer as a whole instead of any specific equipment.
-        private PrinterSettingsViewModel _printerSettingsViewModel;
-        public PrinterSettingsViewModel PrinterSettingsViewModel
-        {
-            get { return _printerSettingsViewModel; }
-        }
         #endregion
 
         #region Constructors
@@ -159,9 +152,6 @@ namespace ModiPrint.ViewModels.PrinterViewModels
 
             //Populates the empty PrintheadViewModel list with an empty Printhead.
             _emptyPrintheadViewModelList.Add(new PrintheadViewModel(new PrintheadModel(""), _gPIOPinListsViewModel));
-
-            //Printer settings.
-            _printerSettingsViewModel = new PrinterSettingsViewModel(_printerModel.PrinterSettingsModel);
 
             //Subscribe to events.
             SerialCommunicationCommandSetsModel.RealTimeStatusDataModel.RecordLimitExecuted += new RecordLimitExecutedEventHandler(UpdateMinMaxPositions);

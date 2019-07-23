@@ -301,8 +301,6 @@ F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\ModiPrint.application
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\ModiPrint.exe
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\ModiPrint.pdb
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\ModiPrint.csprojResolveAssemblyReference.cache
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\PrintViews\GCodeManagerViews\GCodeManagerView.g.cs
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\PrintViews\GCodeManagerViews\GCodeManagerView.baml
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\PrintViews\PrintReadyChecks.g.cs
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\PrintViews\PrintReadyChecks.baml
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\ModiPrint.csprojResolveAssemblyReference.cache

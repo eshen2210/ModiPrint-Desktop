@@ -11,6 +11,7 @@ using ModiPrint.Models.PrinterModels.PrintheadModels;
 using ModiPrint.Models.PrinterModels.PrintheadModels.PrintheadTypeModels;
 using ModiPrint.Models.PrintModels;
 using ModiPrint.Models.PrintModels.MaterialModels;
+using ModiPrint.Models.PrintModels.PrintStyleModels;
 using ModiPrint.Models.RealTimeStatusModels;
 using ModiPrint.Models.GCodeConverterModels.ProcessModels.WriteSetEquipmentModels;
 using ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models;
@@ -54,6 +55,10 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessTCommandMod
         /// </summary>
         public List<ConvertedGCodeLine> ProcessTCommand(string[] repRapLine, ref MaterialModel currentMaterial)
         {
+            AxisModel xAxis = _printerModel.AxisModelList[0];
+            AxisModel yAxis = _printerModel.AxisModelList[1];
+            AxisModel zAxisCurrent = _printerModel.FindAxis(currentMaterial.PrintheadModel.AttachedZAxisModel.Name);
+
             //The return GCode.
             List<ConvertedGCodeLine> convertedGCodeLinesList = new List<ConvertedGCodeLine>();
 
@@ -66,11 +71,6 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessTCommandMod
             //Also appends the converted GCode line with commands that compensate for the new Printhead's offsets.
             try  
             {
-                //Command Set for switching Materials.
-                //This Command Set will convert to the commands for retracting the Z Axis, switching Printheads, moving Offsets, and setting new movement speeds.
-                string convertedGCodeLine = SerialMessageCharacters.SerialCommandSetCharacter + "SwitchMaterial " + '"' + matchingMaterial.Name + '"';
-                convertedGCodeLinesList.Add(new ConvertedGCodeLine(convertedGCodeLine));
-
                 //If a new Motorized Printhead is being set...
                 //Finds the EModiPrintCoord corresponding to the given Printhead and sets the Minimum and Maximum Position values of the EModiPrintCoord.
                 if (matchingMaterial.PrintheadModel.PrintheadType == PrintheadType.Motorized)
@@ -97,9 +97,40 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessTCommandMod
                     _parametersModel.SetNewXYZCoord('Z', newZPosition, zAxisModel.MinPosition, zAxisModel.MaxPosition);
                 }
 
-                //Set the new material.
-                _parametersModel.SetNewMaterial(matchingMaterial);
+                //Set new Droplet parameters if applicable.
+                if (!((currentMaterial.Name == "Unset") || (currentMaterial == null)) //If the current Material is set to Droplet... 
+                 && (currentMaterial.PrintStyle == PrintStyle.Droplet))
+                {
+                    //Execute movement for the remaining movement left in droplet movements.
+                    MaterialModel newMaterialParameter = (matchingMaterial.PrintStyle == PrintStyle.Droplet) ? matchingMaterial : null;
+                    double[] remainingDropletMovementArr = _parametersModel.ResetDropletPrintParameters(currentMaterial, newMaterialParameter);
+                    List<ConvertedGCodeLine> remainingDropletMovement = WriteG00.WriteAxesMovement(
+                        xAxis.MmPerStep, yAxis.MmPerStep, zAxisCurrent.MmPerStep,
+                        remainingDropletMovementArr[0], remainingDropletMovementArr[1], remainingDropletMovementArr[2],
+                        xAxis.IsDirectionInverted, yAxis.IsDirectionInverted, zAxisCurrent.IsDirectionInverted);
+                    if (remainingDropletMovement != null)
+                    { convertedGCodeLinesList.AddRange(remainingDropletMovement); }
+                }
+                else if (matchingMaterial.PrintStyle == PrintStyle.Droplet) //If the current Material is irrelevant and the new Material is set to Droplet...
+                {
+                    _parametersModel.ResetDropletPrintParameters(null, matchingMaterial);
+                }
+
+                //Pause the print sequence before switching to the next Material if applicable.
+                if (((currentMaterial.Name != "Unset") && (currentMaterial.PauseBeforeDeactivating == true))
+                 || (matchingMaterial.PauseBeforeActivating == true))
+                {
+                    ConvertedGCodeLine printPause = new ConvertedGCodeLine(SerialMessageCharacters.SerialPrintPauseCharacter.ToString());
+                    convertedGCodeLinesList.Add(printPause);
+                }
+
+                //Set the new Material.
                 currentMaterial = matchingMaterial;
+
+                //Command Set for switching Materials.
+                //This Command Set will convert to the commands for retracting the Z Axis, switching Printheads, moving Offsets, and setting new movement speeds.
+                string convertedGCodeLine = SerialMessageCharacters.SerialCommandSetCharacter + "SwitchMaterial " + '"' + matchingMaterial.Name + '"';
+                convertedGCodeLinesList.Add(new ConvertedGCodeLine(convertedGCodeLine));
             }
             catch when ((currentMaterial.Name == "Unset") || (matchingMaterial == null) || (currentMaterial == null)) //Catch unset Material.
             {

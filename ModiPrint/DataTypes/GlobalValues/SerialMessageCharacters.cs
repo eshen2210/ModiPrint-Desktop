@@ -67,6 +67,14 @@ namespace ModiPrint.DataTypes.GlobalValues
             get { return _serialMovementBufferClearCharacter; }
         }
 
+        //Character indicating that the serial communication protocol should stop sending messages past this one.
+        //Messages inserted into the front of the outgoing queue can still be executed.
+        private static char _serialPrintPauseCharacter = '?';
+        public static char SerialPrintPauseCharacter
+        {
+            get { return _serialPrintPauseCharacter; }
+        }
+
         //The terminal character for all outgoing and incoming messages.
         private static char _serialTerminalCharacter = ';';
         public static char SerialTerminalCharacter

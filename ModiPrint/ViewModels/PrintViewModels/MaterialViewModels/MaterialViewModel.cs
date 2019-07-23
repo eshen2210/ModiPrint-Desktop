@@ -184,6 +184,20 @@ namespace ModiPrint.ViewModels.PrintViewModels.MaterialViewModels
             set { _materialModel.JunctionDeviation = value; }
         }
 
+        //Pause a print sequence before switching to or switching from this Material.
+        //Manual actions will still fire during this pause.
+        public bool PauseBeforeActivating
+        {
+            get { return _materialModel.PauseBeforeActivating; }
+            set { _materialModel.PauseBeforeActivating = value; }
+        }
+
+        public bool PauseBeforeDeactivating
+        {
+            get { return _materialModel.PauseBeforeDeactivating; }
+            set { _materialModel.PauseBeforeDeactivating = value; }
+        }
+
         //Are all of the parameters set correctly such that printing can occur?
         public bool ReadyToPrint()
         {

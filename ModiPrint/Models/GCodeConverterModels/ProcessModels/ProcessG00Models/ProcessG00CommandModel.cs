@@ -38,20 +38,20 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
         /// <summary>
         /// Processes the command for Axis movement and Printing.
         /// </summary>
-        public List<ConvertedGCodeLine> ProcessG00Command(string[] slicedGCodeLine, MaterialModel currentMaterial, bool isPrinting)
+        public List<ConvertedGCodeLine> ProcessG00Command(string[] repRapGCodeLine, MaterialModel currentMaterial, bool isPrinting)
         {
             //The return GCode.
             List<ConvertedGCodeLine> convertedGCodeLinesList = null;
 
             //Reads the GCode line and sets the fields in the coord classes.
             //If the printer is moving or printing, then proceed to convert the GCode line.
-            if ((ReadCoord(slicedGCodeLine) == true)
+            if ((ReadCoord(repRapGCodeLine) == true)
              && ((_parametersModel.XCoord.Changed == true)
               || (_parametersModel.YCoord.Changed == true)
               || (_parametersModel.ZCoord.Changed == true)))
             {
                 //Does this RepRap line indicate printing?
-                _parametersModel.IsPrinting = ((isPrinting == true) || (_parametersModel.ERepRapCoord.Changed == true)) ? true : false;
+                _parametersModel.IsPrinting = ((isPrinting) || (_parametersModel.ERepRapCoord.PositiveChanged == true)) ? true : false; //To Do: Test is E retraction causes IsPrinting to be false.
 
                 try
                 {
@@ -144,9 +144,19 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
             {
                 if (_parametersModel.IsPrinting == false) //If G00 (no printing, movement only)...
                 {
+                    //If droplet printing, reset droplet print parameters since printing is no longer continuous.
+                    double[] remainingDropletMovementArr = { 0, 0, 0 };
+                    if (currentMaterial.PrintStyle == PrintStyle.Droplet)
+                    {
+                        remainingDropletMovementArr = _parametersModel.ResetDropletPrintParameters(currentMaterial, null);
+                    }
+                    
+                    //Append the remaining droplet print movement to the new G00 movement.
                     convertedGCodeLinesList = WriteG00.WriteAxesMovement(
                         printerModel.AxisModelList[0].MmPerStep, printerModel.AxisModelList[1].MmPerStep, currentMaterial.PrintheadModel.AttachedZAxisModel.MmPerStep,
-                        xCoord.CurrentCoord - xCoord.PreviousCoord, yCoord.CurrentCoord - yCoord.PreviousCoord, zCoord.CurrentCoord - zCoord.PreviousCoord,
+                        xCoord.CurrentCoord - xCoord.PreviousCoord + remainingDropletMovementArr[0], 
+                        yCoord.CurrentCoord - yCoord.PreviousCoord + remainingDropletMovementArr[1],
+                        zCoord.CurrentCoord - zCoord.PreviousCoord + remainingDropletMovementArr[2],
                         printerModel.AxisModelList[0].IsDirectionInverted, printerModel.AxisModelList[1].IsDirectionInverted, currentMaterial.PrintheadModel.AttachedZAxisModel.IsDirectionInverted);
                 }
                 else if (_parametersModel.IsPrinting == true) //If G01 (printing is occurring), then select the appropriate printhead and print style...

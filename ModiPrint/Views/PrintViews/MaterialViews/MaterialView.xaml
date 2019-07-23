@@ -113,13 +113,99 @@
                         </StackPanel>
                         <!--#endregion-->
 
+                        <!--#region Toggle PauseBeforeActivating/Deactivating-->
+                        <StackPanel Orientation="Horizontal"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Left"
+                                    Height="{DynamicResource StandardControlHeight}">
+
+                            <TextBlock Width="{DynamicResource NarrowControlWidth}"/>
+                            <TextBlock Text="Pause Before Activating    "
+                                       Style="{DynamicResource ThematicTextBlock}"/>
+                            <Grid>
+                                <Grid.Resources>
+                                    <ResourceDictionary>
+                                        <ResourceDictionary.MergedDictionaries>
+                                            <ResourceDictionary Source="/Views/GlobalResources.xaml"/>
+                                        </ResourceDictionary.MergedDictionaries>
+
+                                        <Style x:Key="ThematicPauseBeforeActivatingTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ThematicTextBlock}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ElementName=tgbtnPauseBeforeActivating, Path=IsChecked}" Value="False">
+                                                    <Setter Property="Text" Value="False"/>
+                                                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding ElementName=tgbtnPauseBeforeActivating, Path=IsChecked}" Value="True">
+                                                    <Setter Property="Text" Value="True"/>
+                                                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+
+                                    </ResourceDictionary>
+                                </Grid.Resources>
+
+                                <ToggleButton Name="tgbtnPauseBeforeActivating"
+                                              IsChecked="{Binding Path=PauseBeforeActivating}"
+                                              Style="{DynamicResource ThematicToggleButton}"
+                                              Width="{DynamicResource StandardToggleButtonWidth}"/>
+                                <TextBlock Style="{StaticResource ThematicPauseBeforeActivatingTextBlock}"
+                                           IsHitTestVisible="False"
+                                           Width="{DynamicResource NarrowControlWidth}"/>
+                            </Grid>
+                        </StackPanel>
+                        <!--#endregion-->
+
+                        <!--#region Toggle PauseBeforeDeactivating-->
+                        <StackPanel Orientation="Horizontal"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Left"
+                                    Height="{DynamicResource StandardControlHeight}">
+
+                            <TextBlock Width="{DynamicResource NarrowControlWidth}"/>
+                            <TextBlock Text="Pause Before Deactivating"
+                                       Style="{DynamicResource ThematicTextBlock}"/>
+                            <Grid>
+                                <Grid.Resources>
+                                    <ResourceDictionary>
+                                        <ResourceDictionary.MergedDictionaries>
+                                            <ResourceDictionary Source="/Views/GlobalResources.xaml"/>
+                                        </ResourceDictionary.MergedDictionaries>
+
+                                        <Style x:Key="ThematicPauseBeforeDeactivatingTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ThematicTextBlock}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ElementName=tgbtnPauseBeforeDeactivating, Path=IsChecked}" Value="False">
+                                                    <Setter Property="Text" Value="False"/>
+                                                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding ElementName=tgbtnPauseBeforeDeactivating, Path=IsChecked}" Value="True">
+                                                    <Setter Property="Text" Value="True"/>
+                                                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+
+                                    </ResourceDictionary>
+                                </Grid.Resources>
+
+                                <ToggleButton Name="tgbtnPauseBeforeDeactivating"
+                                              IsChecked="{Binding Path=PauseBeforeDeactivating}"
+                                              Style="{DynamicResource ThematicToggleButton}"
+                                              Width="{DynamicResource StandardToggleButtonWidth}"/>
+                                <TextBlock Style="{StaticResource ThematicPauseBeforeDeactivatingTextBlock}"
+                                           IsHitTestVisible="False"
+                                           Width="{DynamicResource NarrowControlWidth}"/>
+                            </Grid>
+                        </StackPanel>
+                        <!--#endregion-->
+
                         <!--#region Print Speed and Acceleration-->
                         <StackPanel Orientation="Vertical">
 
                             <!--#region Junction Deviation-->
                             <StackPanel Orientation="Horizontal"
                                         Height="{DynamicResource StandardControlHeight}">
-                                <Image Source="/Resources/General/Junction.png" 
+                                <Image Source="/Resources/General/JunctionDeviation.png" 
                                        Style="{DynamicResource ThematicControlImage}"
                                        Width="{DynamicResource NarrowControlWidth}"/>
                                 <TextBlock Text="Junction Deviation"

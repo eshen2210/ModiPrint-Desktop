@@ -41,6 +41,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
         {
             get { return _realTimeStatusDataModel; }
         }
+        private SerialCommunicationMainModel _serialCommunicationMainModel;
         private PrinterModel _printerModel;
         private PrintModel _printModel;
 
@@ -82,9 +83,11 @@ namespace ModiPrint.Models.SerialCommunicationModels
         #endregion
 
         #region Constructor
-        public SerialCommunicationCommandSetsModel(RealTimeStatusDataModel RealTimeStatusDataModel, PrinterModel PrinterModel, PrintModel PrintModel)
+        public SerialCommunicationCommandSetsModel(
+            RealTimeStatusDataModel RealTimeStatusDataModel, SerialCommunicationMainModel SerialCommunicationMainModel, PrinterModel PrinterModel, PrintModel PrintModel)
         {
             _realTimeStatusDataModel = RealTimeStatusDataModel;
+            _serialCommunicationMainModel = SerialCommunicationMainModel;
             _printerModel = PrinterModel;
             _printModel = PrintModel;
 
@@ -127,6 +130,11 @@ namespace ModiPrint.Models.SerialCommunicationModels
                   && (commandSet.Substring(1, 5) == "Pause"))
             {
                 return InterpretPause(commandSet);
+            }
+            else if ((commandSet.Length >= 11)
+                  && (commandSet.Substring(1, 10) == "PrintPause"))
+            {
+                return InterpretPrintPause(commandSet);
             }
             else if ((commandSet.Length >= 15)
                   && (commandSet.Substring(1, 14) == "SwitchMaterial"))
@@ -479,6 +487,18 @@ namespace ModiPrint.Models.SerialCommunicationModels
 
             //No command set to be returned.
             return null;
+        }
+
+        /// <summary>
+        /// Generate commands for putting a print sequence on hold.
+        /// </summary>
+        /// <param name="commandSet"></param>
+        /// <returns></returns>
+        private string[] InterpretPrintPause(string commandSet)
+        {
+            string[] returnCommands = { "?" };
+
+            return returnCommands;
         }
 
         /// <summary>

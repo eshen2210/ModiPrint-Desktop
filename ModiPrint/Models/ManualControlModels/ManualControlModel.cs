@@ -66,12 +66,12 @@ namespace ModiPrint.Models.ManualControlModels
             double zmmPerStep = (zDistance != 0) ? _printerModel.FindAxis(zAxisModel.Name).MmPerStep : double.MaxValue;
             bool zDirectionInverted = (zAxisModel != null) ? zAxisModel.IsDirectionInverted : false;
 
-            string convertedGCode = GCodeLinesConverter.GCodeLinesListToString(
+            string axesMovementString = GCodeLinesConverter.GCodeLinesListToString(
                 WriteG00.WriteAxesMovement(xmmPerStep, ymmPerStep, zmmPerStep,
                 xDistance, yDistance, zDistance,
                 _printerModel.AxisModelList[0].IsDirectionInverted, _printerModel.AxisModelList[1].IsDirectionInverted, zDirectionInverted));
 
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(convertedGCode);
+            _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(axesMovementString);
         }
 
         /// <summary>
@@ -91,13 +91,13 @@ namespace ModiPrint.Models.ManualControlModels
             double zmmPerStep = (zDistance != 0) ? _printerModel.FindAxis(zAxisModel.Name).MmPerStep : double.MaxValue;
             bool zDirectionInverted = (zAxisModel != null) ? zAxisModel.IsDirectionInverted : false;
 
-            string convertedGCode = GCodeLinesConverter.GCodeLinesListToString(
+            string printString = GCodeLinesConverter.GCodeLinesListToString(
                 WriteG00.WriteMotorizedContinuousPrint(emmPerStep, xmmPerStep, ymmPerStep, zmmPerStep,
                 eDispensePerDistance, xDistance, yDistance, zDistance,
                 _printerModel.AxisModelList[0].IsDirectionInverted, _printerModel.AxisModelList[1].IsDirectionInverted, zDirectionInverted, motorizedPrintheadTypeModel.IsDirectionInverted,
                 null));
 
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(convertedGCode);
+            _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(printString);
         }
 
         /// <summary>
@@ -110,10 +110,10 @@ namespace ModiPrint.Models.ManualControlModels
             double emmPerStep = motorizedPrintheadTypeModel.MmPerStep;
             RealTimeStatusMotorizedPrintheadModel realTimeStatusMotorizedPrintheadModel = (RealTimeStatusMotorizedPrintheadModel)_realTimeStatusDataModel.ActivePrintheadModel;
 
-            string convertedGCode = GCodeLinesConverter.GCodeLinesListToString(
+            string printString = GCodeLinesConverter.GCodeLinesListToString(
                 WriteG00.WriteMotorizedPrintWithoutMovement(eDistance, emmPerStep, motorizedPrintheadTypeModel.IsDirectionInverted));
 
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(convertedGCode);
+            _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(printString);
         }
 
         /// <summary>
@@ -139,14 +139,14 @@ namespace ModiPrint.Models.ManualControlModels
             double zmmPerStep = (zDistance != 0) ? _printerModel.FindAxis(zAxisModel.Name).MmPerStep : double.MaxValue;
             bool zDirectionInverted = (zAxisModel != null) ? zAxisModel.IsDirectionInverted : false;
 
-            string convertedGCode = GCodeLinesConverter.GCodeLinesListToString(
+            string printString = GCodeLinesConverter.GCodeLinesListToString(
                 WriteG00.WriteMotorizedDropletPrint(
                 emmPerStep, xmmPerStep, ymmPerStep, zmmPerStep,
                 eDispensePerDroplet, 0, xDistance, 0, yDistance, 0, zDistance,
                 _printerModel.AxisModelList[0].IsDirectionInverted, _printerModel.AxisModelList[1].IsDirectionInverted, zDirectionInverted, motorizedPrintheadTypeModel.IsDirectionInverted,
                 null, new DropletModel(interpolateDistance)));
 
-            SendCommandSet(convertedGCode);
+            _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(printString);
         }
 
         /// <summary>
@@ -163,11 +163,11 @@ namespace ModiPrint.Models.ManualControlModels
             double zmmPerStep = (zDistance != 0) ? _printerModel.FindAxis(zAxisModel.Name).MmPerStep : double.MaxValue;
             bool zDirectionInverted = (zAxisModel != null) ? zAxisModel.IsDirectionInverted : false;
 
-            string convertedGCode = GCodeLinesConverter.GCodeLinesListToString(
+            string printString = GCodeLinesConverter.GCodeLinesListToString(
                 WriteG00.WriteValveContinuousPrint(xmmPerStep, ymmPerStep, zmmPerStep, 0, xDistance, 0, yDistance, 0, zDistance,
                 _printerModel.AxisModelList[0].IsDirectionInverted, _printerModel.AxisModelList[1].IsDirectionInverted, zDirectionInverted));
 
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(convertedGCode);
+            _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(printString);
         }
 
         /// <summary>
@@ -176,10 +176,10 @@ namespace ModiPrint.Models.ManualControlModels
         /// <param name="openTime"></param>
         public void ProcessManualValvePrintWithoutMovementCommand(int valveOpenTime)
         {
-            string convertedGCode = GCodeLinesConverter.GCodeLinesListToString(
+            string printString = GCodeLinesConverter.GCodeLinesListToString(
                 WriteG00.WriteValvePrintWithoutMovement(valveOpenTime));
 
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(convertedGCode);
+            _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(printString);
         }
 
         /// <summary>
@@ -199,13 +199,13 @@ namespace ModiPrint.Models.ManualControlModels
             double zmmPerStep = (zDistance != 0) ? _printerModel.FindAxis(zAxisModel.Name).MmPerStep : double.MaxValue;
             bool zDirectionInverted = (zAxisModel != null) ? zAxisModel.IsDirectionInverted : false;
 
-            string convertedGCode = GCodeLinesConverter.GCodeLinesListToString(
+            string printString = GCodeLinesConverter.GCodeLinesListToString(
                 WriteG00.WriteValveDropletPrint(xmmPerStep, ymmPerStep, zmmPerStep, valveOpenTime, 
                 0, xDistance, 0, yDistance, 0, zDistance,
                 _printerModel.AxisModelList[0].IsDirectionInverted, _printerModel.AxisModelList[1].IsDirectionInverted, zDirectionInverted,
                 new DropletModel(interpolateDistance)));
 
-            SendCommandSet(convertedGCode);
+            _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(printString);
         }
 
         /// <summary>
@@ -213,9 +213,9 @@ namespace ModiPrint.Models.ManualControlModels
         /// </summary>
         public void ProcessManualValveCloseCommand()
         {
-            string convertedGCode = GCodeLinesConverter.GCodeLinesListToString(WriteG00.WriteValveClose());
+            string valveCloseString = GCodeLinesConverter.GCodeLinesListToString(WriteG00.WriteValveClose());
 
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(convertedGCode);
+            _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(valveCloseString);
         }
 
         /// <summary>
@@ -226,17 +226,22 @@ namespace ModiPrint.Models.ManualControlModels
         /// <param name="acceleration"></param>
         public void ProcessManualSetAxisCommand(string axisName, double maxSpeed, double acceleration)
         {
+            List<string> outgoingMessagesList = new List<string>();
+
             AxisModel axisModel = _printerModel.FindAxis(axisName);
 
             int limitPinID = (axisModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.NullPinID : axisModel.AttachedLimitSwitchGPIOPinModel.PinID;
 
-            string convertedGCode = _writeSetAxisModel.WriteSetAxis(axisModel.AxisID, axisModel.AttachedMotorStepGPIOPinModel.PinID, axisModel.AttachedMotorDirectionGPIOPinModel.PinID,
+            string setAxisString = _writeSetAxisModel.WriteSetAxis(axisModel.AxisID, axisModel.AttachedMotorStepGPIOPinModel.PinID, axisModel.AttachedMotorDirectionGPIOPinModel.PinID,
                 axisModel.StepPulseTime, limitPinID, maxSpeed, acceleration, axisModel.MmPerStep);
 
             //If switching Z Axes, then retract the current Z Axis first.
             if (axisModel.AxisID == 'Z')
-            { _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(SerialMessageCharacters.SerialCommandSetCharacter + "RetractZ"); }
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(convertedGCode);
+            { outgoingMessagesList.Add(SerialMessageCharacters.SerialCommandSetCharacter + "RetractZ"); }
+
+            outgoingMessagesList.Add(setAxisString);
+
+            _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(outgoingMessagesList);
         }
 
         /// <summary>
@@ -247,24 +252,27 @@ namespace ModiPrint.Models.ManualControlModels
         /// <param name="acceleration"></param>
         public void ProcessManualSetMotorizedPrintheadCommand(string printheadName, double maxSpeed, double acceleration)
         {
+            List<string> outgoingMessagesList = new List<string>();
+
             PrintheadModel printheadModel = _printerModel.FindPrinthead(printheadName);
             MotorizedPrintheadTypeModel motorizedPrintheadTypeModel = (MotorizedPrintheadTypeModel)printheadModel.PrintheadTypeModel;
 
             int printheadLimitPinID = (motorizedPrintheadTypeModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.NullPinID : motorizedPrintheadTypeModel.AttachedLimitSwitchGPIOPinModel.PinID;
-            string convertedGCode = _writeSetPrintheadModel.WriteSetMotorDrivenPrinthead(motorizedPrintheadTypeModel.AttachedMotorStepGPIOPinModel.PinID, motorizedPrintheadTypeModel.AttachedMotorDirectionGPIOPinModel.PinID,
+            string setPrintheadString = _writeSetPrintheadModel.WriteSetMotorDrivenPrinthead(motorizedPrintheadTypeModel.AttachedMotorStepGPIOPinModel.PinID, motorizedPrintheadTypeModel.AttachedMotorDirectionGPIOPinModel.PinID,
                 motorizedPrintheadTypeModel.StepPulseTime, printheadLimitPinID, maxSpeed, acceleration, motorizedPrintheadTypeModel.MmPerStep);
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(convertedGCode);
+            outgoingMessagesList.Add(setPrintheadString);
 
             //Send GCode for the Z Axis attached to the Printhead.
             AxisModel axisModel = printheadModel.AttachedZAxisModel;
 
             int zAxisLimitPinID = (axisModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.NullPinID : axisModel.AttachedLimitSwitchGPIOPinModel.PinID;
-            string convertedGCode2 = _writeSetAxisModel.WriteSetAxis(axisModel.AxisID, axisModel.AttachedMotorStepGPIOPinModel.PinID, axisModel.AttachedMotorDirectionGPIOPinModel.PinID,
+            string setAxisString = _writeSetAxisModel.WriteSetAxis(axisModel.AxisID, axisModel.AttachedMotorStepGPIOPinModel.PinID, axisModel.AttachedMotorDirectionGPIOPinModel.PinID,
                 axisModel.StepPulseTime, zAxisLimitPinID, axisModel.MaxSpeed, axisModel.MaxAcceleration, axisModel.MmPerStep);
 
             //Retract Z Axis before changing Printheads.
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(SerialMessageCharacters.SerialCommandSetCharacter + "RetractZ");
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(convertedGCode2);
+            outgoingMessagesList.Add(SerialMessageCharacters.SerialCommandSetCharacter + "RetractZ");
+            outgoingMessagesList.Add(setAxisString);
+            _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(outgoingMessagesList);
         }
 
         /// <summary>
@@ -273,32 +281,22 @@ namespace ModiPrint.Models.ManualControlModels
         /// <param name="printheadName"></param>
         public void ProcessManualSetValvePrintheadCommand(string printheadName)
         {
+            List<string> outgoingMessagesList = new List<string>();
+
             PrintheadModel printheadModel = _printerModel.FindPrinthead(printheadName);
             ValvePrintheadTypeModel valvePrintheadTypeModel = (ValvePrintheadTypeModel)printheadModel.PrintheadTypeModel;
-            string convertedGCode = _writeSetPrintheadModel.WriteSetValvePrinthead(valvePrintheadTypeModel.AttachedValveGPIOPinModel.PinID);
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(convertedGCode);
+            string setPrintheadString = _writeSetPrintheadModel.WriteSetValvePrinthead(valvePrintheadTypeModel.AttachedValveGPIOPinModel.PinID);
+            outgoingMessagesList.Add(setPrintheadString);
 
             //Send GCode for the Z Axis attached to the Printhead.
             AxisModel axisModel = printheadModel.AttachedZAxisModel;
             int zAxisLimitPinID = (axisModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.NullPinID : axisModel.AttachedLimitSwitchGPIOPinModel.PinID;
-            string convertedGCode2 = _writeSetAxisModel.WriteSetAxis(axisModel.AxisID, axisModel.AttachedMotorStepGPIOPinModel.PinID, axisModel.AttachedMotorDirectionGPIOPinModel.PinID,
+            string setAxisString = _writeSetAxisModel.WriteSetAxis(axisModel.AxisID, axisModel.AttachedMotorStepGPIOPinModel.PinID, axisModel.AttachedMotorDirectionGPIOPinModel.PinID,
                 axisModel.StepPulseTime, zAxisLimitPinID, axisModel.MaxSpeed, axisModel.MaxAcceleration, axisModel.MmPerStep);
 
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(SerialMessageCharacters.SerialCommandSetCharacter + "RetractZ");
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(convertedGCode2);
-        }
-
-        /// <summary>
-        /// Sends a set of commands through the serial port.
-        /// </summary>
-        /// <param name="commandSet"></param>
-        private void SendCommandSet(string commandSet)
-        {
-            string[] commands = commandSet.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-            foreach (string command in commands)
-            {
-                _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(command);
-            }
+            outgoingMessagesList.Add(SerialMessageCharacters.SerialCommandSetCharacter + "RetractZ");
+            outgoingMessagesList.Add(setAxisString);
+            _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(outgoingMessagesList);
         }
         #endregion
     }

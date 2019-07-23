@@ -109,9 +109,10 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
             {
                 //Find the next coordinate.
                 //If it is a part of a continuous movement, then add it to the list.
-                if ((convertedGCodeLineList[i].GCode.Substring(0, 3) == "G00")
-                 || (convertedGCodeLineList[i].GCode.Substring(0, 3) == "G01")
-                 || (convertedGCodeLineList[i].GCode.Substring(0, 3) == "G02")) //Is a movement or print command.
+                if ((convertedGCodeLineList[i].GCode.Length > 2) 
+                 && ((convertedGCodeLineList[i].GCode.Substring(0, 3) == "G00")
+                  || (convertedGCodeLineList[i].GCode.Substring(0, 3) == "G01")
+                  || (convertedGCodeLineList[i].GCode.Substring(0, 3) == "G02"))) //Is a movement or print command.
                 {
                     //Read the coordinates. 
                     MovementModel newMovementModel = ReadCoord(convertedGCodeLineList[i].GCode, i, materialModel);
@@ -188,11 +189,6 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
                         //Ensure neither movement's max speed is exceeded.
                         double junctionMaxSpeed = Math.Min(previousMovement.MaxSpeed, currentMovement.MaxSpeed);
                         previousMovement.ExitSpeed = Math.Min(junctionMaxSpeed, previousMovement.ExitSpeed);
-
-                        if (j == 1)
-                        {
-
-                        }
                     }
                     else
                     {

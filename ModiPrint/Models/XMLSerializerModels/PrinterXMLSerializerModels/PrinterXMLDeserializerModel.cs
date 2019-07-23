@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.IO;
-using ModiPrint.Models.XMLSerializerModels.PrinterXMLSerializerModels.PrinterSettingsXMLSerializerModels;
 using ModiPrint.Models.XMLSerializerModels.PrinterXMLSerializerModels.AxisXMLSerializerModels;
 using ModiPrint.Models.XMLSerializerModels.PrinterXMLSerializerModels.PrintheadXMLSerializerModels;
 using ModiPrint.ViewModels;
@@ -26,7 +25,6 @@ namespace ModiPrint.Models.XMLSerializerModels.PrinterXMLSerializerModels
         //Contains functions to convert XML to Printer equipment settings.
         AxisXMLDeserializerModel _axisXMLDeserializerModel;
         PrintheadXMLDeserializerModel _printheadXMLDeserializerModel;
-        PrinterSettingsXMLDeserializerModel _printerSettingsXMLDeserializerModel;
 
         //A list of the AxisViewModels that were deserialized.
         private List<AxisViewModel> _deserializedAxisViewModelsList = new List<AxisViewModel>();
@@ -43,7 +41,6 @@ namespace ModiPrint.Models.XMLSerializerModels.PrinterXMLSerializerModels
 
             _axisXMLDeserializerModel = new AxisXMLDeserializerModel(_printerViewModel, base._errorListViewModel);
             _printheadXMLDeserializerModel = new PrintheadXMLDeserializerModel(_printerViewModel, base._errorListViewModel);
-            _printerSettingsXMLDeserializerModel = new PrinterSettingsXMLDeserializerModel(base._errorListViewModel);
         }
         #endregion
 
@@ -85,9 +82,6 @@ namespace ModiPrint.Models.XMLSerializerModels.PrinterXMLSerializerModels
                             break;
                         case "PrintheadsCreatedCount":
                             printerViewModel.PrintheadsCreatedCount = xmlReader.ReadElementContentAsInt();
-                            break;
-                        case "PrinterSettings":
-                            _printerSettingsXMLDeserializerModel.DeserializePrinterSettings(xmlReader, printerViewModel.PrinterSettingsViewModel);
                             break;
                         default:
                             base.ReportErrorUnrecognizedElement(xmlReader);

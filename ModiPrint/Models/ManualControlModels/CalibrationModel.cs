@@ -153,6 +153,9 @@ namespace ModiPrint.Models.ManualControlModels
             string setZMaxSpeed = _writeSetAxisModel.WriteSetAxis(printheadModel.AttachedZAxisModel);
             _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(setZMaxSpeed);
 
+            //The next Z Limit Switch hit will calibrate minmax positions.
+            _realTimeStatusDataModel.ShouldZCalibrate = true;
+
             //Retracts the Z Axis up to a short distance away from the Limit Switch (does not hit the Limit Switch).
             string retractZ = SerialMessageCharacters.SerialCommandSetCharacter + "RetractZLimit";
             _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(retractZ);

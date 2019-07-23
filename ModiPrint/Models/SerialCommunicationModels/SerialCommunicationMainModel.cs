@@ -7,6 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.IO.Ports;
 using ModiPrint.DataTypes.GlobalValues;
+using ModiPrint.Models.PrinterModels;
+using ModiPrint.Models.PrintModels;
 using ModiPrint.Models.SerialCommunicationModels.ReportingModels;
 using ModiPrint.Models.RealTimeStatusModels;
 using ModiPrint.ViewModels;
@@ -25,6 +27,9 @@ namespace ModiPrint.Models.SerialCommunicationModels
     //Event handler that's executed when a line of serial message is received.
     public delegate void SerialCommunicationMessageReceivedEventHandler(object sender, SerialMessageEventArgs serialMessageEventArgs);
 
+    //Event handler that's executed when a print sequence pause command is read.
+    public delegate void SerialCommunicationPrintSequencePausedEventHandler(object sender);
+
     /// <summary>
     /// SerialConnectionModel manages the basic functionalities of System.IO.Ports.SerialPort.
     /// </summary>
@@ -36,6 +41,10 @@ namespace ModiPrint.Models.SerialCommunicationModels
 
         //Contains functions to interpret and execute serial command sets.
         private SerialCommunicationCommandSetsModel _serialCommunicationCommandSetsModel;
+        public SerialCommunicationCommandSetsModel SerialCommunicationCommandSetsModel
+        {
+            get { return _serialCommunicationCommandSetsModel; }
+        }
 
         //Contains response information from the microcontroller.
         private RealTimeStatusDataModel _realTimeStatusDataModel;
@@ -85,20 +94,28 @@ namespace ModiPrint.Models.SerialCommunicationModels
         //Toggled when a task queued message is received or when a new message is sent.
         private bool _shouldSend = true;
 
-        //If flagged true, send a serial message to pause hardware operations.
-        private bool _shouldPause = false;
-        public bool ShouldPause
+        //If flagged true, send a serial message to the microcontroller to pause hardware operations.
+        private bool _shouldPauseMicrocontroller = false;
+        public bool ShouldPauseMicrocontroller
         {
-            set { _shouldPause = value; }
-            get { return _shouldPause; }
+            get { return _shouldPauseMicrocontroller; }
+            set { _shouldPauseMicrocontroller = value; }
+        }
+
+        //If flagged true, resume the pausing of a print sequence.
+        private bool _shouldResumePrintSequence = false;
+        public bool ShouldResumePrintSequence
+        {
+            get { return _shouldResumePrintSequence; }
+            set { _shouldResumePrintSequence = value; }
         }
 
         //If flagged true, send a serial message to resume hardware operations.
-        private bool _shouldResume = false;
-        public bool ShouldResume
+        private bool _shouldResumeMicrocontroller = false;
+        public bool ShouldResumeMicrocontroller
         {
-            set { _shouldResume = value; }
-            get { return _shouldResume; }
+            get { return _shouldResumeMicrocontroller; }
+            set { _shouldResumeMicrocontroller = value; }
         }
         #endregion
 
@@ -134,16 +151,26 @@ namespace ModiPrint.Models.SerialCommunicationModels
             if (SerialCommunicationMessageReceived != null)
             { SerialCommunicationMessageReceived(this, serialMessageEventArgs); }
         }
+
+        //Event that's executed when a print sequence pause command is read.
+        public event SerialCommunicationPrintSequencePausedEventHandler SerialCommunicationPrintSequencePaused;
+        private void OnSerialCommunicationPrintSequencePaused()
+        {
+            if (SerialCommunicationPrintSequencePaused != null)
+            { SerialCommunicationPrintSequencePaused(this); }
+        }
         #endregion
 
         #region Constructors
-        public SerialCommunicationMainModel(SerialCommunicationOutgoingMessagesModel SerialCommunicationOutgoingMessagesModel, SerialCommunicationCommandSetsModel SerialCommunicationCommandSetsModel, 
+        public SerialCommunicationMainModel(SerialCommunicationOutgoingMessagesModel SerialCommunicationOutgoingMessagesModel,
+            PrinterModel PrinterModel, PrintModel PrintModel,
             RealTimeStatusDataModel RealTimeStatusDataModel, ErrorListViewModel ErrorListViewModel)
         {
             _serialCommunicationOutgoingMessagesModel = SerialCommunicationOutgoingMessagesModel;
-            _serialCommunicationCommandSetsModel = SerialCommunicationCommandSetsModel;
             _realTimeStatusDataModel = RealTimeStatusDataModel;
             _errorReporterViewModel = new ErrorReporterViewModel(ErrorListViewModel);
+
+            _serialCommunicationCommandSetsModel = new SerialCommunicationCommandSetsModel(_realTimeStatusDataModel, this, PrinterModel, PrintModel);
 
             InitializeSerialPort();
 
@@ -190,7 +217,8 @@ namespace ModiPrint.Models.SerialCommunicationModels
 
                     //If there is a new message that needs to be sent...
                     if ((_serialCommunicationOutgoingMessagesModel.ProspectiveOutgoingMessageList.Count > 0)
-                     && (_shouldSend == true))
+                     && (_shouldSend == true) //Wait until this flag is true to send.
+                     && (CheckShouldPausePrint() == false)) //Wait until this flag is true to send.
                     {
                         //If the message is a command set...
                         //Command sets are a set of commands that are calculated when their position in the task queue is reached.
@@ -263,26 +291,52 @@ namespace ModiPrint.Models.SerialCommunicationModels
         private void IdleProtocol()
         {
             //Do not stream more messages if the system is paused.
-            if (_shouldPause == true)
+            if (_shouldPauseMicrocontroller == true)
             {
                 //Send a message to the microcontroller to stop all hardware operations.
                 SendMessage(SerialMessageCharacters.SerialPauseHardwareCharacter.ToString());
 
                 //Wait until told to resume.
-                while ((_shouldPause == true) && (_shouldResume == false)) { }
+                while ((_shouldPauseMicrocontroller == true) && (_shouldResumeMicrocontroller == false)) { }
 
                 //Send a message to the microcontroller to resume all hardware operations.
                 SendMessage(SerialMessageCharacters.SerialResumeHardwareCharacter.ToString());
-                _shouldPause = false;
-                _shouldResume = false;
+                _shouldPauseMicrocontroller = false;
+                _shouldResumeMicrocontroller = false;
             }
 
             //Resume if the system is paused.
-            if (_shouldResume == true)
+            if (_shouldResumeMicrocontroller == true)
             {
                 //Send a message to the microcontroller to resume all hardware operations.
                 SendMessage(SerialMessageCharacters.SerialResumeHardwareCharacter.ToString());
-                _shouldResume = false;
+                _shouldResumeMicrocontroller = false;
+            }
+        }
+
+        /// <summary>
+        /// Check if a print sequence should be paused.
+        /// </summary>
+        /// <returns></returns>
+        private bool CheckShouldPausePrint()
+        {
+            if (_serialCommunicationOutgoingMessagesModel.ProspectiveOutgoingMessageList[0][0] == '?')
+            {
+                if (_shouldResumePrintSequence == true)
+                {
+                    _serialCommunicationOutgoingMessagesModel.ProspectiveOutgoingMessageList.RemoveAt(0);
+                    _shouldResumePrintSequence = false;
+                    return false;
+                }
+                else
+                {
+                    OnSerialCommunicationPrintSequencePaused();
+                    return true;
+                }
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -382,7 +436,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
         /// </summary>
         private void LimitSwitchHit()
         {
-            _shouldPause = true;
+            _shouldPauseMicrocontroller = true;
         }
 
         /// <summary>

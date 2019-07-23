@@ -13,6 +13,7 @@ using ModiPrint.Models.PrinterModels.PrintheadModels;
 using ModiPrint.Models.PrinterModels.AxisModels;
 using ModiPrint.Models.RealTimeStatusModels;
 using ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models;
+using ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessMiscModels;
 using ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessTCommandModels;
 
 namespace ModiPrint.Models.GCodeConverterModels.ProcessModels
@@ -27,6 +28,7 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels
 
         //Classes associated with GCodeConverter-specific functions.
         private ProcessG00CommandModel _processG00CommandModel;
+        private ProcessG92CommandModel _processG92CommandModel;
         private ProcessTCommandModel _processTCommandModel;
 
         //Class containing pseudo-global parameters for the GCodeConverter that are passed around various GCodeConverter classes.
@@ -51,6 +53,7 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels
             _parametersModel = ParametersModel;
 
             _processG00CommandModel = new ProcessG00CommandModel(_printerModel, _parametersModel);
+            _processG92CommandModel = new ProcessG92CommandModel(_parametersModel);
             _processTCommandModel = new ProcessTCommandModel(_printModel, _printerModel, RealTimeStatusDataModel, _parametersModel);
         }
         #endregion
@@ -69,13 +72,14 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels
             //The return GCode.
             List<ConvertedGCodeLine> convertedGCodeLinesList = null;
 
-            if ((repRapLine[0] == "G00") //Axes movement
-             || (repRapLine[0] == "G0"))
+            if ((repRapLine[0] == "G00") //Movement or printing
+             || (repRapLine[0] == "G0")
+             || (repRapLine[0] == "G01")
+             || (repRapLine[0] == "G1"))
             {
                 convertedGCodeLinesList = _processG00CommandModel.ProcessG00Command(repRapLine, _currentMaterial, false);
             }
-            else if (repRapLine[0] == "G01" //Printing with movement.
-             || repRapLine[0] == "G1")
+            else if (repRapLine[0] == "GX") //Something I made up. GX movements will always print. This allows manually written GCode to not involve E values.
             {
                 convertedGCodeLinesList = _processG00CommandModel.ProcessG00Command(repRapLine, _currentMaterial, true);
             }
@@ -91,7 +95,11 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels
             {
                 _parametersModel.AbsCoordAxis = false;
             }
-            else if (repRapLine[0] == "M82") //Absolute coordinates for Motor Printheads.
+            else if (repRapLine[0] == "G92") //Set new absolute coordinates for Axes and Extruder.
+            {
+                _processG92CommandModel.ProcessG92Command(repRapLine);
+            }
+            else if (repRapLine[0] == "M82") //Absolute coordinates for Motor Printheads. To Do
             {
                 _parametersModel.AbsCoordExtruder = true;
             }
@@ -101,7 +109,8 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels
             }
             //ModiPrint will ignore these commands.
             else if (String.IsNullOrWhiteSpace(repRapLine[0])
-                || (repRapLine[0][0] == SerialMessageCharacters.SerialTerminalCharacter) //Comments from RepRap.
+                || (repRapLine[0][0] == SerialMessageCharacters.SerialTerminalCharacter) //Comments proceed this character.
+                || (repRapLine[0][0] == SerialMessageCharacters.SerialPrintPauseCharacter) //Inidicates pausing of a print sequence.
                 || (repRapLine[0] == "M104") //The command to set printer temperature. This is unneeded.
                 || (repRapLine[0] == "M106") //The command to turn the fan on. ModiPrint printers do not have fans by default.
                 || (repRapLine[0] == "M107") //The command to turn the fan off. ModiPrint printers do not have fans by default.
@@ -109,7 +118,6 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels
                 || (repRapLine[0] == "G04") //The command to pause. ModiPrint has its own built in pausing features.
                 || (repRapLine[0] == "G21") //The command to set units to milimeters. ModiPrint only operates in milimeters so this is irrelevant.
                 || (repRapLine[0] == "G28") //The command to home to the origin. ModiPrint keeps track of positioning, not the microcontroller.
-                || (repRapLine[0] == "G92") //The command to program the zero point. This is unneeded as ModiPrint will control this process.
                 )
             {
                 return null;

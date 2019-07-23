@@ -25,11 +25,11 @@
 
         <StackPanel Grid.Row="0"  Orientation="Horizontal">
 
-            <!--#region Execute-->
+            <!--#region Print Command Buttons-->
             <Viewbox Stretch="Uniform">
                 <Grid>
                     <Grid.Resources>
-                        <System:Double x:Key="PrintButtonHeight">150</System:Double>
+                        <System:Double x:Key="PrintButtonHeight">120</System:Double>
                     </Grid.Resources>
 
                     <!--Print-->
@@ -44,7 +44,7 @@
                             <ControlTemplate TargetType="Button">
                                 <vControl:OpaqueClickableImage x:Name="Image" Source="/Resources/ImageButtons/Print.png"/>
                                 <ControlTemplate.Triggers>
-                                    <DataTrigger Binding="{Binding PrinterStatus}" Value="{x:Static vmPrint:PrinterStatus.Manual}">
+                                    <DataTrigger Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.Manual}">
                                         <Setter Property="Visibility" Value="Visible"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding IsReadyToPrint}" Value="false">
@@ -76,7 +76,7 @@
                             <ControlTemplate TargetType="Button">
                                 <vControl:OpaqueClickableImage x:Name="Image" Source="/Resources/ImageButtons/Pause.png"/>
                                 <ControlTemplate.Triggers>
-                                    <DataTrigger Binding="{Binding PrinterStatus}" Value="{x:Static vmPrint:PrinterStatus.Printing}">
+                                    <DataTrigger Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.Printing}">
                                         <Setter Property="Visibility" Value="Visible"/>
                                     </DataTrigger>
                                     <Trigger Property="IsMouseOver" Value="true">
@@ -102,18 +102,21 @@
                         </Button.Style>
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
-                                <vControl:OpaqueClickableImage x:Name="Image" Source="/Resources/ImageButtons/Print.png"/>
+                                <vControl:OpaqueClickableImage x:Name="Image" Source="/Resources/ImageButtons/Resume.png"/>
                                 <ControlTemplate.Triggers>
-                                    <DataTrigger Binding="{Binding PrinterStatus}" Value="{x:Static vmPrint:PrinterStatus.Paused}">
+                                    <DataTrigger Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.MicrocontrollerPaused}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.PrintSequencePaused}">
                                         <Setter Property="Visibility" Value="Visible"/>
                                     </DataTrigger>
                                     <Trigger Property="IsMouseOver" Value="true">
                                         <Setter TargetName="Image" Property="Source"
-                                                Value="/Resources/ImageButtons/PrintMouseOver.png"/>
+                                                Value="/Resources/ImageButtons/ResumeMouseOver.png"/>
                                     </Trigger>
                                     <Trigger Property="IsPressed" Value="true">
                                         <Setter TargetName="Image" Property="Source"
-                                                Value="/Resources/ImageButtons/Print.png"/>
+                                                Value="/Resources/ImageButtons/Resume.png"/>
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
@@ -130,23 +133,43 @@
 
                     <!--Printer Manual-->
                     <DataTemplate x:Key="PrinterManualTemplate">
-                        <TextBlock Text="Printer Idle"
-                                   FontSize="24"
+                        <TextBlock Text=""
+                                   FontSize="16"
                                    Style="{DynamicResource ThematicTextBlock}"/>
                     </DataTemplate>
 
                     <!--Printer Printing-->
                     <DataTemplate x:Key="PrinterPrintingTemplate">
-                        <TextBlock Text="Printer Printing"
-                                   FontSize="24"
+                        <TextBlock Text="Printing"
+                                   FontSize="16"
                                    Style="{DynamicResource ThematicTextBlock}"/>
                     </DataTemplate>
 
+                    <!--Microcontroller Paused-->
+                    <DataTemplate x:Key="MicrocontrollerPausedTemplate">
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="Microcontroller"
+                                       FontSize="16"
+                                       Style="{DynamicResource ThematicTextBlock}"/>
+                            <TextBlock Text="Paused"
+                                       FontSize="16"
+                                       Style="{DynamicResource ThematicTextBlock}"/>
+                        </StackPanel>
+                    </DataTemplate>
+
                     <!--Printer Paused-->
-                    <DataTemplate x:Key="PrinterPausedTemplate">
-                        <TextBlock Text="Printer Paused"
-                                   FontSize="24"
-                                   Style="{DynamicResource ThematicTextBlock}"/>
+                    <DataTemplate x:Key="PrintSequencePausedTemplate">
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="Print"
+                                       FontSize="16"
+                                       Style="{DynamicResource ThematicTextBlock}"/>
+                            <TextBlock Text="Sequence"
+                                       FontSize="16"
+                                       Style="{DynamicResource ThematicTextBlock}"/>
+                            <TextBlock Text="Paused"
+                                       FontSize="16"
+                                       Style="{DynamicResource ThematicTextBlock}"/>
+                        </StackPanel>
                     </DataTemplate>
                 </Grid.Resources>
 
@@ -156,20 +179,25 @@
                             <Style.Triggers>
 
                                 <!--Printer Manual-->
-                                <DataTrigger Binding="{Binding PrinterStatus}"  Value="{x:Static vmPrint:PrinterStatus.Manual}">
+                                <DataTrigger Binding="{Binding PrintStatus}"  Value="{x:Static vmPrint:PrintStatus.Manual}">
                                     <Setter Property="ContentTemplate" Value="{StaticResource PrinterManualTemplate}"/>
                                 </DataTrigger>
 
                                 <!--Printer Paused-->
-                                <DataTrigger Binding="{Binding PrinterStatus}"  Value="{x:Static vmPrint:PrinterStatus.Printing}">
+                                <DataTrigger Binding="{Binding PrintStatus}"  Value="{x:Static vmPrint:PrintStatus.Printing}">
                                     <Setter Property="ContentTemplate" Value="{StaticResource PrinterPrintingTemplate}"/>
                                 </DataTrigger>
 
-                                <!--Printer Paused-->
-                                <DataTrigger Binding="{Binding PrinterStatus}"  Value="{x:Static vmPrint:PrinterStatus.Paused}">
-                                    <Setter Property="ContentTemplate" Value="{StaticResource PrinterPausedTemplate}"/>
+                                <!--Microcontroller Paused-->
+                                <DataTrigger Binding="{Binding PrintStatus}"  Value="{x:Static vmPrint:PrintStatus.MicrocontrollerPaused}">
+                                    <Setter Property="ContentTemplate" Value="{StaticResource MicrocontrollerPausedTemplate}"/>
                                 </DataTrigger>
-                                
+
+                                <!--Print Sequence Paused-->
+                                <DataTrigger Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.PrintSequencePaused}">
+                                    <Setter Property="ContentTemplate" Value="{StaticResource PrintSequencePausedTemplate}"/>
+                                </DataTrigger>
+
                             </Style.Triggers>
                         </Style>
                     </ContentControl.Style>
@@ -179,12 +207,12 @@
 
             <!--#region Print Ready Check-->
             <StackPanel Orientation="Vertical"
-                        Margin="200, 0, 0, 0">
+                        VerticalAlignment="Center">
                 <StackPanel.Style>
                     <Style TargetType="{x:Type StackPanel}">
                         <Setter Property="Visibility" Value="Hidden"/>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding PrinterStatus}" Value="{x:Static vmPrint:PrinterStatus.Manual}">
+                            <DataTrigger Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.Manual}">
                                 <Setter Property="Visibility" Value="Visible"/>
                             </DataTrigger>
                         </Style.Triggers>
@@ -199,18 +227,15 @@
                             <Style TargetType="Image">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsModiPrintGCodeReadyToPrint}" Value="True">
-                                        <Setter Property="Source" Value="/Resources/GreenCheck.png"/>
+                                        <Setter Property="Source" Value="/Resources/PrintSequenceControl/GCodeEnabled.png"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding IsModiPrintGCodeReadyToPrint}" Value="False">
-                                        <Setter Property="Source" Value="/Resources/RedX.png"/>
+                                        <Setter Property="Source" Value="/Resources/PrintSequenceControl/GCodeDisabled.png"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </Image.Style>
                     </Image>
-                    <TextBlock Text="GCode is Uploaded/Converted"
-                               Width="{DynamicResource WideControlWidth}"
-                               Style="{DynamicResource ThematicTextBlock}"/>
                 </StackPanel>
 
                 <!--Display if the Serial Communication port is established-->
@@ -221,21 +246,18 @@
                             <Style TargetType="Image">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsSerialCommunicationReadyToPrint}" Value="True">
-                                        <Setter Property="Source" Value="/Resources/GreenCheck.png"/>
+                                        <Setter Property="Source" Value="/Resources/PrintSequenceControl/ConnectionEnabled.png"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding IsSerialCommunicationReadyToPrint}" Value="False">
-                                        <Setter Property="Source" Value="/Resources/RedX.png"/>
+                                        <Setter Property="Source" Value="/Resources/PrintSequenceControl/ConnectionDisabled.png"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </Image.Style>
                     </Image>
-                    <TextBlock Text="Connected to Microcontroller"
-                               Width="{DynamicResource WideControlWidth}"
-                               Style="{DynamicResource ThematicTextBlock}"/>
                 </StackPanel>
 
-                <!--Display is there is an active Printhead-->
+                <!--Display if there is an active Printhead-->
                 <StackPanel Orientation="Horizontal"
                             Height="{DynamicResource StandardControlHeight}">
                     <Image Width="{DynamicResource NarrowControlWidth}">
@@ -243,37 +265,19 @@
                             <Style TargetType="Image">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsActivePrintheadReadyToPrint}" Value="True">
-                                        <Setter Property="Source" Value="/Resources/GreenCheck.png"/>
+                                        <Setter Property="Source" Value="/Resources/PrintSequenceControl/PrintheadEnabled.png"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding IsActivePrintheadReadyToPrint}" Value="False">
-                                        <Setter Property="Source" Value="/Resources/RedX.png"/>
+                                        <Setter Property="Source" Value="/Resources/PrintSequenceControl/PrintheadDisabled.png"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </Image.Style>
                     </Image>
-                    <TextBlock Text="Printhead Set"
-                               Width="{DynamicResource WideControlWidth}"
-                               Style="{DynamicResource ThematicTextBlock}"/>
                 </StackPanel>
             </StackPanel>
             <!--#endregion-->
             
         </StackPanel>
-
-        <vGCodeManager:GCodeManagerView
-            Grid.Row="1"
-            DataContext="{Binding RelativeSource={RelativeSource FindAncestor, 
-                                  AncestorLevel=2,
-                                  AncestorType={x:Type UserControl}}, 
-                                  Path=DataContext.GCodeManagerViewModel}"/>
-
-        <vSerialCommunications:SerialMessageDisplayView 
-            Grid.Row="2"
-            DataContext="{Binding RelativeSource={RelativeSource FindAncestor, 
-                                  AncestorLevel=2,
-                                  AncestorType={x:Type UserControl}}, 
-                                  Path=DataContext.SerialMessageDisplayViewModel}"/>
-
     </Grid>
 </UserControl>

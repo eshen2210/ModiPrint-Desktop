@@ -38,8 +38,6 @@ namespace ModiPrint.ViewModels
     {
         #region Declare Classes
         //Models.
-        private SerialCommunicationCommandSetsModel _serialCommunicationCommandSetsModel;
-
         private SerialCommunicationMainModel _serialCommunicationMainModel;
         public SerialCommunicationMainModel SerialCommunicationMainModel
         {
@@ -162,24 +160,23 @@ namespace ModiPrint.ViewModels
 
             //Serial Communication Incoming and Outgoing Message Interpreter.
             _realTimeStatusDataModel = new RealTimeStatusDataModel(_printerModel);
-            _serialCommunicationCommandSetsModel = new SerialCommunicationCommandSetsModel(_realTimeStatusDataModel, _printerModel, _printModel);
 
             //Serial Communication.
             _serialCommunicationOutgoingMessagesModel = new SerialCommunicationOutgoingMessagesModel();
-            _serialCommunicationMainModel = new SerialCommunicationMainModel(_serialCommunicationOutgoingMessagesModel, _serialCommunicationCommandSetsModel, _realTimeStatusDataModel, _errorListViewModel);
+            _serialCommunicationMainModel = new SerialCommunicationMainModel(_serialCommunicationOutgoingMessagesModel, _printerModel, _printModel, _realTimeStatusDataModel, _errorListViewModel);
             _serialMessageDisplayViewModel = new SerialMessageDisplayViewModel();
             _serialCommunicationBGWModel = new SerialCommunicationBGWModel(_serialCommunicationMainModel);
             _serialCommunicationViewModel = new SerialCommunicationViewModel(_serialCommunicationMainModel, _serialCommunicationOutgoingMessagesModel, _serialCommunicationBGWModel, _serialMessageDisplayViewModel);
 
             //Printer View Model.
-            _printerViewModel = new PrinterViewModel(_printerModel, _serialCommunicationCommandSetsModel);
+            _printerViewModel = new PrinterViewModel(_printerModel, _serialCommunicationMainModel.SerialCommunicationCommandSetsModel);
 
             //Print View Model.
             _printViewModel = new PrintViewModel(_printModel, _serialMessageDisplayViewModel);
 
             //Real Time Status.
             _realTimeStatusSerialInterpreterModel = new RealTimeStatusSerialInterpreterModel(_serialCommunicationMainModel, _printerModel, _printerViewModel, _realTimeStatusDataModel, _errorListViewModel);
-            _realTimeStatusDataViewModel = new RealTimeStatusDataViewModel(_realTimeStatusDataModel, _serialCommunicationCommandSetsModel, _errorListViewModel);
+            _realTimeStatusDataViewModel = new RealTimeStatusDataViewModel(_realTimeStatusDataModel, _serialCommunicationMainModel.SerialCommunicationCommandSetsModel, _errorListViewModel);
 
             //Manual Commmands and Calibration.
             _manualControlModel = new ManualControlModel(_printerModel, _serialCommunicationOutgoingMessagesModel, _realTimeStatusDataModel);

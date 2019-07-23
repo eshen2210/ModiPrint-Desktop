@@ -4,56 +4,29 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ModiPrint.Views.PrintViews"
+             xmlns:vGCodeManager="clr-namespace:ModiPrint.Views.PrintViews.GCodeManagerViews"
              xmlns:vMaterial="clr-namespace:ModiPrint.Views.PrintViews.MaterialViews"
              mc:Ignorable="d">
-    
-    <TabControl Style="{DynamicResource ThematicTabControl}">
 
-        <!--Print & GCode-->
-        <TabItem>
-            <TabItem.Header>
-                <StackPanel Orientation="Horizontal"
-                            Height="{DynamicResource StandardControlHeight}">
-                    <Image Source="/Resources/General/TextFileBright.png"
-                           Style="{DynamicResource ThematicControlImage}"
-                           Width="{DynamicResource NarrowControlWidth}"
-                           Margin="0, 0, 0, 0"/>
-                    <TextBlock Text="Print and GCode"
-                               VerticalAlignment="Center"
-                               Style="{DynamicResource ThematicTabControlTextBlock}"
-                               Margin="0, 0, 0, 0"/>
-                </StackPanel>
-            </TabItem.Header>
 
-            <local:PrintExecuteView 
-                DataContext="{Binding PrintExecuteViewModel}"
+    <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden"
+                  Style="{DynamicResource ThematicScrollViewer}">
+        <StackPanel Orientation="Vertical">
+            
+            <vGCodeManager:GCodeManagerView
+                Grid.Row="1"
+                DataContext="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                      AncestorLevel=1,
+                                      AncestorType={x:Type UserControl}}, 
+                                      Path=DataContext.GCodeManagerViewModel}"/>
+
+            <vMaterial:MaterialView
+                DataContext="{Binding PrintViewModel}"
                 Margin="10, 10, 10, 10"/>
-        </TabItem>
-
-        <!--Material-->
-        <TabItem>
-            <TabItem.Header>
-                <StackPanel Orientation="Horizontal"
-                            Height="{DynamicResource StandardControlHeight}">
-                    <Image Source="/Resources/General/Material.png"
-                           Style="{DynamicResource ThematicControlImage}"
-                           Width="{DynamicResource NarrowControlWidth}"
-                           Margin="0, 0, 0, 0"/>
-                    <TextBlock Text="Material"
-                               VerticalAlignment="Center"
-                               Style="{DynamicResource ThematicTabControlTextBlock}"
-                               Margin="0, 0, 0, 0"/>
-                </StackPanel>
-            </TabItem.Header>
-
-            <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden"
-                          Style="{DynamicResource ThematicScrollViewer}">
-                <vMaterial:MaterialView
-                    DataContext="{Binding PrintViewModel}"
-                    Margin="10, 10, 10, 10"/>
-            </ScrollViewer>
-        </TabItem>
+            
+        </StackPanel>
         
-    </TabControl>
+    </ScrollViewer>
+
     
 </UserControl>

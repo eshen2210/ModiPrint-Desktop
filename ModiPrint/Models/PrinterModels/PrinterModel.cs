@@ -63,13 +63,6 @@ namespace ModiPrint.Models.PrinterModels
             get { return _printheadsCreatedCount; }
             set { _printheadsCreatedCount = value; }
         }
-
-        //General settings that belong to the Printer as a whole instead of any specific equipment.
-        private PrinterSettingsModel _printerSettingsModel;
-        public PrinterSettingsModel PrinterSettingsModel
-        {
-            get { return _printerSettingsModel; }
-        }
         #endregion
 
         #region Constructors
@@ -85,8 +78,6 @@ namespace ModiPrint.Models.PrinterModels
             AddZAxis();
 
             AddPrinthead();
-
-            _printerSettingsModel = new PrinterSettingsModel();
         }
         #endregion
 

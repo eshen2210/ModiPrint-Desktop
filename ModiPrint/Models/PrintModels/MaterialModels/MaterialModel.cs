@@ -218,11 +218,27 @@ namespace ModiPrint.Models.PrintModels.MaterialModels
         //The higher the value, the faster the junction speeds.
         //However, high values can cause harsh transitions in between movements and missed steps.
         //Value must be between 0 to 1 and is usually on the very low end (< 0.1).
-        private double _junctionDeviation;
+        private double _junctionDeviation = 0;
         public double JunctionDeviation
         {
             get { return _junctionDeviation; }
             set { _junctionDeviation = value; }
+        }
+
+        //Pause a print sequence before switching to or switching from this Material.
+        //Manual actions will still fire during this pause.
+        private bool _pauseBeforeActivating = false;
+        public bool PauseBeforeActivating
+        {
+            get { return _pauseBeforeActivating; }
+            set { _pauseBeforeActivating = value; }
+        }
+
+        private bool _pauseBeforeDeactivating = false;
+        public bool PauseBeforeDeactivating
+        {
+            get { return _pauseBeforeDeactivating; }
+            set { _pauseBeforeDeactivating = value; }
         }
         #endregion
 

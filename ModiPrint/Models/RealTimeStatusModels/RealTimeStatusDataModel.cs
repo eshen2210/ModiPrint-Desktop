@@ -34,7 +34,7 @@ namespace ModiPrint.Models.RealTimeStatusModels
     public delegate void StatusMessagesUpdatedEventHandler(string statusMessage);
     public delegate void ErrorMessagesUpdatedEventHandler(string errorMessage);
 
-    //Associated with RealTimeStatus equipment models.
+    //Associated with RealTimeStatus Models.
     //States the status of the Limit Switch during operation.
     public enum LimitSwitchStatus
     {
@@ -100,6 +100,15 @@ namespace ModiPrint.Models.RealTimeStatusModels
         public RealTimeStatusPrintheadModel ActivePrintheadModel
         {
             get { return _activePrintheadModel; }
+        }
+
+        //States whether or not hitting Limit Switches on Z actuators should change the Z Axis offset / minmax positions.
+        //Once minmax positions are recorded, this flag is automatically set to false.
+        //This is a product of how the Z offset is tied with its minmax positions and how the device does not know its position on startup.
+        private bool _shouldZCalibrate = false;
+        public bool ShouldZCalibrate
+        {
+            set { _shouldZCalibrate = value; }
         }
         #endregion
 
@@ -626,15 +635,23 @@ namespace ModiPrint.Models.RealTimeStatusModels
             {
                 if (zStepsTaken > 0)
                 {
-                    zAxisModel.MaxPosition = _zRealTimeStatusAxisModel.Position;
+                    if (_shouldZCalibrate == true)
+                    {
+                        zAxisModel.MaxPosition = _zRealTimeStatusAxisModel.Position;
+                        _shouldZCalibrate = false;
+                    }
                     _zRealTimeStatusAxisModel.LimitSwitchStatus = LimitSwitchStatus.UpperLimit;
                 }
                 else if (zStepsTaken < 0)
                 {
                     //The minimum Position of Z Axes are always zero.
                     //If the lower limit of a Z Axis is hit, then adjust the Max Position such that the range remains the same.
-                    zAxisModel.MaxPosition = zAxisModel.MaxPosition + _zRealTimeStatusAxisModel.Position;
-                    zAxisModel.MinPosition = 0;
+                    if (_shouldZCalibrate == true)
+                    {
+                        zAxisModel.MaxPosition = zAxisModel.MaxPosition + _zRealTimeStatusAxisModel.Position;
+                        zAxisModel.MinPosition = 0;
+                        _shouldZCalibrate = false;
+                    }
                     _zRealTimeStatusAxisModel.LimitSwitchStatus = LimitSwitchStatus.LowerLimit;
                 }
             }

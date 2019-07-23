@@ -112,7 +112,7 @@ namespace ModiPrint.Models.GCodeConverterModels
             string retractZ = SerialMessageCharacters.SerialCommandSetCharacter + "RetractZ";
             convertedGCode.Add(new ConvertedGCodeLine(retractZ));
 
-            _parametersModel.ReportProgress("GCode Converted! (Large Bodies of Text May Take a Few Seconds to Load)", 100);
+            _parametersModel.ReportProgress("GCode Converted!", 100);
 
             return GCodeLinesConverter.GCodeLinesListToString(convertedGCode);
         }
