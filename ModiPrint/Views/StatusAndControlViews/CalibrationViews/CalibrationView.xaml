@@ -36,6 +36,19 @@
                         </StackPanel>
                     </ControlTemplate>
                 </Button.Template>
+                <Button.ToolTip>
+                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                        The following sequence will happen:
+                        <LineBreak/>
+                        1. Retract all Z actuators until the upper limit switches are hit. Z actuator min/max positions will not be recorded.
+                        <LineBreak/>
+                        2. Move X actuator to both upper and lower limit switches. Record min/max positions.
+                        <LineBreak/>
+                        3. Move Y actuator to both upper and lower limit switches. Record min/max positions.
+                        <LineBreak/>
+                        Note that to calibrate all min/max positions and printhead offsets, you must use Set Printhead Offset for each printhead after using Find Limits.
+                    </TextBlock>
+                </Button.ToolTip>
             </Button>
         </Border>
 
@@ -67,6 +80,15 @@
                         </StackPanel>
                     </ControlTemplate>
                 </Button.Template>
+                <Button.ToolTip>
+                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                        Move to the center of the XY stage with a specified offsets.
+                        <LineBreak/>
+                        Set that new position as the origin X and Y positions equal zero).
+                        <LineBreak/>
+                        Use this button only after Find Limits.
+                    </TextBlock>
+                </Button.ToolTip>
             </Button>
         </Border>
 
@@ -99,6 +121,29 @@
                         </StackPanel>
                     </ControlTemplate>
                 </Button.Template>
+                <Button.ToolTip>
+                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                        Set the offset values for the currently set printhead.
+                        <LineBreak/>
+                        To use this feature, do the following:
+                        <LineBreak/>
+                        1. Install nozzles on each printhead as if printing is about to occur.
+                        <LineBreak/>
+                        2. Set a printhead (drop-down menu on the left).
+                        <LineBreak/>
+                        3. Move the ends of each nozzle precisely to a specific position in 3D space.
+                        <LineBreak/>
+                        4. Hit the Set Printhead Offset button.
+                        <LineBreak/>
+                        5. Repeat steps 3-5 for all printheads, manuevering them to the exact same position.
+                        <LineBreak/>
+                        Do not perform any other actions in between steps 2-5.
+                        <LineBreak/>
+                        In sum, these actions will set the min/max positions of the Z actuators and the offsets of the printheads.
+                        <LineBreak/>
+                        It is recommended to use the Save feature after calibration. Periodic calibration is recommended. 
+                    </TextBlock>
+                </Button.ToolTip>
             </Button>
         </Border>
     </StackPanel>

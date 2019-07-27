@@ -62,6 +62,13 @@
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Button.Template>
+                        <Button.ToolTip>
+                            <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                Executes a print sequence. This program will sequentially send all commands contained within a .mdpt file or a converted .gcode file.
+                                <LineBreak/>
+                                Only availible if all conditions (to the right of this icon) are met.
+                            </TextBlock>
+                        </Button.ToolTip>
                     </Button>
 
                     <!--Pause-->
@@ -90,6 +97,13 @@
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Button.Template>
+                        <Button.ToolTip>
+                            <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                Pause the print sequence.
+                                <LineBreak/>
+                                Specifically, stop sending serial messages and tell the microcontroller to stop processing its received queue of commands ASAP.
+                            </TextBlock>
+                        </Button.ToolTip>
                     </Button>
 
                     <!--Resume-->
@@ -121,6 +135,12 @@
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Button.Template>
+                        <LineBreak/>
+                        <Button.ToolTip>
+                            <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                Resume the print sequence.
+                            </TextBlock>
+                        </Button.ToolTip>
                     </Button>
 
                 </Grid>
@@ -155,6 +175,7 @@
                                        FontSize="16"
                                        Style="{DynamicResource ThematicTextBlock}"/>
                         </StackPanel>
+                        
                     </DataTemplate>
 
                     <!--Printer Paused-->
@@ -219,7 +240,48 @@
                     </Style>
                 </StackPanel.Style>
 
-                <!--Display if the GCode has been uploaded or converter and is ready for a print-->
+                <StackPanel.Resources>
+                    <ResourceDictionary>
+                        <ResourceDictionary.MergedDictionaries>
+                            <ResourceDictionary Source="/Views/GlobalResources.xaml"/>
+                        </ResourceDictionary.MergedDictionaries>
+
+                        <Style x:Key="GCodeReadyCheckToolTipStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ThematicToolTipTextBlock}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsModiPrintGCodeReadyToPrint}" Value="True">
+                                    <Setter Property="Text" Value="GCode is uploaded/converted and ready for print."/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsModiPrintGCodeReadyToPrint}" Value="False">
+                                    <Setter Property="Text" Value="A .mdpt file needs to be uploaded or a .gcode file needs to be converted from the Print menu."/>
+                                 </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+
+                        <Style x:Key="SerialConnectionReadyCheckToolTipStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ThematicToolTipTextBlock}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsSerialCommunicationReadyToPrint}" Value="True">
+                                    <Setter Property="Text" Value="Serial connection established and ready for print."/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsSerialCommunicationReadyToPrint}" Value="False">
+                                    <Setter Property="Text" Value="Serial connection needs to be established. Connect the microcontroller to a serial port and establish a conenction from the Control menu."/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+
+                        <Style x:Key="PrintheadSetReadyCheckToolTipStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ThematicToolTipTextBlock}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsActivePrintheadReadyToPrint}" Value="True">
+                                    <Setter Property="Text" Value="Printhead is set and ready for print."/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsActivePrintheadReadyToPrint}" Value="False">
+                                    <Setter Property="Text" Value="Printhead needs to be set to establish a starting location. Set the printhead from the Control menu."/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ResourceDictionary>
+                </StackPanel.Resources>
+
+                <!--Display if the GCode has been uploaded or converted and is ready for a print-->
                 <StackPanel Orientation="Horizontal"
                             Height="{DynamicResource StandardControlHeight}">
                     <Image Width="{DynamicResource NarrowControlWidth}">
@@ -235,6 +297,9 @@
                                 </Style.Triggers>
                             </Style>
                         </Image.Style>
+                        <Image.ToolTip>
+                            <TextBlock Style="{StaticResource GCodeReadyCheckToolTipStyle}"/>
+                        </Image.ToolTip>
                     </Image>
                 </StackPanel>
 
@@ -254,6 +319,9 @@
                                 </Style.Triggers>
                             </Style>
                         </Image.Style>
+                        <Image.ToolTip>
+                            <TextBlock Style="{StaticResource SerialConnectionReadyCheckToolTipStyle}"/>
+                        </Image.ToolTip>
                     </Image>
                 </StackPanel>
 
@@ -273,6 +341,9 @@
                                 </Style.Triggers>
                             </Style>
                         </Image.Style>
+                        <Image.ToolTip>
+                            <TextBlock Style="{StaticResource PrintheadSetReadyCheckToolTipStyle}"/>
+                        </Image.ToolTip>
                     </Image>
                 </StackPanel>
             </StackPanel>

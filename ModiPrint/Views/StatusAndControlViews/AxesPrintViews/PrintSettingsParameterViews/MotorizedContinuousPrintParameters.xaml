@@ -20,7 +20,13 @@
             <TextBox Text="{Binding Path=EMoveAxisPositiveDistance, Mode=TwoWay, 
                                     UpdateSourceTrigger=PropertyChanged, Delay=250}"
                      Style="{DynamicResource ThematicTextBox}"
-                     Width="{DynamicResource StandardControlWidth}"/>
+                     Width="{DynamicResource StandardControlWidth}">
+                <TextBox.ToolTip>
+                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                        For every mm moved by the XYZ stage, the motorized printhead will match that movement with this distance of extrusion.
+                    </TextBlock>
+                </TextBox.ToolTip>
+            </TextBox>
             <TextBlock Text="mm/mm"
                        Style="{DynamicResource ThematicTextBlock}"
                        Width="{DynamicResource NarrowControlWidth}"/>

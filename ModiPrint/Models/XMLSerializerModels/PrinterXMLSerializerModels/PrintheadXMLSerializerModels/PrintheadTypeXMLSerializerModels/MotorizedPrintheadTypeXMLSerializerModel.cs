@@ -64,12 +64,6 @@ namespace ModiPrint.Models.XMLSerializerModels.PrinterXMLSerializerModels.Printh
                 //Min Position.
                 xmlWriter.WriteElementString("MinPosition", motorizedPrintheadTypeViewModel.MinPosition.ToString());
 
-                //Resevoir Diameter.
-                xmlWriter.WriteElementString("ResevoirDiameter", motorizedPrintheadTypeViewModel.ResevoirDiameter.ToString());
-
-                //Resevoir Volume.
-                xmlWriter.WriteElementString("ResevoirVolume", motorizedPrintheadTypeViewModel.ResevoirVolume.ToString());
-
                 //Close outmost element "MotorizedPrintheadType".
                 xmlWriter.WriteEndElement();
             }

@@ -207,11 +207,13 @@ namespace ModiPrint.Models.SerialCommunicationModels
                 ymmPerStep = yAxisModel.MmPerStep;
             }
 
+            double unused = 0;
             returnCommands[0] = GCodeLinesConverter.GCodeLinesListToString(
                 WriteG00.WriteAxesMovement(
                 xmmPerStep, ymmPerStep, 0, 
                 xNewPosition - xRealTimeStatusAxisModel.Position, yNewPosition - yRealTimeStatusAxisModel.Position, 0,
-                xInvertDirection, yInvertDirection, false));
+                xInvertDirection, yInvertDirection, false,
+                ref unused, ref unused, ref unused));
 
             return returnCommands;
         }
@@ -428,17 +430,20 @@ namespace ModiPrint.Models.SerialCommunicationModels
 
             if (zAxisModel != null)
             {
-                //Retract Z Axis.
+                //Retract Z Axis.\
+                double unused = 0;
                 bool zDirectionInverted = (zAxisModel != null) ? zAxisModel.IsDirectionInverted : false;
                 if (commandSet.Contains("Limit")) //If CommandSet is "RetractZLimit", then hit the Limit Switch before returning to default position.
                 {
                     //Hit the Limti Switch.
                     double retractDistance = 5000;
+                    
                     string zRetract = GCodeLinesConverter.GCodeLinesListToString(
                         WriteG00.WriteAxesMovement(
                         1, 1, zAxisModel.MmPerStep,
                         0, 0, retractDistance,
-                        false, false, zDirectionInverted));
+                        false, false, zDirectionInverted,
+                        ref unused, ref unused, ref unused));
                     returnCommands[0] = zRetract;
 
                     //Move away from the Limit Switch to default position.
@@ -446,7 +451,8 @@ namespace ModiPrint.Models.SerialCommunicationModels
                         WriteG00.WriteAxesMovement(
                         0, 0, zAxisModel.MmPerStep,
                         0, 0, -1 * GlobalValues.LimitBuffer,
-                        false, false, zAxisModel.IsDirectionInverted));
+                        false, false, zAxisModel.IsDirectionInverted,
+                        ref unused, ref unused, ref unused));
                     returnCommands[1] = zMoveAwayFromLimit;
                 }
                 else //If the CommandSet is "RetractZ", then move to default position without hitting the Limit Switch.
@@ -457,7 +463,8 @@ namespace ModiPrint.Models.SerialCommunicationModels
                         WriteG00.WriteAxesMovement(
                         1, 1, zAxisModel.MmPerStep,
                         0, 0, retractDistance,
-                        false, false, zDirectionInverted));
+                        false, false, zDirectionInverted,
+                        ref unused, ref unused, ref unused));
                     returnCommands[0] = zRetract;
                 }
                 
@@ -612,21 +619,26 @@ namespace ModiPrint.Models.SerialCommunicationModels
             double zMove = -1 * (newPrinthead.AttachedZAxisModel.MaxPosition - GlobalValues.LimitBuffer) + zPosition;
 
             //Move to the X and Y offsets first to prevent bumping of print container walls.
+            double unused = 0;
             if ((xMove != 0) || (yMove != 0))
             {
                 //Maximize movement speeds before moving to offset.
                 returnCommands[returnIndex++] = _writeSetAxisModel.WriteSetAxis(_printerModel.AxisModelList[0]) + "\r\n";
                 returnCommands[returnIndex++] = _writeSetAxisModel.WriteSetAxis(_printerModel.AxisModelList[1]) + "\r\n";
-                returnCommands[returnIndex++] = GCodeLinesConverter.GCodeLinesListToString(WriteG00.WriteAxesMovement(xAxisModel.MmPerStep, yAxisModel.MmPerStep, 0,
-                    xMove, yMove, 0, xAxisModel.IsDirectionInverted, yAxisModel.IsDirectionInverted, false)) + "\r\n";
+                returnCommands[returnIndex++] = GCodeLinesConverter.GCodeLinesListToString(
+                    WriteG00.WriteAxesMovement(xAxisModel.MmPerStep, yAxisModel.MmPerStep, 0,
+                    xMove, yMove, 0, xAxisModel.IsDirectionInverted, yAxisModel.IsDirectionInverted, false,
+                    ref unused, ref unused, ref unused)) + "\r\n";
             }
 
             //Move the Z offset after the X and Y positions are set.
             if (zMove != 0)
             {
                 returnCommands[returnIndex++] = _writeSetAxisModel.WriteSetAxis(newPrinthead.AttachedZAxisModel) + "\r\n";
-                returnCommands[returnIndex++] = GCodeLinesConverter.GCodeLinesListToString(WriteG00.WriteAxesMovement(0, 0, zAxisModel.MmPerStep,
-                    0, 0, zMove, false, false, zAxisModel.IsDirectionInverted)) + "\r\n";
+                returnCommands[returnIndex++] = GCodeLinesConverter.GCodeLinesListToString(
+                    WriteG00.WriteAxesMovement(0, 0, zAxisModel.MmPerStep,
+                    0, 0, zMove, false, false, zAxisModel.IsDirectionInverted,
+                    ref unused, ref unused, ref unused)) + "\r\n";
             }
 
             return returnCommands;

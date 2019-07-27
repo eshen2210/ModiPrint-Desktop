@@ -63,16 +63,19 @@ namespace ModiPrint.Models.ManualControlModels
             _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(switchX);
 
             //Hit the min and max limit switches on X.
+            double unused = 0;
             string xPositive = GCodeLinesConverter.GCodeLinesListToString(
                 WriteG00.WriteAxesMovement(
                 xAxis.MmPerStep, 0, 0,
                 5000, 0, 0,
-                xAxis.IsDirectionInverted, false, false));
+                xAxis.IsDirectionInverted, false, false,
+                ref unused, ref unused, ref unused));
             string xNegative = GCodeLinesConverter.GCodeLinesListToString(
                 WriteG00.WriteAxesMovement(
                 xAxis.MmPerStep, 0, 0,
                 -5000, 0, 0,
-                xAxis.IsDirectionInverted, false, false));
+                xAxis.IsDirectionInverted, false, false,
+                ref unused, ref unused, ref unused));
             _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(xPositive);
             _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(xNegative);
 
@@ -81,7 +84,8 @@ namespace ModiPrint.Models.ManualControlModels
                 WriteG00.WriteAxesMovement(
                 xAxis.MmPerStep, 0, 0,
                 GlobalValues.LimitBuffer, 0, 0,
-                xAxis.IsDirectionInverted, false, false));
+                xAxis.IsDirectionInverted, false, false,
+                ref unused, ref unused, ref unused));
             _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(xMoveAwayFromLimit);
 
             //Set Y Axis to max speeds.
@@ -94,12 +98,14 @@ namespace ModiPrint.Models.ManualControlModels
                 WriteG00.WriteAxesMovement(
                 0, yAxis.MmPerStep, 0,
                 0, 5000, 0,
-                yAxis.IsDirectionInverted, false, false));
+                yAxis.IsDirectionInverted, false, false,
+                ref unused, ref unused, ref unused));
             string yNegative = GCodeLinesConverter.GCodeLinesListToString(
                 WriteG00.WriteAxesMovement(
                 0, yAxis.MmPerStep, 0,
                 0, -5000, 0,
-                yAxis.IsDirectionInverted, false, false));
+                yAxis.IsDirectionInverted, false, false,
+                ref unused, ref unused, ref unused));
             _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(yPositive);
             _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(yNegative);
 
@@ -108,7 +114,8 @@ namespace ModiPrint.Models.ManualControlModels
                 WriteG00.WriteAxesMovement(
                 0, yAxis.MmPerStep, 0,
                 0, GlobalValues.LimitBuffer, 0,
-                yAxis.IsDirectionInverted, false, false));
+                yAxis.IsDirectionInverted, false, false,
+                ref unused, ref unused, ref unused));
             _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(yMoveAwayFromLimit);
         }
 

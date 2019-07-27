@@ -40,7 +40,13 @@
                                                 Path= DataContext.CalibrationViewModel.XDistanceFromCenter, Mode=TwoWay, 
                                                 UpdateSourceTrigger=PropertyChanged, Delay=250}"
                                  Style="{DynamicResource ThematicTextBox}"
-                                 Width="{DynamicResource StandardControlWidth}"/>
+                                 Width="{DynamicResource StandardControlWidth}">
+                            <TextBox.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                    X position relative to the center of the XYZ stage that the stage will move to and set as the X zero position.
+                                </TextBlock>
+                            </TextBox.ToolTip>
+                        </TextBox>
                         <TextBlock Text="mm From Center"
                                    Style="{DynamicResource ThematicTextBlock}"
                                    Width="{DynamicResource StandardControlWidth}"/>
@@ -59,7 +65,13 @@
                                                 Path= DataContext.CalibrationViewModel.YDistanceFromCenter, Mode=TwoWay, 
                                                 UpdateSourceTrigger=PropertyChanged, Delay=250}"
                                  Style="{DynamicResource ThematicTextBox}"
-                                 Width="{DynamicResource StandardControlWidth}"/>
+                                 Width="{DynamicResource StandardControlWidth}">
+                            <TextBox.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                    Y position relative to the center of the XYZ stage that the stage will move to and set as the Y zero position.
+                                </TextBlock>
+                            </TextBox.ToolTip>
+                        </TextBox>
                         <TextBlock Text="mm From Center"
                                    Style="{DynamicResource ThematicTextBlock}"
                                    Width="{DynamicResource StandardControlWidth}"/>
@@ -94,6 +106,15 @@
                             </StackPanel>
                         </ControlTemplate>
                     </Button.Template>
+                    <Button.ToolTip>
+                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                            Move to the center of the XY stage with a specified offsets.
+                            <LineBreak/>
+                            Set that new position as the origin X and Y positions equal zero).
+                            <LineBreak/>
+                            Use this button only after Find Limits.
+                            </TextBlock>
+                    </Button.ToolTip>
                 </Button>
             </Border>
 

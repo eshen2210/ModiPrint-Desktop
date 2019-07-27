@@ -151,10 +151,6 @@ F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint Desktop\ModiPrint\
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint Desktop\ModiPrint\obj\Debug\ModiPrint.application
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint Desktop\ModiPrint\obj\Debug\ModiPrint.exe
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint Desktop\ModiPrint\obj\Debug\ModiPrint.pdb
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\xunit.runner.visualstudio.testadapter.dll
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\xunit.runner.reporters.net452.dll
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\xunit.runner.utility.net452.dll
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\xunit.abstractions.dll
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\ModiPrint.exe.config
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\ModiPrint.exe.manifest
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\ModiPrint.application
@@ -162,12 +158,6 @@ F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\ModiPrint.pdb
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\System.Windows.Interactivity.dll
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\ToggleSwitch.dll
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\xunit.assert.dll
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\xunit.core.dll
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\xunit.execution.desktop.dll
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\xunit.assert.xml
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\xunit.core.xml
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\xunit.execution.desktop.xml
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\PrinterViews\AxisViews\AxisView.g.cs
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\ErrorListView.g.cs
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\MainWindowView.g.cs
@@ -211,11 +201,6 @@ F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\AxesPrintViews\PrintSettingsParameterViews\PrintSettingsParameterView.g.cs
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\AxesPrintViews\PrintSettingsParameterViews\ValveContinuousPrintParameters.g.cs
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\AxesPrintViews\PrintSettingsParameterViews\ValveDropletPrintParameters.g.cs
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\AxesPrintViews\PrintSettingsViews\MotorizedContinuousPrint.g.cs
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\AxesPrintViews\PrintSettingsViews\MotorizedDropletPrint.g.cs
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\AxesPrintViews\PrintSettingsViews\PrintSettingsView.g.cs
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\AxesPrintViews\PrintSettingsViews\ValveContinuousPrint.g.cs
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\AxesPrintViews\PrintSettingsViews\ValveDropletPrint.g.cs
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\CalibrationViews\CalibrationView.g.cs
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\CalibrationViews\SetOriginSettings.g.cs
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\CommandSettingsView.g.cs
@@ -277,11 +262,6 @@ F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\AxesPrintViews\PrintSettingsParameterViews\PrintSettingsParameterView.baml
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\AxesPrintViews\PrintSettingsParameterViews\ValveContinuousPrintParameters.baml
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\AxesPrintViews\PrintSettingsParameterViews\ValveDropletPrintParameters.baml
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\AxesPrintViews\PrintSettingsViews\MotorizedContinuousPrint.baml
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\AxesPrintViews\PrintSettingsViews\MotorizedDropletPrint.baml
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\AxesPrintViews\PrintSettingsViews\PrintSettingsView.baml
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\AxesPrintViews\PrintSettingsViews\ValveContinuousPrint.baml
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\AxesPrintViews\PrintSettingsViews\ValveDropletPrint.baml
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\CalibrationViews\CalibrationView.baml
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\CalibrationViews\SetOriginSettings.baml
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\CommandSettingsView.baml
@@ -303,4 +283,25 @@ F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\ModiPrint.pdb
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\PrintViews\GCodeManagerViews\GCodeManagerView.g.cs
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\PrintViews\GCodeManagerViews\GCodeManagerView.baml
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\UnsetMainWindow.g.cs
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\UnsetMainWindow.baml
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\Microsoft.Expression.Interactions.dll
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\en\Microsoft.Expression.Interactions.resources.dll
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\es\Microsoft.Expression.Interactions.resources.dll
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\fr\Microsoft.Expression.Interactions.resources.dll
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\it\Microsoft.Expression.Interactions.resources.dll
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\ja\Microsoft.Expression.Interactions.resources.dll
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\ko\Microsoft.Expression.Interactions.resources.dll
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\ru\Microsoft.Expression.Interactions.resources.dll
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\zh-Hans\Microsoft.Expression.Interactions.resources.dll
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\zh-Hant\Microsoft.Expression.Interactions.resources.dll
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\en\System.Windows.Interactivity.resources.dll
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\es\System.Windows.Interactivity.resources.dll
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\fr\System.Windows.Interactivity.resources.dll
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\it\System.Windows.Interactivity.resources.dll
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\ja\System.Windows.Interactivity.resources.dll
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\ko\System.Windows.Interactivity.resources.dll
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\ru\System.Windows.Interactivity.resources.dll
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\zh-Hans\System.Windows.Interactivity.resources.dll
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\zh-Hant\System.Windows.Interactivity.resources.dll
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\ModiPrint.csprojResolveAssemblyReference.cache

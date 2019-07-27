@@ -66,10 +66,12 @@ namespace ModiPrint.Models.ManualControlModels
             double zmmPerStep = (zDistance != 0) ? _printerModel.FindAxis(zAxisModel.Name).MmPerStep : double.MaxValue;
             bool zDirectionInverted = (zAxisModel != null) ? zAxisModel.IsDirectionInverted : false;
 
+            double unused = 0;
             string axesMovementString = GCodeLinesConverter.GCodeLinesListToString(
                 WriteG00.WriteAxesMovement(xmmPerStep, ymmPerStep, zmmPerStep,
                 xDistance, yDistance, zDistance,
-                _printerModel.AxisModelList[0].IsDirectionInverted, _printerModel.AxisModelList[1].IsDirectionInverted, zDirectionInverted));
+                _printerModel.AxisModelList[0].IsDirectionInverted, _printerModel.AxisModelList[1].IsDirectionInverted, zDirectionInverted,
+                ref unused, ref unused, ref unused));
 
             _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(axesMovementString);
         }
@@ -91,10 +93,12 @@ namespace ModiPrint.Models.ManualControlModels
             double zmmPerStep = (zDistance != 0) ? _printerModel.FindAxis(zAxisModel.Name).MmPerStep : double.MaxValue;
             bool zDirectionInverted = (zAxisModel != null) ? zAxisModel.IsDirectionInverted : false;
 
+            double unused = 0;
             string printString = GCodeLinesConverter.GCodeLinesListToString(
                 WriteG00.WriteMotorizedContinuousPrint(emmPerStep, xmmPerStep, ymmPerStep, zmmPerStep,
                 eDispensePerDistance, xDistance, yDistance, zDistance,
                 _printerModel.AxisModelList[0].IsDirectionInverted, _printerModel.AxisModelList[1].IsDirectionInverted, zDirectionInverted, motorizedPrintheadTypeModel.IsDirectionInverted,
+                ref unused, ref unused, ref unused, ref unused,
                 null));
 
             _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(printString);
@@ -110,8 +114,9 @@ namespace ModiPrint.Models.ManualControlModels
             double emmPerStep = motorizedPrintheadTypeModel.MmPerStep;
             RealTimeStatusMotorizedPrintheadModel realTimeStatusMotorizedPrintheadModel = (RealTimeStatusMotorizedPrintheadModel)_realTimeStatusDataModel.ActivePrintheadModel;
 
+            double unused = 0;
             string printString = GCodeLinesConverter.GCodeLinesListToString(
-                WriteG00.WriteMotorizedPrintWithoutMovement(eDistance, emmPerStep, motorizedPrintheadTypeModel.IsDirectionInverted));
+                WriteG00.WriteMotorizedPrintWithoutMovement(eDistance, emmPerStep, motorizedPrintheadTypeModel.IsDirectionInverted, ref unused));
 
             _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(printString);
         }
@@ -123,9 +128,8 @@ namespace ModiPrint.Models.ManualControlModels
         /// <param name="yDistance"></param>
         /// <param name="zDistance"></param>
         /// <param name="interpolateDistance"></param>
-        /// <param name="interpolateRoundUp"></param>
         /// <param name="eDispensePerDroplet"></param>
-        public void ProcessManualMotorDropletPrintCommand(double xDistance, double yDistance, double zDistance, double interpolateDistance, bool interpolateRoundUp, double eDispensePerDroplet)
+        public void ProcessManualMotorDropletPrintCommand(double xDistance, double yDistance, double zDistance, double interpolateDistance, double eDispensePerDroplet)
         {
             PrintheadModel printheadModel = _printerModel.FindPrinthead(_realTimeStatusDataModel.ActivePrintheadModel.Name);
             MotorizedPrintheadTypeModel motorizedPrintheadTypeModel = (MotorizedPrintheadTypeModel)printheadModel.PrintheadTypeModel;
@@ -139,11 +143,13 @@ namespace ModiPrint.Models.ManualControlModels
             double zmmPerStep = (zDistance != 0) ? _printerModel.FindAxis(zAxisModel.Name).MmPerStep : double.MaxValue;
             bool zDirectionInverted = (zAxisModel != null) ? zAxisModel.IsDirectionInverted : false;
 
+            double unused = 0;
             string printString = GCodeLinesConverter.GCodeLinesListToString(
                 WriteG00.WriteMotorizedDropletPrint(
                 emmPerStep, xmmPerStep, ymmPerStep, zmmPerStep,
                 eDispensePerDroplet, 0, xDistance, 0, yDistance, 0, zDistance,
                 _printerModel.AxisModelList[0].IsDirectionInverted, _printerModel.AxisModelList[1].IsDirectionInverted, zDirectionInverted, motorizedPrintheadTypeModel.IsDirectionInverted,
+                ref unused, ref unused, ref unused, ref unused,
                 null, new DropletModel(interpolateDistance)));
 
             _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(printString);
@@ -163,9 +169,12 @@ namespace ModiPrint.Models.ManualControlModels
             double zmmPerStep = (zDistance != 0) ? _printerModel.FindAxis(zAxisModel.Name).MmPerStep : double.MaxValue;
             bool zDirectionInverted = (zAxisModel != null) ? zAxisModel.IsDirectionInverted : false;
 
+            double unused = 0;
             string printString = GCodeLinesConverter.GCodeLinesListToString(
-                WriteG00.WriteValveContinuousPrint(xmmPerStep, ymmPerStep, zmmPerStep, 0, xDistance, 0, yDistance, 0, zDistance,
-                _printerModel.AxisModelList[0].IsDirectionInverted, _printerModel.AxisModelList[1].IsDirectionInverted, zDirectionInverted));
+                WriteG00.WriteValveContinuousPrint(xmmPerStep, ymmPerStep, zmmPerStep, 
+                xDistance, yDistance, zDistance,
+                _printerModel.AxisModelList[0].IsDirectionInverted, _printerModel.AxisModelList[1].IsDirectionInverted, zDirectionInverted,
+                ref unused, ref unused, ref unused));
 
             _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(printString);
         }
@@ -189,9 +198,8 @@ namespace ModiPrint.Models.ManualControlModels
         /// <param name="yDistance"></param>
         /// <param name="zDistance"></param>
         /// <param name="interpolateDistance"></param>
-        /// <param name="interpolateRoundUp"></param>
         /// <param name="valveOpenTime"></param>
-        public void ProcessManualValveDropletPrintCommand(double xDistance, double yDistance, double zDistance, double interpolateDistance, bool interpolateRoundUp, int valveOpenTime)
+        public void ProcessManualValveDropletPrintCommand(double xDistance, double yDistance, double zDistance, double interpolateDistance, int valveOpenTime)
         {
             double xmmPerStep = (xDistance != 0) ? _printerModel.AxisModelList[0].MmPerStep : double.MaxValue;
             double ymmPerStep = (yDistance != 0) ? _printerModel.AxisModelList[1].MmPerStep : double.MaxValue;
@@ -199,10 +207,12 @@ namespace ModiPrint.Models.ManualControlModels
             double zmmPerStep = (zDistance != 0) ? _printerModel.FindAxis(zAxisModel.Name).MmPerStep : double.MaxValue;
             bool zDirectionInverted = (zAxisModel != null) ? zAxisModel.IsDirectionInverted : false;
 
+            double unused = 0;
             string printString = GCodeLinesConverter.GCodeLinesListToString(
                 WriteG00.WriteValveDropletPrint(xmmPerStep, ymmPerStep, zmmPerStep, valveOpenTime, 
                 0, xDistance, 0, yDistance, 0, zDistance,
                 _printerModel.AxisModelList[0].IsDirectionInverted, _printerModel.AxisModelList[1].IsDirectionInverted, zDirectionInverted,
+                ref unused, ref unused, ref unused,
                 new DropletModel(interpolateDistance)));
 
             _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(printString);

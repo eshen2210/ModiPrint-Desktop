@@ -213,6 +213,11 @@
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Button.Template>
+            <Button.ToolTip>
+                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                    Return to the previous menu.
+                </TextBlock>
+            </Button.ToolTip>
         </Button>
 
     </Grid>

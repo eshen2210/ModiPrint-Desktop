@@ -17,8 +17,7 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
         Y, //This Coordinate tracks the position of the Y Axis.
         Z, //This Coordinate tracks the position of the Z Axes.
         E, //This Coordinate tracks the position of Motorized Printheads.
-        S, //This Coordinate tracks the position of RepRap's extrusion position.
-        T //Used during unit tests.
+        S //This Coordinate tracks the position of RepRap's extrusion position.
     }
 
     /// <summary>
@@ -54,6 +53,17 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
         {
             get { return _currentCoord; }
         }
+
+        //Change in position since the last update.
+        public double DeltaCoord
+        {
+            get { return (_currentCoord - _previousCoord); }
+        }
+
+        //Since a movement may not fit perfectly into a step, store the remainder of the delta.
+        //Should be retrieved and calculated outside this class during movement calculations.
+        //Set as a public variable without get/set because this needs to be pass as a reference.
+        public double DeltaCoordRemainder = 0;
 
         //Coord values should not be below this MinPosition.
         private double _minPosition;
@@ -111,31 +121,6 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
             //Set the new Coord.
             _currentCoord = (absCoord == true) ? currentCoordInput : _previousCoord + currentCoordInput;
 
-            /* To Do: This feature is broken as hell because it does not know the starting location of the print and cannot judge whether or not it will go out of bounds.
-             * Also To Do: Motorized Printheads should follow the negative E values given by RepRap slicing programs.
-            //If the new Coord exceeds the maximum allowable position...
-            //CoordinateModels that track RepRap coordinates would always have Max and Min Position values of zero. 
-            //Therefore, ignore range for RepRap CoordinateModels.
-            if (((_currentCoord < _minPosition) || (_currentCoord > _maxPosition))
-                && (_type != CoordinateType.S))
-            {
-                //Report error.
-                string errorType = "GCode Converter: " + SerialCommands.AxesMovement + " Command";
-                string errorMessage = "SL:" + _parametersModel.RepRapLine + " Range Exceeded For ";
-                if (_type == CoordinateType.E)
-                {
-                    errorMessage += "Motor Printhead";
-                }
-                else
-                {
-                    errorMessage += _type.ToString() + " Axis";
-                }
-                _parametersModel.ErrorReporterViewModel.ReportError(errorType, errorMessage);
-
-                //Allow GCode to be converted regardless of outofrange error.
-            }
-            */
-
             //If the position changed, then mark that change occurred.
             _changed = (_previousCoord != _currentCoord) ? true : false;
             _positiveChanged = (_currentCoord > _previousCoord) ? true : false;
@@ -149,14 +134,10 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
         public void NewCoord(double newCoordInput)
         {
             _currentCoord = newCoordInput;
-        }
 
-        /// <summary>
-        /// If this axis actually moved since the last line, then return a GCode command.
-        /// </summary>
-        public string WriteCoord()
-        {
-            return ((_writable == true) && (_changed == true)) ? " " + _type.ToString() + _currentCoord : "";
+            //If the position changed, then mark that change occurred.
+            _changed = (_previousCoord != _currentCoord) ? true : false;
+            _positiveChanged = (_currentCoord > _previousCoord) ? true : false;
         }
 
         /// <summary>

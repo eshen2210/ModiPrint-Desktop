@@ -53,6 +53,13 @@
                                     </StackPanel>
                                 </ControlTemplate>
                             </Button.Template>
+                            <Button.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                    Upload a RepRap flavor .gcode file.
+                                    <LineBreak/>
+                                    Before printing, set the appropriate print parameters then hit Convert GCode.
+                                </TextBlock>
+                            </Button.ToolTip>
                         </Button>
                     </Border>
 
@@ -89,10 +96,19 @@
                                     </StackPanel>
                                 </ControlTemplate>
                             </Button.Template>
+                            <Button.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                    If a .gcode file is uploaded, translate the file into a .mdpt file with ModiPrint-specific commands.
+                                    <LineBreak/>
+                                    If a .mdpt file is uplaoded, use the uploaded file as is during printing.
+                                    <LineBreak/>
+                                    Will not function if a .gcode file has not uploaded.
+                                </TextBlock>
+                            </Button.ToolTip>
                         </Button>
                     </Border>
 
-                    <!--Saves/Writes the ModiPrint GCode into a .gcode file-->
+                    <!--Saves/Writes the ModiPrint GCode into a .mdpt file-->
                     <Border Style="{DynamicResource ThematicButtonBorder}"
                             HorizontalAlignment="Right">
                         <Button Command="{Binding SaveModiPrintGCodeFileCommand}"
@@ -119,6 +135,13 @@
                                     </StackPanel>
                                 </ControlTemplate>
                             </Button.Template>
+                            <Button.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                    Save the converted GCode file into a .mdpt file.
+                                    <LineBreak/>
+                                    Requires a .gcode file to be uploaded then converted or a converted Gcode file to be loaded first.
+                                </TextBlock>
+                            </Button.ToolTip>
                         </Button>
                     </Border>
 
@@ -140,6 +163,7 @@
                                Text="{Binding TaskName}"
                                Style="{DynamicResource ThematicTextBlock}">
                     </TextBlock>
+                    <!--To Do: More feedback after converting GCode-->
                 </Grid>
 
             </StackPanel>

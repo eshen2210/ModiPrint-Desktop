@@ -53,11 +53,11 @@
                                         <Setter Property="Text" Value=""/>
                                         <Setter Property="HorizontalAlignment" Value="Right"/>
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ElementName=tgbtnInterpolateRounding, Path=IsChecked}" Value="False">
+                                            <DataTrigger Binding="{Binding ElementName=tgbtnMaximizeSpeed, Path=IsChecked}" Value="False">
                                                 <Setter Property="Text" Value="False"/>
                                                 <Setter Property="HorizontalAlignment" Value="Right"/>
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding ElementName=tgbtnInterpolateRounding, Path=IsChecked}" Value="True">
+                                            <DataTrigger Binding="{Binding ElementName=tgbtnMaximizeSpeed, Path=IsChecked}" Value="True">
                                                 <Setter Property="Text" Value="True"/>
                                                 <Setter Property="HorizontalAlignment" Value="Left"/>
                                             </DataTrigger>
@@ -66,10 +66,16 @@
                                 </ResourceDictionary>
                             </Grid.Resources>
 
-                            <ToggleButton Name="tgbtnInterpolateRounding"
+                            <ToggleButton Name="tgbtnMaximizeSpeed"
                                           IsChecked="{Binding Path=MaximizeSpeeds}"
                                           Style="{DynamicResource ThematicToggleButton}"
-                                          Width="{DynamicResource StandardToggleButtonWidth}"/>
+                                          Width="{DynamicResource StandardToggleButtonWidth}">
+                                <ToggleButton.ToolTip>
+                                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                        Set speeds to their maximum values as set in the Printer menu.
+                                    </TextBlock>
+                                </ToggleButton.ToolTip>
+                            </ToggleButton>
                             <TextBlock Style="{StaticResource MaximizePrintSpeedsTextBlock}"
                                        IsHitTestVisible="False"
                                        Width="{DynamicResource NarrowControlWidth}"/>
@@ -93,7 +99,13 @@
                                  Width="{DynamicResource StandardControlWidth}"/>
                         <TextBlock Text="mm/s"
                                    Style="{DynamicResource ThematicTextBlock}"
-                                   Width="{DynamicResource NarrowControlWidth}"/>
+                                   Width="{DynamicResource NarrowControlWidth}">
+                            <TextBlock.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                    The actuator will accelerate to this speed for all following commands.
+                                </TextBlock>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
                     </StackPanel>
 
                     <!--Acceleration-->
@@ -113,7 +125,13 @@
                                  Width="{DynamicResource StandardControlWidth}"/>
                         <TextBlock Text="mm/s²"
                                    Style="{DynamicResource ThematicTextBlock}"
-                                   Width="{DynamicResource NarrowControlWidth}"/>
+                                   Width="{DynamicResource NarrowControlWidth}">
+                            <TextBlock.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                    The actuator will use this acceleration value for all following commands.
+                                </TextBlock>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
@@ -144,6 +162,11 @@
                             </StackPanel>
                         </ControlTemplate>
                     </Button.Template>
+                    <Button.ToolTip>
+                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                            Use this actuator for all following commands with the specified parameters.
+                        </TextBlock>
+                    </Button.ToolTip>
                 </Button>
             </Border>
 

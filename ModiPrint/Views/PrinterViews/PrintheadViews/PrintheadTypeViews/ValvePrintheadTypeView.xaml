@@ -39,6 +39,13 @@
                                                CommandParameter="ValveGPIOPinViewModelList"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
+                <ComboBox.ToolTip>
+                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                            Pin ID for the Valve Pin of this actuator. 
+                            <LineBreak/>
+                            The Pin ID is physically marked on your Arduino MEGA. The wire connected to this GPIO Pin is also connected to "SIG" on your IRF520 MOS Driver.
+                    </TextBlock>
+                </ComboBox.ToolTip>
             </ComboBox>
 
             <Button Command="{Binding ClearGPIOPinCommand}"

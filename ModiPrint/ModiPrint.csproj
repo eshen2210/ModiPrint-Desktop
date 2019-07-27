@@ -1,7 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\xunit.runner.visualstudio.2.3.1\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.3.1\build\net20\xunit.runner.visualstudio.props')" />
-  <Import Project="..\packages\xunit.core.2.3.1\build\xunit.core.props" Condition="Exists('..\packages\xunit.core.2.3.1\build\xunit.core.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -73,13 +71,17 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Expression.Blend.Sdk.WPF.1.0.1\lib\net45\Microsoft.Expression.Interactions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Expression.Blend.Sdk.1.0.2\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>..\packages\Expression.Blend.Sdk.WPF.1.0.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml" />
@@ -98,22 +100,6 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.abstractions.2.0.1\lib\net35\xunit.abstractions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="xunit.assert, Version=2.3.1.3858, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.assert.2.3.1\lib\netstandard1.1\xunit.assert.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="xunit.core, Version=2.3.1.3858, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.extensibility.core.2.3.1\lib\netstandard1.1\xunit.core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="xunit.execution.desktop, Version=2.3.1.3858, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.extensibility.execution.2.3.1\lib\net452\xunit.execution.desktop.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -258,6 +244,7 @@
     <Compile Include="ViewModels\SerialCommunicationViewModels\SerialMessageDisplayViewModel.cs" />
     <Compile Include="Models\XMLSerializerModels\PrinterXMLSerializerModels\AxisXMLSerializerModels\AxisXMLSerializerModel.cs" />
     <Compile Include="ViewModels\SettingsViewModels\SaveLoadViewModel.cs" />
+    <Compile Include="ViewModels\UnsetMainViewModel.cs" />
     <Compile Include="Views\ControlViews\OpaqueClickableImage.cs" />
     <Compile Include="Views\PrinterViews\AxisViews\AxisView.xaml.cs">
       <DependentUpon>AxisView.xaml</DependentUpon>
@@ -388,21 +375,6 @@
     <Compile Include="Views\StatusAndControlViews\AxesPrintViews\PrintSettingsParameterViews\ValveDropletPrintParameters.xaml.cs">
       <DependentUpon>ValveDropletPrintParameters.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\StatusAndControlViews\AxesPrintViews\PrintSettingsViews\MotorizedContinuousPrint.xaml.cs">
-      <DependentUpon>MotorizedContinuousPrint.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\StatusAndControlViews\AxesPrintViews\PrintSettingsViews\MotorizedDropletPrint.xaml.cs">
-      <DependentUpon>MotorizedDropletPrint.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\StatusAndControlViews\AxesPrintViews\PrintSettingsViews\PrintSettingsView.xaml.cs">
-      <DependentUpon>PrintSettingsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\StatusAndControlViews\AxesPrintViews\PrintSettingsViews\ValveContinuousPrint.xaml.cs">
-      <DependentUpon>ValveContinuousPrint.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\StatusAndControlViews\AxesPrintViews\PrintSettingsViews\ValveDropletPrint.xaml.cs">
-      <DependentUpon>ValveDropletPrint.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\StatusAndControlViews\CalibrationViews\CalibrationView.xaml.cs">
       <DependentUpon>CalibrationView.xaml</DependentUpon>
     </Compile>
@@ -438,6 +410,9 @@
     </Compile>
     <Compile Include="Views\StatusAndControlViews\StatusControlView.xaml.cs">
       <DependentUpon>StatusControlView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UnsetMainWindow.xaml.cs">
+      <DependentUpon>UnsetMainWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Properties\DesignTimeResources.xaml">
       <SubType>Designer</SubType>
@@ -639,26 +614,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\StatusAndControlViews\AxesPrintViews\PrintSettingsViews\MotorizedContinuousPrint.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\StatusAndControlViews\AxesPrintViews\PrintSettingsViews\MotorizedDropletPrint.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\StatusAndControlViews\AxesPrintViews\PrintSettingsViews\PrintSettingsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\StatusAndControlViews\AxesPrintViews\PrintSettingsViews\ValveContinuousPrint.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\StatusAndControlViews\AxesPrintViews\PrintSettingsViews\ValveDropletPrint.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\StatusAndControlViews\CalibrationViews\CalibrationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -704,6 +659,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\StatusAndControlViews\StatusControlView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UnsetMainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -756,9 +715,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="..\packages\xunit.analyzers.0.9.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\XYZEControl\EMinus.PNG" />
@@ -1027,16 +983,16 @@
     <Resource Include="Resources\PrintSequenceControl\PrintheadDisabled.png" />
     <Resource Include="Resources\PrintSequenceControl\PrintheadEnabled.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\McCloskeyLabLogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\GithubLogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ConcentrationGradientFormulas.PNG" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\xunit.core.2.3.1\build\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.core.2.3.1\build\xunit.core.props'))" />
-    <Error Condition="!Exists('..\packages\xunit.core.2.3.1\build\xunit.core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.core.2.3.1\build\xunit.core.targets'))" />
-    <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.3.1\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.3.1\build\net20\xunit.runner.visualstudio.props'))" />
-  </Target>
-  <Import Project="..\packages\xunit.core.2.3.1\build\xunit.core.targets" Condition="Exists('..\packages\xunit.core.2.3.1\build\xunit.core.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

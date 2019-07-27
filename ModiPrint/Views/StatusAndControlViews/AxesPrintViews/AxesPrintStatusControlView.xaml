@@ -80,6 +80,17 @@
 
                 <!--#region Limit Display-->
                 <Grid DataContext="{Binding RealTimeStatusDataViewModel}">
+                    <Grid.Resources>
+                        <ResourceDictionary>
+                            <ResourceDictionary.MergedDictionaries>
+                                <ResourceDictionary Source="/Views/GlobalResources.xaml"/>
+                            </ResourceDictionary.MergedDictionaries>
+
+                            <Style x:Key="LimitSwitchHitToolTipTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ThematicToolTipTextBlock}">
+                                <Setter Property="Text" Value="Limit Switch hit. Movement will not be permitted in the last travelled direction as that would damge hardware."/>
+                            </Style>
+                        </ResourceDictionary>
+                    </Grid.Resources>
 
                     <!--X Upper Limit-->
                     <Image>
@@ -94,6 +105,9 @@
                                 </Style.Triggers>
                             </Style>
                         </Image.Style>
+                        <Image.ToolTip>
+                            <TextBlock Style="{StaticResource LimitSwitchHitToolTipTextBlock}"/>
+                        </Image.ToolTip>
                     </Image>
 
                     <!--X Lower Limit-->
@@ -109,6 +123,9 @@
                                 </Style.Triggers>
                             </Style>
                         </Image.Style>
+                        <Image.ToolTip>
+                            <TextBlock Style="{StaticResource LimitSwitchHitToolTipTextBlock}"/>
+                        </Image.ToolTip>
                     </Image>
 
                     <!--Y Upper Limit-->
@@ -124,6 +141,9 @@
                                 </Style.Triggers>
                             </Style>
                         </Image.Style>
+                        <Image.ToolTip>
+                            <TextBlock Style="{StaticResource LimitSwitchHitToolTipTextBlock}"/>
+                        </Image.ToolTip>
                     </Image>
 
                     <!--Y Lower Limit-->
@@ -139,6 +159,9 @@
                                 </Style.Triggers>
                             </Style>
                         </Image.Style>
+                        <Image.ToolTip>
+                            <TextBlock Style="{StaticResource LimitSwitchHitToolTipTextBlock}"/>
+                        </Image.ToolTip>
                     </Image>
 
                     <!--Z Upper Limit-->
@@ -154,6 +177,9 @@
                                 </Style.Triggers>
                             </Style>
                         </Image.Style>
+                        <Image.ToolTip>
+                            <TextBlock Style="{StaticResource LimitSwitchHitToolTipTextBlock}"/>
+                        </Image.ToolTip>
                     </Image>
 
                     <!--Z Lower Limit-->
@@ -169,6 +195,9 @@
                                 </Style.Triggers>
                             </Style>
                         </Image.Style>
+                        <Image.ToolTip>
+                            <TextBlock Style="{StaticResource LimitSwitchHitToolTipTextBlock}"/>
+                        </Image.ToolTip>
                     </Image>
 
                     <!--E Upper Limit-->
@@ -184,6 +213,9 @@
                                 </Style.Triggers>
                             </Style>
                         </Image.Style>
+                        <Image.ToolTip>
+                            <TextBlock Style="{StaticResource LimitSwitchHitToolTipTextBlock}"/>
+                        </Image.ToolTip>
                     </Image>
 
                     <!--E Lower Limit-->
@@ -199,6 +231,9 @@
                                 </Style.Triggers>
                             </Style>
                         </Image.Style>
+                        <Image.ToolTip>
+                            <TextBlock Style="{StaticResource LimitSwitchHitToolTipTextBlock}"/>
+                        </Image.ToolTip>
                     </Image>
                 </Grid>
                 <!--#endregion-->
@@ -256,8 +291,12 @@
                             <Image Source="/Resources/General/Position.png"/>
                             <TextBlock Text="{Binding XRealTimeStatusAxisViewModel.Position, StringFormat=N2}"
                                        Foreground="Aqua"
-                                       Style="{StaticResource DataDisplayTextBlock}">
-                            </TextBlock>
+                                       Style="{StaticResource DataDisplayTextBlock}"/>
+                            <StackPanel.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                    Position of this actuator relative to the origin.
+                                </TextBlock>
+                            </StackPanel.ToolTip>
                         </StackPanel>
                         <!--Max Speed-->
                         <StackPanel Orientation="Horizontal"
@@ -265,8 +304,12 @@
                             <Image Source="/Resources/General/MaxSpeed.png"/>
                             <TextBlock Text="{Binding XRealTimeStatusAxisViewModel.MaxSpeed, StringFormat=N2}"
                                        Foreground="Aqua"
-                                       Style="{StaticResource DataDisplayTextBlock}">
-                            </TextBlock>
+                                       Style="{StaticResource DataDisplayTextBlock}"/>
+                            <StackPanel.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                    Maximum speed set on this actuator.
+                                </TextBlock>
+                            </StackPanel.ToolTip>
                         </StackPanel>
                         <!--Acceleration-->
                         <StackPanel Orientation="Horizontal"
@@ -274,8 +317,12 @@
                             <Image Source="/Resources/General/Acceleration.png"/>
                             <TextBlock Text="{Binding XRealTimeStatusAxisViewModel.Acceleration, StringFormat=N2}"
                                        Foreground="Aqua"
-                                       Style="{StaticResource DataDisplayTextBlock}">
-                            </TextBlock>
+                                       Style="{StaticResource DataDisplayTextBlock}"/>
+                            <StackPanel.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                    Acceleration set on this actuator.
+                                </TextBlock>
+                            </StackPanel.ToolTip>
                         </StackPanel>
                     </StackPanel>
                    <!--#endregion-->
@@ -299,8 +346,12 @@
                             <Image Source="/Resources/General/Position.png"/>
                             <TextBlock Text="{Binding YRealTimeStatusAxisViewModel.Position, StringFormat=N2}"
                                        Foreground="Red"
-                                       Style="{StaticResource DataDisplayTextBlock}">
-                            </TextBlock>
+                                       Style="{StaticResource DataDisplayTextBlock}"/>
+                            <StackPanel.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                    Position of this actuator relative to the origin.
+                                </TextBlock>
+                            </StackPanel.ToolTip>
                         </StackPanel>
                         <!--Max Speed-->
                         <StackPanel Orientation="Horizontal"
@@ -308,8 +359,12 @@
                             <Image Source="/Resources/General/MaxSpeed.png"/>
                             <TextBlock Text="{Binding YRealTimeStatusAxisViewModel.MaxSpeed, StringFormat=N2}"
                                        Foreground="Red"
-                                       Style="{StaticResource DataDisplayTextBlock}">
-                            </TextBlock>
+                                       Style="{StaticResource DataDisplayTextBlock}"/>
+                            <StackPanel.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                    Maximum speed set on this actuator.
+                                </TextBlock>
+                            </StackPanel.ToolTip>
                         </StackPanel>
                         <!--Acceleration-->
                         <StackPanel Orientation="Horizontal"
@@ -317,8 +372,12 @@
                             <Image Source="/Resources/General/Acceleration.png"/>
                             <TextBlock Text="{Binding YRealTimeStatusAxisViewModel.Acceleration, StringFormat=N2}"
                                        Foreground="Red"
-                                       Style="{StaticResource DataDisplayTextBlock}">
-                            </TextBlock>
+                                       Style="{StaticResource DataDisplayTextBlock}"/>
+                            <StackPanel.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                    Acceleration set on this actuator.
+                                </TextBlock>
+                            </StackPanel.ToolTip>
                         </StackPanel>
                     </StackPanel>
                     <!--#endregion-->
@@ -342,8 +401,12 @@
                             <Image Source="/Resources/General/Position.png"/>
                             <TextBlock Text="{Binding ZRealTimeStatusAxisViewModel.Position, StringFormat=N2}"
                                        Foreground="MediumPurple"
-                                       Style="{StaticResource DataDisplayTextBlock}">
-                            </TextBlock>
+                                       Style="{StaticResource DataDisplayTextBlock}"/>
+                            <StackPanel.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                    Position of this actuator relative to the origin.
+                                </TextBlock>
+                            </StackPanel.ToolTip>
                         </StackPanel>
                         <!--Max Speed-->
                         <StackPanel Orientation="Horizontal"
@@ -351,8 +414,12 @@
                             <Image Source="/Resources/General/MaxSpeed.png"/>
                             <TextBlock Text="{Binding ZRealTimeStatusAxisViewModel.MaxSpeed, StringFormat=N2}"
                                        Foreground="MediumPurple"
-                                       Style="{StaticResource DataDisplayTextBlock}">
-                            </TextBlock>
+                                       Style="{StaticResource DataDisplayTextBlock}"/>
+                            <StackPanel.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                    Maximum speed set on this actuator.
+                                </TextBlock>
+                            </StackPanel.ToolTip>
                         </StackPanel>
                         <!--Acceleration-->
                         <StackPanel Orientation="Horizontal"
@@ -360,8 +427,12 @@
                             <Image Source="/Resources/General/Acceleration.png"/>
                             <TextBlock Text="{Binding ZRealTimeStatusAxisViewModel.Acceleration, StringFormat=N2}"
                                        Foreground="MediumPurple"
-                                       Style="{StaticResource DataDisplayTextBlock}">
-                            </TextBlock>
+                                       Style="{StaticResource DataDisplayTextBlock}"/>
+                            <StackPanel.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                    Acceleration set on this actuator.
+                                </TextBlock>
+                            </StackPanel.ToolTip>
                         </StackPanel>
                     </StackPanel>
                     <!--#endregion-->
@@ -387,8 +458,12 @@
                             <Image Source="/Resources/General/Position.png"/>
                             <TextBlock Text="{Binding ActivePrintheadViewModel.Position, StringFormat=N2}"
                                        Foreground="SeaGreen"
-                                       Style="{StaticResource DataDisplayTextBlock}">
-                            </TextBlock>
+                                       Style="{StaticResource DataDisplayTextBlock}"/>
+                            <StackPanel.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                    Position of this actuator relative to the origin.
+                                </TextBlock>
+                            </StackPanel.ToolTip>
                         </StackPanel>
                         <!--Max Speed-->
                         <StackPanel Orientation="Horizontal"
@@ -396,8 +471,12 @@
                             <Image Source="/Resources/General/MaxSpeed.png"/>
                             <TextBlock Text="{Binding ActivePrintheadViewModel.MaxSpeed, StringFormat=N2}"
                                        Foreground="SeaGreen"
-                                       Style="{StaticResource DataDisplayTextBlock}">
-                            </TextBlock>
+                                       Style="{StaticResource DataDisplayTextBlock}"/>
+                            <StackPanel.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                    Maximum speed set on this actuator.
+                                </TextBlock>
+                            </StackPanel.ToolTip>
                         </StackPanel>
                         <!--Acceleration-->
                         <StackPanel Orientation="Horizontal"
@@ -405,8 +484,12 @@
                             <Image Source="/Resources/General/Acceleration.png"/>
                             <TextBlock Text="{Binding ActivePrintheadViewModel.Acceleration, StringFormat=N2}"
                                        Foreground="SeaGreen"
-                                       Style="{StaticResource DataDisplayTextBlock}">
-                            </TextBlock>
+                                       Style="{StaticResource DataDisplayTextBlock}"/>
+                            <StackPanel.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                    Acceleration set on this actuator.
+                                </TextBlock>
+                            </StackPanel.ToolTip>
                         </StackPanel>
                     </StackPanel>
                     <!--#endregion-->
@@ -416,6 +499,17 @@
 
                 <!--#region Manual Move Buttons-->
                 <Grid DataContext="{Binding ManualControlViewModel}">
+                    <Grid.Resources>
+                        <ResourceDictionary>
+                            <ResourceDictionary.MergedDictionaries>
+                                <ResourceDictionary Source="/Views/GlobalResources.xaml"/>
+                            </ResourceDictionary.MergedDictionaries>
+
+                            <Style x:Key="ManualMoveToolTipTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ThematicToolTipTextBlock}">
+                                <Setter Property="Text" Value="Move or print in the indicated direction."/>
+                            </Style>
+                        </ResourceDictionary>
+                    </Grid.Resources>
                     
                     <!--Manual Move X- -->
                     <Button Command="{Binding SetMenuCommand}"
@@ -445,6 +539,9 @@
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Button.Template>
+                        <Button.ToolTip>
+                            <TextBlock Style="{StaticResource ManualMoveToolTipTextBlock}"/>
+                        </Button.ToolTip>
                     </Button>
 
                     <!--Manual Move X+ -->
@@ -474,6 +571,9 @@
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Button.Template>
+                        <Button.ToolTip>
+                            <TextBlock Style="{StaticResource ManualMoveToolTipTextBlock}"/>
+                        </Button.ToolTip>
                     </Button>
 
                     <!--Manual Move Y- -->
@@ -503,6 +603,9 @@
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Button.Template>
+                        <Button.ToolTip>
+                            <TextBlock Style="{StaticResource ManualMoveToolTipTextBlock}"/>
+                        </Button.ToolTip>
                     </Button>
 
                     <!--Manual Move Y+ -->
@@ -532,6 +635,9 @@
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Button.Template>
+                        <Button.ToolTip>
+                            <TextBlock Style="{StaticResource ManualMoveToolTipTextBlock}"/>
+                        </Button.ToolTip>
                     </Button>
 
                     <!--Manual Move Z- -->
@@ -561,6 +667,9 @@
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Button.Template>
+                        <Button.ToolTip>
+                            <TextBlock Style="{StaticResource ManualMoveToolTipTextBlock}"/>
+                        </Button.ToolTip>
                     </Button>
 
                     <!--Manual Move Z+ -->
@@ -590,6 +699,9 @@
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Button.Template>
+                        <Button.ToolTip>
+                            <TextBlock Style="{StaticResource ManualMoveToolTipTextBlock}"/>
+                        </Button.ToolTip>
                     </Button>
 
                     <!--Manual Move X+ Y+ -->
@@ -628,6 +740,9 @@
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Button.Template>
+                        <Button.ToolTip>
+                            <TextBlock Style="{StaticResource ManualMoveToolTipTextBlock}"/>
+                        </Button.ToolTip>
                     </Button>
 
                     <!--Manual Move X- Y+ -->
@@ -666,6 +781,9 @@
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Button.Template>
+                        <Button.ToolTip>
+                            <TextBlock Style="{StaticResource ManualMoveToolTipTextBlock}"/>
+                        </Button.ToolTip>
                     </Button>
 
                     <!--Manual Move X- Y- -->
@@ -704,6 +822,9 @@
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Button.Template>
+                        <Button.ToolTip>
+                            <TextBlock Style="{StaticResource ManualMoveToolTipTextBlock}"/>
+                        </Button.ToolTip>
                     </Button>
 
                     <!--Manual Move X+ Y- -->
@@ -742,6 +863,9 @@
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Button.Template>
+                        <Button.ToolTip>
+                            <TextBlock Style="{StaticResource ManualMoveToolTipTextBlock}"/>
+                        </Button.ToolTip>
                     </Button>
                 </Grid>
                 <!--#endregion-->
@@ -784,6 +908,11 @@
                                             </Setter>
                                         </Style>
                                     </Button.Style>
+                                    <Button.ToolTip>
+                                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                            Retract the motorized printhead.
+                                        </TextBlock>
+                                    </Button.ToolTip>
                                 </Button>
 
                                 <!--Manual Move E+ -->
@@ -810,6 +939,11 @@
                                             </Setter>
                                         </Style>
                                     </Button.Style>
+                                    <Button.ToolTip>
+                                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                            Dispense with the motorized printhead.
+                                        </TextBlock>
+                                    </Button.ToolTip>
                                 </Button>
                             </Grid>
                         </DataTemplate>
@@ -843,6 +977,11 @@
                                             </Setter>
                                         </Style>
                                     </Button.Style>
+                                    <Button.ToolTip>
+                                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                            Dispense with the valve printhead.
+                                        </TextBlock>
+                                    </Button.ToolTip>
                                 </Button>
                             </Grid>
                         </DataTemplate>
@@ -873,6 +1012,11 @@
                                             </Setter>
                                         </Style>
                                     </Button.Style>
+                                    <Button.ToolTip>
+                                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                            Stop dispensing with the valve printhead.
+                                        </TextBlock>
+                                    </Button.ToolTip>
                                 </Button>
                             </Grid>
                         </DataTemplate>

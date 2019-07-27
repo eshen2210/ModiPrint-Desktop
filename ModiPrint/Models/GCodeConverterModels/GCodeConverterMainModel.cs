@@ -22,9 +22,7 @@ namespace ModiPrint.Models.GCodeConverterModels
     /// The master class for the GCodeConverter application logic.
     /// </summary>
     public class GCodeConverterMainModel
-    {
-        //To Do: Double check if this converter has any rounding issues when tranlating coordinates to steps.
-        
+    {        
         #region Fields and Properties
         //The GCode Converter will take Print parameters from these objects.
         private PrinterModel _printerModel;

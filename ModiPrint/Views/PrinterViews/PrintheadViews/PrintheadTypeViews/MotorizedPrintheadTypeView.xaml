@@ -21,6 +21,7 @@
             
             <!--#region Step Pin-->
             <StackPanel Orientation="Horizontal">
+                
                 <StackPanel Orientation="Horizontal"
                             Height="{DynamicResource StandardControlHeight}">
                     <Image Source="/Resources/General/Motor.png"
@@ -30,6 +31,7 @@
                            Width="{DynamicResource StandardControlWidth}"
                            Style="{DynamicResource ThematicTextBlock}"/>
                 </StackPanel>
+                
                 <ComboBox DisplayMemberPath="Name"
                           ItemsSource="{Binding MotorStepPinViewModelList}"
                           SelectedValue="{Binding AttachedMotorStepGPIOPinViewModel}"
@@ -41,7 +43,15 @@
                                                    CommandParameter="MotorStepPinViewModelList"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
+                    <ComboBox.ToolTip>
+                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                            Pin ID for the Step Pin of this actuator. 
+                            <LineBreak/>
+                            The Pin ID is physically marked on your Arduino MEGA. The wire connected to this GPIO Pin is also connected to "PUL-(PUL)" on your DQ542MA Stepper Driver.
+                        </TextBlock>
+                    </ComboBox.ToolTip>
                 </ComboBox>
+                
                 <Button Command="{Binding ClearGPIOPinCommand}"
                         CommandParameter="AttachedMotorStepGPIOPinViewModel"
                         Height="{DynamicResource StandardControlHeight}">
@@ -61,11 +71,13 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
+                
             </StackPanel>
             <!--#endregion-->
 
             <!--#region Direction Pin-->
             <StackPanel Orientation="Horizontal">
+                
                 <StackPanel Orientation="Horizontal"
                             Height="{DynamicResource StandardControlHeight}">
                     <Image Source="/Resources/General/Motor.png"
@@ -75,6 +87,7 @@
                                Width="{DynamicResource StandardControlWidth}"
                                Style="{DynamicResource ThematicTextBlock}"/>
                 </StackPanel>
+                
                 <ComboBox DisplayMemberPath="Name"
                           ItemsSource="{Binding MotorDirectionPinViewModelList}"
                           SelectedValue="{Binding AttachedMotorDirectionGPIOPinViewModel}"
@@ -86,7 +99,15 @@
                                                    CommandParameter="MotorDirectionPinViewModelList"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
+                    <ComboBox.ToolTip>
+                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                            Pin ID for the Direction Pin of this actuator. 
+                            <LineBreak/>
+                            The Pin ID is physically marked on your Arduino MEGA. The wire connected to this GPIO Pin is also connected to "DIR-(DIR)" on your DQ542MA Stepper Driver.
+                        </TextBlock>
+                    </ComboBox.ToolTip>
                 </ComboBox>
+                
                 <Button Command="{Binding ClearGPIOPinCommand}"
                         CommandParameter="AttachedMotorDirectionGPIOPinViewModel"
                         Height="{DynamicResource StandardControlHeight}">
@@ -106,11 +127,13 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
+                
             </StackPanel>
             <!--#endregion-->
 
             <!--#region Limit Switch Pin-->
             <StackPanel Orientation="Horizontal">
+                
                 <StackPanel Orientation="Horizontal"
                             Height="{DynamicResource StandardControlHeight}">
                     <Image Source="/Resources/General/LimitSwitch.png"
@@ -120,6 +143,7 @@
                                Width="{DynamicResource StandardControlWidth}"
                                Style="{DynamicResource ThematicTextBlock}"/>
                 </StackPanel>
+                
                 <ComboBox DisplayMemberPath="Name"
                           ItemsSource="{Binding LimitSwitchPinViewModelList}"
                           SelectedValue="{Binding AttachedLimitSwitchGPIOPinViewModel}"
@@ -131,7 +155,15 @@
                                                    CommandParameter="LimitSwitchPinViewModelList"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
+                    <ComboBox.ToolTip>
+                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                            Pin ID for the limit switch Pin of this actuator. 
+                            <LineBreak/>
+                            The Pin ID is physically marked on your Arduino MEGA. The wire connected to this GPIO Pin is also connected to normally open (marked "NO") on your limit switch.
+                        </TextBlock>
+                    </ComboBox.ToolTip>
                 </ComboBox>
+                
                 <Button Command="{Binding ClearGPIOPinCommand}"
                         CommandParameter="AttachedLimitSwitchGPIOPinViewModel"
                         Height="{DynamicResource StandardControlHeight}">
@@ -151,6 +183,7 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
+                
             </StackPanel>
             <!--#endregion-->
 
@@ -170,6 +203,21 @@
                 <TextBlock Text="mm/s"
                            Width="{DynamicResource NarrowControlWidth}"
                            Style="{DynamicResource ThematicTextBlock}"/>
+                <StackPanel.ToolTip>
+                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                        Maximum speed that this actuator is able to traverse. 
+                        <LineBreak/>
+                        Higher max speeds decrease operation time and enable higher print speeds for lower extrusion filament diameters.
+                        <LineBreak/>
+                        This value should be set as high as possible given the following criteria:
+                        <LineBreak/>
+                        1. If the max speed exceeds the microcontroller's computational capacity, the "^Cyc" error message will appear. Depending on other workloads being processed, the microcontroller typically handles at max 10,000 steps/s (50 mm/s at 1/8th microstepping with ModiPrint hardware).
+                        <LineBreak/>
+                        2. Screw-based actuators are prone to violent vibrations at higher speeds which may affect accuracy. If the acme screw for your actuator is noticeably "bouncing" during operation, consider lowering the max speed value. 
+                        <LineBreak/>
+                        3. Once a limit switch is triggered, the printer will come from a completely 100 to 0 stop without deceleration. This puts stress on the device and should be minimized if possible. 
+                    </TextBlock>
+                </StackPanel.ToolTip>
             </StackPanel>
             <!--#endregion-->
 
@@ -189,9 +237,22 @@
                 <TextBlock Text="mm/s²"
                            Width="{DynamicResource NarrowControlWidth}"
                            Style="{DynamicResource ThematicTextBlock}"/>
+                <StackPanel.ToolTip>
+                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                        Maximum acceleration that this actuator is able to traverse. 
+                        <LineBreak/>
+                        This value should be set as high as possible given the following criteria:
+                        <LineBreak/>
+                        1. Higher acceleration values require higher torque. If this toruqe is not met, the motor will miss steps leading to inaccurate operation. To quote the GRBL wiki: "individually test each axis with slowly increasing (acceleration) until the motor stalls."
+                        <LineBreak/>
+                        2. Higher acceleration values introduce higher stress to the device. If there seems to be too much "kick" when the XYZ stage change directions, consider lowering this value.
+                        <LineBreak/>
+                        Note that finer microstepping values decrease torque and necessitate lower acceleration values.
+                    </TextBlock>
+                </StackPanel.ToolTip>
             </StackPanel>
 
-            <!--#region mm Per Step-->
+            <!--#region Distance Per Step-->
             <StackPanel Orientation="Horizontal"
                         Height="{DynamicResource StandardControlHeight}">
                 <Image Source="/Resources/General/StepDistance.png"
@@ -207,6 +268,17 @@
                 <TextBlock Text="mm"
                            Width="{DynamicResource NarrowControlWidth}"
                            Style="{DynamicResource ThematicTextBlock}"/>
+                <StackPanel.ToolTip>
+                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                        The distance traversed with each step of an actuator. AKA actuator resolution.
+                        <LineBreak/>
+                        Theoretical resolution = (screw pitch * microstepping) / (motor steps per revolution)
+                        <LineBreak/>
+                        With ModiPrint hardware, theoretical resolution at 1/8th microstepping is 5 um for XY actuators and 2.5 um for Z actuators.
+                        <LineBreak/>
+                        Note that actual resolution will differ very slightly.
+                    </TextBlock>
+                </StackPanel.ToolTip>
             </StackPanel>
             <!--#endregion-->
 
@@ -226,12 +298,19 @@
                 <TextBlock Text="us"
                            Width="{DynamicResource NarrowControlWidth}"
                            Style="{DynamicResource ThematicTextBlock}"/>
+                <StackPanel.ToolTip>
+                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                        To quote the GRBL wiki: "If the pulses are too long, you might run into trouble when running the system at very high feed and pulse rates, because the step pulses can begin to overlap each other."
+                        <LineBreak/>
+                        To quote me: "This really doesn't matter. Just set it to 10 us."
+                    </TextBlock>
+                </StackPanel.ToolTip>
             </StackPanel>
 
             <!--Invert Direction-->
             <StackPanel Orientation="Horizontal"
-                                        VerticalAlignment="Center"
-                                        Height="{DynamicResource StandardControlHeight}">
+                        VerticalAlignment="Center"
+                        Height="{DynamicResource StandardControlHeight}">
                 <StackPanel.Resources>
                     <ResourceDictionary>
                         <ResourceDictionary.MergedDictionaries>
@@ -256,19 +335,28 @@
                 </StackPanel.Resources>
 
                 <Image Source="/Resources/General/InvertDirection.png"
-                                       Style="{DynamicResource ThematicControlImage}"
-                                       Width="{DynamicResource NarrowControlWidth}"/>
+                       Style="{DynamicResource ThematicControlImage}"
+                       Width="{DynamicResource NarrowControlWidth}"/>
                 <TextBlock Text="Invert Direction"
-                                           Style="{DynamicResource ThematicTextBlock}"
-                                           Width="{DynamicResource StandardControlWidth}"/>
+                           Style="{DynamicResource ThematicTextBlock}"
+                           Width="{DynamicResource StandardControlWidth}"/>
                 <Grid>
                     <ToggleButton Name="tgbtnInvertDirection"
-                                              IsChecked="{Binding Path=IsDirectionInverted}"
-                                              Style="{DynamicResource ThematicToggleButton}"
-                                              Width="{DynamicResource StandardToggleButtonWidth}"/>
+                                  IsChecked="{Binding Path=IsDirectionInverted}"
+                                  Style="{DynamicResource ThematicToggleButton}"
+                                  Width="{DynamicResource StandardToggleButtonWidth}"/>
                     <TextBlock Style="{StaticResource ThematicInvertDirectionTextBlock}"
-                                               IsHitTestVisible="False"
-                                               Width="{DynamicResource NarrowControlWidth}"/>
+                               IsHitTestVisible="False"
+                               Width="{DynamicResource NarrowControlWidth}"/>
+                    <Grid.ToolTip>
+                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                            Determines what direction is considered positive movement. Toggling this value will flip the direction of movement for this actuator.
+                            <LineBreak/>
+                            This value should be set such that positive relative positions in the GCode causes the printhead to dispense and negative values cause retraction.
+                            <LineBreak/>
+                            Default values for all actuators are set for ModiPrint hardware. If you are following the same hardware build as ModiPrint, don't touch these unless you want your prints mirrored.
+                        </TextBlock>
+                    </Grid.ToolTip>
                 </Grid>
             </StackPanel>
 
@@ -288,6 +376,13 @@
                 <TextBlock Text="mm"
                            Width="{DynamicResource NarrowControlWidth}"
                            Style="{DynamicResource ThematicTextBlock}"/>
+                <StackPanel.ToolTip>
+                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                        Traverse from the upper limit switch to the lowest print position.
+                        <LineBreak/>
+                        This is suppose to be automatically set during the calibration process. It is not recommended that you manually set these values unless you are sure by what margin these values deviate.
+                    </TextBlock>
+                </StackPanel.ToolTip>
             </StackPanel>
 
             <!--Min Position-->
@@ -306,47 +401,16 @@
                 <TextBlock Text="mm"
                            Width="{DynamicResource NarrowControlWidth}"
                            Style="{DynamicResource ThematicTextBlock}"/>
+                <StackPanel.ToolTip>
+                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                        Should always be zero (origin) and represents the lowest print position.
+                        <LineBreak/>
+                        This is suppose to be automatically set during the calibration process. It is not recommended that you manually set these values unless you are sure by what margin these values deviate.
+                    </TextBlock>
+                </StackPanel.ToolTip>
             </StackPanel>
             <!--#endregion-->
             
-            <!--#region Resevoir Diamaeter-->
-            <StackPanel Orientation="Horizontal"
-                        Height="{DynamicResource StandardControlHeight}">
-                <Image Source="/Resources/General/Diameter.png"
-                       Width="{DynamicResource NarrowControlWidth}"
-                       Style="{DynamicResource ThematicControlImage}"/>
-                <TextBlock Text="Resevoir Diameter"
-                           Width="{DynamicResource StandardControlWidth}"
-                           Style="{DynamicResource ThematicTextBlock}"/>
-                <TextBox Text="{Binding Path=ResevoirDiameter, Mode=TwoWay, 
-                                        UpdateSourceTrigger=PropertyChanged, Delay=250}"
-                         Width="{DynamicResource WideControlWidth}"
-                         Style="{DynamicResource ThematicTextBox}"/>
-                <TextBlock Text="mm"
-                           Width="{DynamicResource NarrowControlWidth}"
-                           Style="{DynamicResource ThematicTextBlock}"/>
-            </StackPanel>
-            <!--#endregion-->
-
-            <!--#region Resevoir Volume-->
-            <StackPanel Orientation="Horizontal"
-                        Height="{DynamicResource StandardControlHeight}">
-                <Image Source="/Resources/General/Volume.png"
-                       Width="{DynamicResource NarrowControlWidth}"
-                       Style="{DynamicResource ThematicControlImage}"/>
-                <TextBlock Text="Resevoir Volume"
-                           Width="{DynamicResource StandardControlWidth}"
-                           Style="{DynamicResource ThematicTextBlock}"/>
-                <TextBox Text="{Binding Path=ResevoirVolume, Mode=TwoWay, 
-                                        UpdateSourceTrigger=PropertyChanged, Delay=250}"
-                         Width="{DynamicResource WideControlWidth}"
-                         Style="{DynamicResource ThematicTextBox}"/>
-                <TextBlock Text="mL"
-                           Width="{DynamicResource NarrowControlWidth}"
-                           Style="{DynamicResource ThematicTextBlock}"/>
-            </StackPanel>
-            <!--#endregion-->
-
         </StackPanel>
     </GroupBox>
     

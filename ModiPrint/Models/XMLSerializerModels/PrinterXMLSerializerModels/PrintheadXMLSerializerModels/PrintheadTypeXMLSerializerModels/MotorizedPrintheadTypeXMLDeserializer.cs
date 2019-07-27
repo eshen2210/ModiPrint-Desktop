@@ -76,12 +76,6 @@ namespace ModiPrint.Models.XMLSerializerModels.PrinterXMLSerializerModels.Printh
                         case "MinPosition":
                             motorizedPrintheadTypeViewModel.MinPosition = xmlReader.ReadElementContentAsDouble();
                             break;
-                        case "ResevoirDiameter":
-                            motorizedPrintheadTypeViewModel.ResevoirDiameter = xmlReader.ReadElementContentAsDouble();
-                            break;
-                        case "ResevoirVolume":
-                            motorizedPrintheadTypeViewModel.ResevoirVolume = xmlReader.ReadElementContentAsDouble();
-                            break;
                         default:
                             base.ReportErrorUnrecognizedElement(xmlReader);
                             break;

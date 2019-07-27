@@ -17,7 +17,7 @@
     
     <StackPanel Orientation="Vertical">
 
-        <!--#region Add Axis Button-->
+        <!--#region Add Z Axis Button-->
         <Border HorizontalAlignment="Right"
                 Style="{DynamicResource ThematicButtonBorder}">
             <Button Command="{Binding AddZAxisCommand}"
@@ -38,12 +38,21 @@
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Margin="0, 0, 0, 0"/>
                                 <TextBlock Text="Axis"
-                                           Style="{DynamicResource ThematicTextBlock}"
+                                           Style="{DynamicResource ThematicToolTipTextBlock}"
                                            Margin="0, 0, 0, 0"/>
                             </StackPanel>
                         </StackPanel>
                     </ControlTemplate>
                 </Button.Template>
+                <Button.ToolTip>
+                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                        Add a Z actuator to the Printer. 
+                        <LineBreak/>
+                        Each Z actuator is a virtual representation of your printer hardware.
+                        <LineBreak/>
+                        Be sure to set parameters for this new and any existing Z actuators before operation.
+                    </TextBlock>
+                </Button.ToolTip>
             </Button>
         </Border>
         <!--#endregion-->
@@ -79,24 +88,31 @@
                             <StackPanel Orientation="Horizontal"
                                         Height="{DynamicResource StandardControlHeight}">
                                 <Image Source="/Resources/General/Motor.png"
-                                        Style="{DynamicResource ThematicControlImage}"
-                                        Width="{DynamicResource NarrowControlWidth}"/>
+                                       Style="{DynamicResource ThematicControlImage}"
+                                       Width="{DynamicResource NarrowControlWidth}"/>
                                 <TextBlock Text="Step Pin"
-                                            Style="{DynamicResource ThematicTextBlock}"
-                                            Width="{DynamicResource StandardControlWidth}"/>
+                                           Style="{DynamicResource ThematicTextBlock}"
+                                           Width="{DynamicResource StandardControlWidth}"/>
                             </StackPanel>
 
                             <ComboBox DisplayMemberPath="Name"
-                                        ItemsSource="{Binding MotorStepPinViewModelList}"
-                                        SelectedValue="{Binding AttachedMotorStepGPIOPinViewModel}"
-                                        Style="{DynamicResource ThematicComboBox}"
-                                        Height="{DynamicResource StandardControlHeight}" Width="{DynamicResource WideControlWidth}">
+                                      ItemsSource="{Binding MotorStepPinViewModelList}"
+                                      SelectedValue="{Binding AttachedMotorStepGPIOPinViewModel}"
+                                      Style="{DynamicResource ThematicComboBox}"
+                                      Height="{DynamicResource StandardControlHeight}" Width="{DynamicResource WideControlWidth}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="DropDownOpened">
                                         <i:InvokeCommandAction Command="{Binding RefreshPinBySettingListCommand}"
-                                                                CommandParameter="MotorStepPinViewModelList"/>
+                                                               CommandParameter="MotorStepPinViewModelList"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
+                                <ComboBox.ToolTip>
+                                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                        Pin ID for the Step Pin of this actuator. 
+                                        <LineBreak/>
+                                        The Pin ID is physically marked on your Arduino MEGA. The wire connected to this GPIO Pin is also connected to "PUL-(PUL)" on your DQ542MA Stepper Driver.     
+                                    </TextBlock> 
+                                </ComboBox.ToolTip>
                             </ComboBox>
 
                             <Button Command="{Binding ClearGPIOPinCommand}"
@@ -143,6 +159,13 @@
                                                                CommandParameter="MotorDirectionPinViewModelList"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
+                                <ComboBox.ToolTip>
+                                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                        Pin ID for the Direction Pin of this actuator. 
+                                        <LineBreak/>
+                                        The Pin ID is physically marked on your Arduino MEGA. The wire connected to this GPIO Pin is also connected to "DIR-(DIR)" on your DQ542MA Stepper Driver.
+                                    </TextBlock>
+                                </ComboBox.ToolTip>
                             </ComboBox>
 
                             <Button Command="{Binding ClearGPIOPinCommand}"
@@ -173,7 +196,7 @@
                                 <Image Source="/Resources/General/LimitSwitch.png"
                                        Style="{DynamicResource ThematicControlImage}"
                                        Width="{DynamicResource NarrowControlWidth}"/>
-                                <TextBlock Text="Limit Switch Pin"
+                                <TextBlock Text="limit switch Pin"
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource StandardControlWidth}"/>
                             </StackPanel>
@@ -189,6 +212,13 @@
                                                                CommandParameter="LimitSwitchPinViewModelList"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
+                                <ComboBox.ToolTip>
+                                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                        Pin ID for the limit switch Pin of this actuator. 
+                                        <LineBreak/>
+                                        The Pin ID is physically marked on your Arduino MEGA. The wire connected to this GPIO Pin is also connected to normally open (marked "NO") on your limit switch.
+                                    </TextBlock>
+                                </ComboBox.ToolTip>
                             </ComboBox>
 
                             <Button Command="{Binding ClearGPIOPinCommand}"
@@ -228,7 +258,25 @@
                                 <TextBox Text="{Binding Path=MaxSpeed, Mode=TwoWay, 
                                                         UpdateSourceTrigger=PropertyChanged, Delay=250}"
                                          Style="{DynamicResource ThematicTextBox}"
-                                         Width="{DynamicResource WideControlWidth}"/>
+                                         Width="{DynamicResource WideControlWidth}">
+                                    <TextBox.ToolTip>
+                                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                        Maximum speed that this actuator is able to traverse. 
+                                        <LineBreak/>
+                                        Higher max speeds decrease operation time and enable higher print speeds for lower extrusion filament diameters.
+                                        <LineBreak/>
+                                        This value should be set as high as possible given the following criteria:
+                                        <LineBreak/>
+                                        1. If the max speed exceeds the microcontroller's computational capacity, the "^Cyc" error message will appear. Depending on other workloads being processed, the microcontroller typically handles at max 10,000 steps/s (50 mm/s at 1/8th microstepping with ModiPrint hardware).
+                                        <LineBreak/>
+                                        2. Screw-based actuators are prone to violent vibrations at higher speeds which may affect accuracy. If the acme screw for your actuator is noticeably "bouncing" during operation, consider lowering the max speed value. 
+                                        <LineBreak/>
+                                        3. Once a limit switch is triggered, the printer will come from a completely 100 to 0 stop without deceleration. This puts stress on the device and should be minimized if possible. 
+                                        <LineBreak/>
+                                        The recommended setting for ModiPrint hardware is 40 mm/s at 1/8th microstepping.
+                                        </TextBlock>
+                                    </TextBox.ToolTip>
+                                </TextBox>
                                 <TextBlock Text="mm/s"
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource StandardControlWidth}"/>
@@ -246,7 +294,25 @@
                                 <TextBox Text="{Binding Path=MaxAcceleration, Mode=TwoWay, 
                                                         UpdateSourceTrigger=PropertyChanged, Delay=250}"
                                          Style="{DynamicResource ThematicTextBox}"
-                                         Width="{DynamicResource WideControlWidth}"/>
+                                         Width="{DynamicResource WideControlWidth}">
+                                    <TextBox.ToolTip>
+                                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                        Maximum acceleration that this actuator is able to traverse. 
+                                        <LineBreak/>
+                                        Higher accelerations decrease operation time and reduces cornering filament diameter during extrusion printing. High acceleration values are particularly important for maintaining consistent extrusion filament diameters during complex prints.
+                                        <LineBreak/>
+                                        This value should be set as high as possible given the following criteria:
+                                        <LineBreak/>
+                                        1. Higher acceleration values require higher torque. If this toruqe is not met, the motor will miss steps leading to inaccurate operation. To quote the GRBL wiki: "individually test each axis with slowly increasing (acceleration) until the motor stalls."
+                                        <LineBreak/>
+                                        2. Higher acceleration values introduce higher stress to the device. If there seems to be too much "kick" when the XYZ stage change directions, consider lowering this value.
+                                        <LineBreak/>
+                                        Note that finer microstepping values decrease torque and necessitate lower acceleration values.
+                                        <LineBreak/>
+                                        The recommended setting for ModiPrint hardware is 2000 mm/s<Run BaselineAlignment="Superscript" FontSize="{DynamicResource SuperscriptFontSize}">2</Run> at 1/8th microstepping.
+                                        </TextBlock>
+                                    </TextBox.ToolTip>
+                                </TextBox>
                                 <TextBlock Text="mm/s²"
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource StandardControlWidth}"/>
@@ -268,6 +334,17 @@
                                 <TextBlock Text="mm"
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource StandardControlWidth}"/>
+                                <StackPanel.ToolTip>
+                                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                        The distance traversed with each step of an actuator. AKA actuator resolution.
+                                        <LineBreak/>
+                                        Theoretical resolution = (screw pitch * microstepping) / (motor steps per revolution)
+                                        <LineBreak/>
+                                        With ModiPrint hardware, theoretical resolution at 1/8th microstepping is 5 um for XY actuators and 2.5 um for Z actuators.
+                                        <LineBreak/>
+                                        Note that actual resolution will differ very slightly.
+                                    </TextBlock>
+                                </StackPanel.ToolTip>
                             </StackPanel>
 
                             <!--Step Pulse Time-->
@@ -286,6 +363,13 @@
                                 <TextBlock Text="us"
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource StandardControlWidth}"/>
+                                <StackPanel.ToolTip>
+                                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                        To quote the GRBL wiki: "If the pulses are too long, you might run into trouble when running the system at very high feed and pulse rates, because the step pulses can begin to overlap each other."
+                                        <LineBreak/>
+                                        To quote me: "This really doesn't matter. Just set it to 10 us."
+                                    </TextBlock>
+                                </StackPanel.ToolTip>
                             </StackPanel>
 
                             <!--Invert Direction-->
@@ -323,12 +407,21 @@
                                            Width="{DynamicResource StandardControlWidth}"/>
                                 <Grid>
                                     <ToggleButton Name="tgbtnInvertDirection"
-                                              IsChecked="{Binding Path=IsDirectionInverted}"
-                                              Style="{DynamicResource ThematicToggleButton}"
-                                              Width="{DynamicResource StandardToggleButtonWidth}"/>
+                                                  IsChecked="{Binding Path=IsDirectionInverted}"
+                                                  Style="{DynamicResource ThematicToggleButton}"
+                                                  Width="{DynamicResource StandardToggleButtonWidth}"/>
                                     <TextBlock Style="{StaticResource ThematicInvertDirectionTextBlock}"
                                                IsHitTestVisible="False"
                                                Width="{DynamicResource NarrowControlWidth}"/>
+                                    <Grid.ToolTip>
+                                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                            Determines what direction is considered positive movement. Toggling this value will flip the direction of movement for this actuator.
+                                            <LineBreak/>
+                                            Positive relative positions sent to the microcontroller always turn motors clockwise. Depending on the orientation of the actuators, the inteded direction of positive movement may be flipped (like Z actuators moving down on positive movement values).
+                                            <LineBreak/>
+                                            Default values for all actuators are set for ModiPrint hardware. So don't touch these unless you want your prints mirrored. 
+                                        </TextBlock>
+                                    </Grid.ToolTip>
                                 </Grid>
                             </StackPanel>
 
@@ -348,6 +441,15 @@
                                 <TextBlock Text="mm From Origin"
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource StandardControlWidth}"/>
+                                <StackPanel.ToolTip>
+                                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                        For XY actuators: Position value of a limit switch relative to some artibrary position.
+                                        <LineBreak/>
+                                        For Z actuators: Traverse from the upper limit switch to the lowest print position.
+                                        <LineBreak/>
+                                        This is suppose to be automatically set during the calibration process. It is not recommended that you manually set these values unless you are sure by what margin these values deviate.
+                                    </TextBlock>
+                                </StackPanel.ToolTip>
                             </StackPanel>
 
                             <!--Min Position-->
@@ -366,6 +468,15 @@
                                 <TextBlock Text="mm From Origin"
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource StandardControlWidth}"/>
+                                <StackPanel.ToolTip>
+                                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                        For XY actuators: Position value of a limit switch relative to some artibrary position.
+                                        <LineBreak/>
+                                        For Z actuators: Should always be zero (origin) and represents the lowest print position.
+                                        <LineBreak/>
+                                        This is suppose to be automatically set during the calibration process. It is not recommended that you manually set these values unless you are sure by what margin these values deviate.
+                                    </TextBlock>
+                                </StackPanel.ToolTip>
                             </StackPanel>
 
                         </StackPanel>
@@ -400,6 +511,11 @@
                                         </StackPanel>
                                     </ControlTemplate>
                                 </Button.Template>
+                                <Button.ToolTip>
+                                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                        Remove this actuator from the software. Note that parameters will not be saved.
+                                    </TextBlock>
+                                </Button.ToolTip>
                             </Button>
                         </Border>
                         <!--#endregion-->

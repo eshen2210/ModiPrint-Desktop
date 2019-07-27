@@ -42,6 +42,20 @@ namespace ModiPrint.Models.GCodeConverterModels
         {
             get { return _zCoord; }
         }
+        private CoordinateModel _eRepRapCoord;
+        public CoordinateModel ERepRapCoord
+        {
+            get { return _eRepRapCoord; }
+        }
+
+        //The XYZ coordinates for RepRap should match the XYZ coordinates in ModiPrint.
+        //However, the E coordinates are different for the different software.
+        //Therefore, this program needs to track the E coordinates for each of its printheads.
+        private List<CoordinateModel> _eModiPrintCoordList = new List<CoordinateModel>();
+        public List<CoordinateModel> EModiPrintCoordList
+        {
+            get { return _eModiPrintCoordList; }
+        }
 
         //Used if a Print Style is set to Droplet.
         //Keeps track of the position of the last droplet and ensures the interpolate distance parameters is not violated.
@@ -58,23 +72,6 @@ namespace ModiPrint.Models.GCodeConverterModels
         {
             get { return _isPrinting; }
             set { _isPrinting = value; }
-        }
-
-        //The E command in RepRap represents extrusion.
-        //Here it may be used to determine if printing is suppose to occur.
-        private CoordinateModel _eRepRapCoord;
-        public CoordinateModel ERepRapCoord
-        {
-            get { return _eRepRapCoord; }
-        }
-
-        //The XYZ coordinates for RepRap should match the XYZ coordinates in ModiPrint.
-        //However, the E coordinates are different for the different software.
-        //Therefore, this program needs to track the E coordinates for each of its printheads.
-        private List<CoordinateModel> _eModiPrintCoordList = new List<CoordinateModel>();
-        public List<CoordinateModel> EModiPrintCoordList
-        {
-            get { return _eModiPrintCoordList; }
         }
 
         //True = absolute coordinate system for Axis movement interpretation where the origin (0, 0, 0, 0) is set to the position at the start of this Print.

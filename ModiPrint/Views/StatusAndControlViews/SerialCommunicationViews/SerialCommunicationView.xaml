@@ -60,6 +60,15 @@
                             <i:InvokeCommandAction Command="{Binding RefreshPortNamesCommand}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
+                    <ComboBox.ToolTip>
+                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                            Select the serial port that the microcontroller USB cable is connected to then press the Connect button to the right.
+                            <LineBreak/>
+                            To see what serial port the microcontroller is connected to, go to Device Manager (not a part of this program) then the PORT tab.
+                            <LineBreak/>
+                            You can also guess the serial port. If you guess correctly, the serial message display should tell you "Connected".
+                        </TextBlock>
+                    </ComboBox.ToolTip>
                 </ComboBox>
             </StackPanel>
 
@@ -85,6 +94,17 @@
                             </StackPanel>
                         </ControlTemplate>
                     </Button.Template>
+                    <Button.ToolTip>
+                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                            Select the serial port that the microcontroller USB cable is connected to (drop-down to the left) then press this button.
+                            <LineBreak/>
+                            If a connection is established (to the appropriate microcontroller or not), this button will have a yellow border. 
+                            <LineBreak/>
+                            If a proper connection to the microcontroller is established, the serial message display should tell you "Connected".
+                            <LineBreak/>
+                            It is recommended that you do not connect to the microcontroller until 10 seconds after giving power to the microcontroller.
+                        </TextBlock>
+                    </Button.ToolTip>
                 </Button>
             </Border>
 
@@ -108,6 +128,13 @@
                             </StackPanel>
                         </ControlTemplate>
                     </Button.Template>
+                    <Button.ToolTip>
+                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                            Disconnect this program from whatever device it is connected to.
+                            <LineBreak/>
+                            If there is no connection established, this button will have a yellow border around it.
+                        </TextBlock>
+                    </Button.ToolTip>
                 </Button>
             </Border>
             <!--#endregion-->
@@ -123,7 +150,15 @@
                          Name="tbManualCommand"
                          Text="{Binding ManualSerialSendMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          Height="{DynamicResource StandardControlHeight}"
-                         Style="{DynamicResource ThematicTextBox}"/>
+                         Style="{DynamicResource ThematicTextBox}">
+                    <TextBox.ToolTip>
+                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                            Type in a command to be directly sent to the microcontroller. Then press the Send Message button to the right.
+                            <LineBreak/>
+                            All acceptable commands that can be sent to the microcontroller can be found under the "ModiPrint GCode Documentation.docx" file on Github. 
+                        </TextBlock>
+                    </TextBox.ToolTip>
+                </TextBox>
 
                 <Border Grid.Column="1"
                         HorizontalAlignment="Right"
@@ -155,6 +190,13 @@
                                 </StackPanel>
                             </ControlTemplate>
                         </Button.Template>
+                        <Button.ToolTip>
+                            <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                Send a command (entered in the textbox to the left) directly to the microcontroller.
+                                <LineBreak/>
+                                As with all commands in menu, a serial connection must be established first.
+                            </TextBlock>
+                        </Button.ToolTip>
                     </Button>
                 </Border>
 

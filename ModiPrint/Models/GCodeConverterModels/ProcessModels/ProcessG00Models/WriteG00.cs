@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ModiPrint.DataTypes.GlobalValues;
+using ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models;
 using ModiPrint.Models.PrintModels.PrintStyleModels.GradientModels;
 
 namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
@@ -26,21 +27,29 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
         /// <param name="xInvertDirection"></param>
         /// <param name="yInvertDirection"></param>
         /// <param name="zInvertDirection"></param>
+        /// <param name="xRemainder"></param>
+        /// <param name="yRemainder"></param>
+        /// <param name="zRemainder"></param>
         /// <returns></returns>
-        public static List<ConvertedGCodeLine> WriteAxesMovement(double xmmPerStep, double ymmPerStep, double zmmPerStep,
+        public static List<ConvertedGCodeLine> WriteAxesMovement(
+            double xmmPerStep, double ymmPerStep, double zmmPerStep,
             double xDistance, double yDistance, double zDistance,
-            bool xInvertDirection, bool yInvertDirection, bool zInvertDirection)
+            bool xInvertDirection, bool yInvertDirection, bool zInvertDirection,
+            ref double xRemainder, ref double yRemainder, ref double zRemainder)
         {
             //The return GCode.
             List<ConvertedGCodeLine> convertedGCodeLinesList = new List<ConvertedGCodeLine>();
-
             string convertedGCodeLine = "";
-            convertedGCodeLine += SerialCommands.AxesMovement;
 
-            //Output commands that will be sent through the serial port.
-            convertedGCodeLine += G00Calculator.WriteSteps('X', xDistance, xmmPerStep, xInvertDirection);
-            convertedGCodeLine += G00Calculator.WriteSteps('Y', yDistance, ymmPerStep, yInvertDirection);
-            convertedGCodeLine += G00Calculator.WriteSteps('Z', zDistance, zmmPerStep, zInvertDirection);
+            if (((xDistance) != 0) || ((yDistance) != 0) || ((zDistance) != 0))
+            {
+                convertedGCodeLine += SerialCommands.AxesMovement;
+
+                //Output commands that will be sent through the serial port.
+                convertedGCodeLine += G00Calculator.WriteSteps('X', xDistance, xmmPerStep, xInvertDirection, ref xRemainder);
+                convertedGCodeLine += G00Calculator.WriteSteps('Y', yDistance, ymmPerStep, yInvertDirection, ref yRemainder);
+                convertedGCodeLine += G00Calculator.WriteSteps('Z', zDistance, zmmPerStep, zInvertDirection, ref zRemainder);
+            }
 
             if (convertedGCodeLine != SerialCommands.AxesMovement) //If there are steps to take...
             {
@@ -60,38 +69,40 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
         /// <param name="xmmPerStep"></param>
         /// <param name="ymmPerStep"></param>
         /// <param name="zmmPerStep"></param>
-        /// <param name="eDispensePerDistance"></param>
+        /// <param name="eDistance"></param>
         /// <param name="xDistance"></param>
         /// <param name="yDistance"></param>
         /// <param name="zDistance"></param>
+        /// <param name="eInvertDirection"></param>
         /// <param name="xInvertDirection"></param>
         /// <param name="yInvertDirection"></param>
         /// <param name="zInvertDirection"></param>
-        /// <param name="eInvertDirection"></param>
+        /// <param name="eRemainder"></param>
+        /// <param name="xRemainder"></param>
+        /// <param name="yRemainder"></param>
+        /// <param name="zRemainder"></param>
         /// <param name="eModiPrintCoord"></param>
         /// <returns></returns>
-        public static List<ConvertedGCodeLine> WriteMotorizedContinuousPrint(double emmPerStep, double xmmPerStep, double ymmPerStep, double zmmPerStep,
-            double eDispensePerDistance, double xDistance, double yDistance, double zDistance,
-            bool xInvertDirection, bool yInvertDirection, bool zInvertDirection, bool eInvertDirection, CoordinateModel eModiPrintCoord)
+        public static List<ConvertedGCodeLine> WriteMotorizedContinuousPrint(
+            double emmPerStep, double xmmPerStep, double ymmPerStep, double zmmPerStep,
+            double eDistance, double xDistance, double yDistance, double zDistance,
+            bool eInvertDirection, bool xInvertDirection, bool yInvertDirection, bool zInvertDirection,
+            ref double eRemainder, ref double xRemainder, ref double yRemainder, ref double zRemainder,
+            CoordinateModel eModiPrintCoord)
         {
             //The return GCode.
             List<ConvertedGCodeLine> convertedGCodeLinesList = new List<ConvertedGCodeLine>();
 
-            if (((xDistance) != 0) || ((yDistance) != 0) || ((zDistance) != 0))
+            if (((eDistance) != 0) || ((xDistance) != 0) || ((yDistance) != 0) || ((zDistance) != 0))
             {
                 string convertedGCodeLine = "";
                 convertedGCodeLine += SerialCommands.MotorPrintWithMovement;
 
-                //Calculate the number of steps for each axis.
-                //If steps == 0, then do not print a command for that axis.
-                double travelDistance = G00Calculator.CalculateDistance(xDistance, yDistance, zDistance);
-                double eDistance = eDispensePerDistance * travelDistance;
-
                 //Output commands that will be sent through the serial port.
-                convertedGCodeLine += G00Calculator.WriteSteps('X', xDistance, xmmPerStep, xInvertDirection);
-                convertedGCodeLine += G00Calculator.WriteSteps('Y', yDistance, ymmPerStep, yInvertDirection);
-                convertedGCodeLine += G00Calculator.WriteSteps('Z', zDistance, zmmPerStep, zInvertDirection);
-                convertedGCodeLine += G00Calculator.WriteSteps('E', eDistance, emmPerStep, eInvertDirection);
+                convertedGCodeLine += G00Calculator.WriteSteps('X', xDistance, xmmPerStep, xInvertDirection, ref xRemainder);
+                convertedGCodeLine += G00Calculator.WriteSteps('Y', yDistance, ymmPerStep, yInvertDirection, ref yRemainder);
+                convertedGCodeLine += G00Calculator.WriteSteps('Z', zDistance, zmmPerStep, zInvertDirection, ref zRemainder);
+                convertedGCodeLine += G00Calculator.WriteSteps('E', eDistance, emmPerStep, eInvertDirection, ref eRemainder);
                 if (eModiPrintCoord != null)
                 {
                     //Can be passed into this method as a null object if this step is not required.
@@ -123,12 +134,17 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
         /// <param name="yInvertDirection"></param>
         /// <param name="zInvertDirection"></param>
         /// <param name="eInvertDirection"></param>
+        /// <param name="eRemainder"></param>
+        /// <param name="xRemainder"></param>
+        /// <param name="yRemainder"></param>
+        /// <param name="zRemainder"></param>
         /// <param name="eModiPrintCoord"></param>
         /// <param name="dropletModel"></param>
         /// <returns></returns>
         public static List<ConvertedGCodeLine> WriteMotorizedDropletPrint(double emmPerStep, double xmmPerStep, double ymmPerStep, double zmmPerStep,
             double eDistance, double xPrevious, double xCurrent, double yPrevious, double yCurrent, double zPrevious, double zCurrent,
             bool xInvertDirection, bool yInvertDirection, bool zInvertDirection, bool eInvertDirection,
+            ref double eRemainder, ref double xRemainder, ref double yRemainder, ref double zRemainder,
             CoordinateModel eModiPrintCoord, DropletModel dropletModel)
         {
             //The return GCode.
@@ -146,14 +162,16 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
                     {
                         List<ConvertedGCodeLine> appendList = WriteAxesMovement(xmmPerStep, ymmPerStep, zmmPerStep,
                             printDistancesList[i][0], printDistancesList[i][1], printDistancesList[i][2], 
-                            xInvertDirection, yInvertDirection, zInvertDirection);
+                            xInvertDirection, yInvertDirection, zInvertDirection,
+                            ref xRemainder, ref yRemainder, ref zRemainder);
                         if (appendList != null) { convertedGCodeLinesList.AddRange(appendList); }
                     }
                     else
                     {
                         List<ConvertedGCodeLine> appendList = WriteAxesMovement(xmmPerStep, ymmPerStep, zmmPerStep,
                             printDistancesList[i][0] - printDistancesList[i - 1][0], printDistancesList[i][1] - printDistancesList[i - 1][1], printDistancesList[i][2] - printDistancesList[i - 1][2],
-                            xInvertDirection, yInvertDirection, zInvertDirection);
+                            xInvertDirection, yInvertDirection, zInvertDirection,
+                            ref xRemainder, ref yRemainder, ref zRemainder);
                         if (appendList != null) { convertedGCodeLinesList.AddRange(appendList); }
                     }
 
@@ -162,12 +180,12 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
                     {
                         double ePrint = dropletModel.GradientModel.PrintParameterAtDistance(eDistance,
                             xPrevious + printDistancesList[i][0], yPrevious + printDistancesList[i][1], zPrevious + printDistancesList[i][2]);
-                        List<ConvertedGCodeLine> appendList = WriteMotorizedPrintWithoutMovement(ePrint, emmPerStep, eInvertDirection);
+                        List<ConvertedGCodeLine> appendList = WriteMotorizedPrintWithoutMovement(ePrint, emmPerStep, eInvertDirection, ref eRemainder);
                         if (appendList != null) { convertedGCodeLinesList.AddRange(appendList); }
                     }
                     else //No gradient.
                     {
-                        List<ConvertedGCodeLine> appendList = WriteMotorizedPrintWithoutMovement(eDistance, emmPerStep, eInvertDirection);
+                        List<ConvertedGCodeLine> appendList = WriteMotorizedPrintWithoutMovement(eDistance, emmPerStep, eInvertDirection, ref eRemainder);
                         if (appendList != null) { convertedGCodeLinesList.AddRange(appendList); }
                     }
                 }
@@ -184,14 +202,15 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
         /// <param name="eDistance"></param>
         /// <param name="emmPerStep"></param>
         /// <param name="invertDirection"></param>
+        /// <param name="eRemainder"></param>
         /// <returns></returns>
-        public static List<ConvertedGCodeLine> WriteMotorizedPrintWithoutMovement(double eDistance, double emmPerStep, bool invertDirection)
+        public static List<ConvertedGCodeLine> WriteMotorizedPrintWithoutMovement(double eDistance, double emmPerStep, bool invertDirection, ref double eRemainder)
         {
             //The return GCode.
             List<ConvertedGCodeLine> convertedGCodeLinesList = new List<ConvertedGCodeLine>();
 
             string printLine = SerialCommands.MotorPrintWithoutMovement;
-            printLine += G00Calculator.WriteSteps('E', eDistance, emmPerStep, invertDirection);
+            printLine += G00Calculator.WriteSteps('E', eDistance, emmPerStep, invertDirection, ref eRemainder);
 
             convertedGCodeLinesList.Add(new ConvertedGCodeLine(printLine));
             return convertedGCodeLinesList;
@@ -200,24 +219,36 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
         /// <summary>
         /// Returns a string of converted GCode for Valve Printhead printing with continuous Axis movement.
         /// </summary>
-        /// <param name="currentMaterial"></param>
+        /// <param name="xmmPerStep"></param>
+        /// <param name="ymmPerStep"></param>
+        /// <param name="zmmPerStep"></param>
+        /// <param name="xDistance"></param>
+        /// <param name="yDistance"></param>
+        /// <param name="zDistance"></param>
+        /// <param name="xInvertDirection"></param>
+        /// <param name="yInvertDirection"></param>
+        /// <param name="zInvertDirection"></param>
+        /// <param name="xRemainder"></param>
+        /// <param name="yRemainder"></param>
+        /// <param name="zRemainder"></param>
         /// <returns></returns>
         public static List<ConvertedGCodeLine> WriteValveContinuousPrint(double xmmPerStep, double ymmPerStep, double zmmPerStep,
-            double xPrevious, double xCurrent, double yPrevious, double yCurrent, double zPrevious, double zCurrent,
-            bool xInvertDirection, bool yInvertDirection, bool zInvertDirection)
+            double xDistance, double yDistance, double zDistance,
+            bool xInvertDirection, bool yInvertDirection, bool zInvertDirection,
+            ref double xRemainder, ref double yRemainder, ref double zRemainder)
         {
             //The return GCode.
             List<ConvertedGCodeLine> convertedGCodeLinesList = new List<ConvertedGCodeLine>();
 
-            if (((xCurrent - xPrevious) != 0) || ((yCurrent - yPrevious) != 0) || ((zCurrent - zPrevious) != 0))
+            if (((xDistance) != 0) || ((yDistance) != 0) || ((zDistance) != 0))
             {
                 string convertedGCodeLine = SerialCommands.ValvePrintWithMovement;
 
                 //Calculate the number of steps for each axis.
                 //If steps == 0, then do not print a command for that axis.
-                convertedGCodeLine += G00Calculator.WriteSteps('X', xCurrent - xPrevious, xmmPerStep, xInvertDirection);
-                convertedGCodeLine += G00Calculator.WriteSteps('Y', yCurrent - yPrevious, ymmPerStep, yInvertDirection);
-                convertedGCodeLine += G00Calculator.WriteSteps('Z', zCurrent - zPrevious, zmmPerStep, zInvertDirection);
+                convertedGCodeLine += G00Calculator.WriteSteps('X', xDistance, xmmPerStep, xInvertDirection, ref xRemainder);
+                convertedGCodeLine += G00Calculator.WriteSteps('Y', yDistance, ymmPerStep, yInvertDirection, ref yRemainder);
+                convertedGCodeLine += G00Calculator.WriteSteps('Z', zDistance, zmmPerStep, zInvertDirection, ref zRemainder);
 
                 //Catch the corner case where there is movement that is less than one step.
                 if (convertedGCodeLine != SerialCommands.ValvePrintWithMovement)
@@ -246,12 +277,16 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
         /// <param name="xInvertDirection"></param>
         /// <param name="yInvertDirection"></param>
         /// <param name="zInvertDirection"></param>
+        /// <param name="xRemainder"></param>
+        /// <param name="yRemainder"></param>
+        /// <param name="zRemainder"></param>
         /// <param name="dropletModel"></param>
         /// <returns></returns>
         public static List<ConvertedGCodeLine> WriteValveDropletPrint(
             double xmmPerStep, double ymmPerStep, double zmmPerStep,
             int valveOpenTime, double xPrevious, double xCurrent, double yPrevious, double yCurrent, double zPrevious, double zCurrent,
             bool xInvertDirection, bool yInvertDirection, bool zInvertDirection,
+            ref double xRemainder, ref double yRemainder, ref double zRemainder,
             DropletModel dropletModel)
         {
             //The return GCode.
@@ -269,7 +304,8 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
                     {
                         List<ConvertedGCodeLine> appendList = WriteAxesMovement(xmmPerStep, ymmPerStep, zmmPerStep,
                             printDistancesList[i][0], printDistancesList[i][1], printDistancesList[i][2],
-                            xInvertDirection, yInvertDirection, zInvertDirection);
+                            xInvertDirection, yInvertDirection, zInvertDirection,
+                            ref xRemainder, ref yRemainder, ref zRemainder);
                         if (appendList != null) { convertedGCodeLinesList.AddRange(appendList); }
                         //To Do: Handle error if appendList == null
                     }
@@ -277,7 +313,8 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
                     {
                         List<ConvertedGCodeLine> appendList = WriteAxesMovement(xmmPerStep, ymmPerStep, zmmPerStep,
                             printDistancesList[i][0] - printDistancesList[i - 1][0], printDistancesList[i][1] - printDistancesList[i - 1][1], printDistancesList[i][2] - printDistancesList[i - 1][2],
-                            xInvertDirection, yInvertDirection, zInvertDirection);
+                            xInvertDirection, yInvertDirection, zInvertDirection,
+                            ref xRemainder, ref yRemainder, ref zRemainder);
                         if (appendList != null) { convertedGCodeLinesList.AddRange(appendList); }
                     }
 

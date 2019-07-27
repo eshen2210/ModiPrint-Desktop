@@ -62,7 +62,7 @@ namespace ModiPrint.Models.PrinterModels.AxisModels
 
         //Maximum speed of the Axis.
         //In milimeter per second.
-        private double _maxSpeed = 0;
+        private double _maxSpeed = 40;
         public double MaxSpeed
         {
             get { return _maxSpeed; }
@@ -77,7 +77,7 @@ namespace ModiPrint.Models.PrinterModels.AxisModels
 
         //Maximum acceleration of the Axis.
         //In milimeter per seconds squared.
-        private double _maxAcceleration = 0;
+        private double _maxAcceleration = 2000;
         public double MaxAcceleration
         {
             get { return _maxAcceleration; }
@@ -92,7 +92,7 @@ namespace ModiPrint.Models.PrinterModels.AxisModels
         
         //Distance per step of the Axis.
         //In milimeters per step.
-        private double _mmPerStep = 0;
+        private double _mmPerStep = 0.005;
         public double MmPerStep
         {
             get { return _mmPerStep; }
@@ -101,7 +101,7 @@ namespace ModiPrint.Models.PrinterModels.AxisModels
 
         //Time in between step signal on and step signal off.
         //In microseconds.
-        private int _stepPulseTime = 0;
+        private int _stepPulseTime = 10;
         public int StepPulseTime
         {
             get { return _stepPulseTime; }

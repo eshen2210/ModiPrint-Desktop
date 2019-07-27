@@ -68,6 +68,11 @@
                             </StackPanel>
                         </ControlTemplate>
                     </Button.Template>
+                    <Button.ToolTip>
+                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                            Use this printhead for all following commands with the specified parameters.
+                        </TextBlock>
+                    </Button.ToolTip>
                 </Button>
             </Border>
 

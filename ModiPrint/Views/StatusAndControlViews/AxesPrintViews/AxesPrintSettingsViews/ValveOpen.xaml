@@ -38,7 +38,13 @@
                         <TextBox Text="{Binding Path=ValveOpenTime, Mode=TwoWay, 
                                                 UpdateSourceTrigger=PropertyChanged, Delay=250}"
                                    Style="{DynamicResource ThematicTextBox}"
-                                   Width="{DynamicResource StandardControlWidth}"/>
+                                   Width="{DynamicResource StandardControlWidth}">
+                            <TextBox.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                    Amount of time that the valve will remain open.
+                                </TextBlock>
+                            </TextBox.ToolTip>
+                        </TextBox>
                         <TextBlock Text="us"
                                    Style="{DynamicResource ThematicTextBlock}"
                                    Width="{DynamicResource NarrowControlWidth}"/>
@@ -79,6 +85,11 @@
                             </StackPanel>
                         </ControlTemplate>
                     </Button.Template>
+                    <Button.ToolTip>
+                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                            Open the valve on the valve printhead for the specified amount of time. Then close the valve immediately.
+                        </TextBlock>
+                    </Button.ToolTip>
                 </Button>
             </Border>
 

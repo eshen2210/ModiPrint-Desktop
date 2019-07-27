@@ -66,14 +66,14 @@ namespace ModiPrint.Models.PrinterModels.PrintheadModels
         //In milimeters.
         //Note: These values are relative and do not specify a specific position on the print surface.
         //Offset values are compared to other offset values to determine new positioning when switching Printheads.
-        private double _xOffset;
+        private double _xOffset = 0;
         public double XOffset
         {
             get { return _xOffset; }
             set { _xOffset = value; }
         }
 
-        private double _yOffset;
+        private double _yOffset = 0;
         public double YOffset
         {
             get { return _yOffset; }

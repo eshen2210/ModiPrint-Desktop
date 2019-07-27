@@ -19,8 +19,6 @@ namespace ModiPrint.ViewModels
         private ErrorListViewModel _errorListViewModel;
         #endregion
 
-
-
         #region Constructor
         public ErrorReporterViewModel(ErrorListViewModel ErrorListViewModel)
         {

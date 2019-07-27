@@ -15,26 +15,8 @@
     <GroupBox Header="Continuous Motorized Print Parameters"
               Style="{DynamicResource ThematicGroupBox}">
         <StackPanel Orientation="Vertical">
-            
-            <!--E Dispense Per Distance-->
-            <StackPanel Orientation="Horizontal"
-                        VerticalAlignment="Center"
-                        Height="{DynamicResource StandardControlHeight}">
-                <Image Source="/Resources/General/MotorizedPrinthead.png"
-                       Style="{DynamicResource ThematicControlImage}"
-                       Width="{DynamicResource NarrowControlWidth}"/>
-                <TextBlock Text="E Dispense Per Distance"
-                           Style="{DynamicResource ThematicTextBlock}"
-                           Width="{DynamicResource WideControlWidth}"/>
-                <TextBox Text="{Binding Path=MotorizedDispenseDistancePermm, Mode=TwoWay, 
-                                        UpdateSourceTrigger=PropertyChanged, Delay=250}"
-                         Style="{DynamicResource ThematicTextBox}"
-                         Width="{DynamicResource StandardControlWidth}"/>
-                <TextBlock Text="mm/mm"
-                           Style="{DynamicResource ThematicTextBlock}"
-                           Width="{DynamicResource NarrowControlWidth}"/>
-            </StackPanel>
-
+            <TextBlock Text="No Parameters to Set"
+                   Style="{DynamicResource ThematicTextBlock}"/>
         </StackPanel>
     </GroupBox>
 </UserControl>

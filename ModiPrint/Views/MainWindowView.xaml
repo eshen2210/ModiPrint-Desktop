@@ -86,6 +86,11 @@
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Button.Template>
+                        <Button.ToolTip>
+                            <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                Set parameters for the printer hardware.
+                            </TextBlock>
+                        </Button.ToolTip>
                     </Button>
 
                     <!--Print Button-->
@@ -109,6 +114,11 @@
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Button.Template>
+                        <Button.ToolTip>
+                            <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                Set parameters for and execute a print sequence.
+                            </TextBlock>
+                        </Button.ToolTip>
                     </Button>
 
                     <!--Control Button-->
@@ -132,6 +142,11 @@
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Button.Template>
+                        <Button.ToolTip>
+                            <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                Manage serial connection and manually control the printer.
+                            </TextBlock>
+                        </Button.ToolTip>
                     </Button>
 
                     <!--Save Button-->
@@ -152,6 +167,11 @@
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Button.Template>
+                        <Button.ToolTip>
+                            <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                Save all parameters from the Printer and Print menu to a .xml file.
+                            </TextBlock>
+                        </Button.ToolTip>
                     </Button>
 
                     <!--Load Button-->
@@ -172,6 +192,11 @@
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Button.Template>
+                        <Button.ToolTip>
+                            <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                Save all parameters from a .xml file.
+                            </TextBlock>
+                        </Button.ToolTip>
                     </Button>
 
                     <!--Errors Button-->
@@ -211,6 +236,15 @@
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Button.Template>
+                        <Button.ToolTip>
+                            <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                Displays all errors that may arise from GCode conversion, operations, or saving and loading.
+                                <LineBreak/>
+                                If an error comes up, this button will turn red.
+                                <LineBreak/>
+                                Errors typically fail the operation in question and should be attended to.
+                            </TextBlock>
+                        </Button.ToolTip>
                     </Button>
                     <!--#endregion-->
 
@@ -309,7 +343,9 @@
 
                 <!--Unset Template-->
                 <DataTemplate x:Key="UnsetTemplate">
-                    <!--To Do: Insert Vanity Here-->
+                    <v:UnsetMainWindow
+                        DataContext="{Binding UnsetMainViewModel}"
+                        Margin="10, 10, 10, 10"/>
                 </DataTemplate>
 
                 <!--Printer Template-->

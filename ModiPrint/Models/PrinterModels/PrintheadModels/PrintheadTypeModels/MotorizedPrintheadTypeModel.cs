@@ -123,36 +123,6 @@ namespace ModiPrint.Models.PrinterModels.PrintheadModels.PrintheadTypeModels
             get { return _isDirectionInverted; }
             set { _isDirectionInverted = value; }
         }
-
-        //Diameter of the resevoir that this Printhead is dispensing from.
-        //In mm.
-        private double _resevoirDiameter = 0;
-        public double ResevoirDiameter
-        {
-            get { return _resevoirDiameter; }
-            set
-            {
-                if (0 <= value)
-                { _resevoirDiameter = value; }
-                else
-                { _resevoirDiameter = 0; }
-            }
-        }
-
-        //Total volume of the resevoir that this Printhead is dispensing from.
-        //In mL of cc.
-        private double _resevoirVolume = 0;
-        public double ResevoirVolume
-        {
-            get { return _resevoirVolume; }
-            set
-            {
-                if (0 <= value)
-                { _resevoirVolume = value; }
-                else
-                { _resevoirVolume = 0; }
-            }
-        }
         #endregion
 
         #region Constructor
@@ -177,9 +147,7 @@ namespace ModiPrint.Models.PrinterModels.PrintheadModels.PrintheadTypeModels
                 && (_mmPerStep > 0)
                 && (_stepPulseTime > 0)
                 && (_maxPosition < 0)
-                && (_minPosition > 0)
-                && (_resevoirDiameter > 0)
-                && (_resevoirVolume > 0))
+                && (_minPosition > 0))
             {
                 return true;
             }

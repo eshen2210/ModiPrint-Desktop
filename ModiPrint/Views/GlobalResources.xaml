@@ -29,6 +29,7 @@
     <System:Double x:Key="SmallFontSize">10</System:Double>
     <System:Double x:Key="StandardFontSize">12</System:Double>
     <System:Double x:Key="HeaderControlFontSize">20</System:Double>
+    <System:Double x:Key="SuperscriptFontSize">8</System:Double>
     <FontFamily x:Key="HeaderTextFont">Serif</FontFamily>
     <FontFamily x:Key="StandardTextFont">Sans Serif</FontFamily>
     
@@ -40,6 +41,9 @@
     <SolidColorBrush x:Key="SecondaryColor">Aqua</SolidColorBrush>
     <SolidColorBrush x:Key="TertiaryColor">Gold</SolidColorBrush>
     
+    <!--ToolTipService Values-->
+    <System:Int32 x:Key="ToolTipServiceShowDuration">120000</System:Int32>
+    
     <!--#endregion-->
     
     <!--#region Thematic Border-->
@@ -48,6 +52,7 @@
         <Setter Property="Padding" Value="5"/>
         <Setter Property="CornerRadius" Value="5"/>
         <Setter Property="BorderBrush" Value="{StaticResource StandardBorder}"/>
+        <Setter Property="ToolTipService.ShowDuration" Value="{StaticResource ToolTipServiceShowDuration}"/>
         <Setter Property="Margin" Value="5, 5, 5, 5"/>
     </Style>
     <!--#endregion-->
@@ -60,6 +65,7 @@
         <Setter Property="FontSize" Value="{StaticResource StandardFontSize}"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="ToolTipService.ShowDuration" Value="{StaticResource ToolTipServiceShowDuration}"/>
         <Style.Triggers>
             <!--To Do: Disable button and grey the background if canexecute is false-->
         </Style.Triggers>
@@ -73,6 +79,7 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="CornerRadius" Value="5"/>
         <Setter Property="BorderBrush" Value="{StaticResource StandardBorder}"/>
+        <Setter Property="ToolTipService.ShowDuration" Value="{StaticResource ToolTipServiceShowDuration}"/>
         <Setter Property="Margin" Value="5, 5, 5, 5"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="true">
@@ -90,6 +97,7 @@
         <Setter Property="TextAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="ToolTipService.ShowDuration" Value="{StaticResource ToolTipServiceShowDuration}"/>
         <Setter Property="Margin" Value="5, 5, 5, 5"/>
     </Style>
 
@@ -100,7 +108,11 @@
         <Setter Property="TextAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="ToolTipService.ShowDuration" Value="{StaticResource ToolTipServiceShowDuration}"/>
         <Setter Property="Margin" Value="5, 5, 5, 5"/>
+    </Style>
+
+    <Style x:Key="ThematicToolTipTextBlock" TargetType="{x:Type TextBlock}">
     </Style>
     <!--#endregion-->
 
@@ -115,6 +127,7 @@
         <Setter Property="TextAlignment" Value="Center"/>
         <Setter Property="BorderBrush" Value="{StaticResource StandardForeground}"/>
         <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="ToolTipService.ShowDuration" Value="{StaticResource ToolTipServiceShowDuration}"/>
         <Setter Property="Margin" Value="5, 5, 5, 5"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -156,6 +169,7 @@
         <Setter Property="Foreground" Value="{StaticResource StandardForeground}"/>
         <Setter Property="FontFamily" Value="{StaticResource StandardTextFont}"/>
         <Setter Property="FontSize" Value="{StaticResource StandardFontSize}"/>
+        <Setter Property="ToolTipService.ShowDuration" Value="{StaticResource ToolTipServiceShowDuration}"/>
         <Setter Property="Margin" Value="5, 5, 5, 5"/>
         <Setter Property="IsReadOnly" Value="True"/>
         <Setter Property="Template">
@@ -209,6 +223,7 @@
         <Setter Property="Foreground" Value="{StaticResource StandardForeground}"/>
         <Setter Property="FontFamily" Value="{StaticResource StandardTextFont}"/>
         <Setter Property="FontSize" Value="{StaticResource StandardFontSize}"/>
+        <Setter Property="ToolTipService.ShowDuration" Value="{StaticResource ToolTipServiceShowDuration}"/>
         <Setter Property="Margin" Value="5, 5, 5, 5"/>
         <Setter Property="IsReadOnly" Value="True"/>
         <Setter Property="Template">
@@ -262,6 +277,7 @@
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Stretch" Value="Uniform"/>
+        <Setter Property="ToolTipService.ShowDuration" Value="{StaticResource ToolTipServiceShowDuration}"/>
         <Setter Property="Margin" Value="5, 5, 5, 5"/>
     </Style>
     <!--#endregion-->
@@ -319,6 +335,7 @@
         <Setter Property="Background" Value="{StaticResource StandardBackground}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="ItemContainerStyle" Value="{StaticResource ThematicTabControlItem}"/>
+        <Setter Property="ToolTipService.ShowDuration" Value="{StaticResource ToolTipServiceShowDuration}"/>
         <Setter Property="Margin" Value="5, 5, 5, 5"/>
     </Style>
 
@@ -366,6 +383,7 @@
     <Style x:Key="ThematicToggleButton" TargetType="{x:Type ToggleButton}">
         <Setter Property="Height" Value="{StaticResource StandardToggleButtonHeight}"/>
         <Setter Property="Width" Value="{StaticResource StandardToggleButtonWidth}"/>
+        <Setter Property="ToolTipService.ShowDuration" Value="{StaticResource ToolTipServiceShowDuration}"/>
         <Setter Property="Margin" Value="5, 0, 5, 0"/>
         <Setter Property="Template">
             <Setter.Value>

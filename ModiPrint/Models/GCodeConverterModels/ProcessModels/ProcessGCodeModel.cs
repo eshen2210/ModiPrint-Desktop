@@ -115,6 +115,7 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels
                 || (repRapLine[0] == "M106") //The command to turn the fan on. ModiPrint printers do not have fans by default.
                 || (repRapLine[0] == "M107") //The command to turn the fan off. ModiPrint printers do not have fans by default.
                 || (repRapLine[0] == "M109") //The command to set extruder temperature. ModiPrint printers do not have fans by default.
+                || (repRapLine[0] == "M140") //The command to set bed temperature. Irrelevant.
                 || (repRapLine[0] == "G04") //The command to pause. ModiPrint has its own built in pausing features.
                 || (repRapLine[0] == "G21") //The command to set units to milimeters. ModiPrint only operates in milimeters so this is irrelevant.
                 || (repRapLine[0] == "G28") //The command to home to the origin. ModiPrint keeps track of positioning, not the microcontroller.

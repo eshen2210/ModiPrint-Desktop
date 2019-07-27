@@ -57,7 +57,8 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
                 {
                     int eModiPrintCoordIndex = _parametersModel.FindEModiPrintCoordIndex(currentMaterial.PrintheadModel);
                     convertedGCodeLinesList = SetWriteG00Command(
-                        currentMaterial, _printerModel, _parametersModel.XCoord, _parametersModel.YCoord, _parametersModel.ZCoord, _parametersModel.EModiPrintCoordList[eModiPrintCoordIndex]);
+                        currentMaterial, _printerModel, 
+                        _parametersModel.ERepRapCoord, _parametersModel.XCoord, _parametersModel.YCoord, _parametersModel.ZCoord, _parametersModel.EModiPrintCoordList[eModiPrintCoordIndex]);
                 }
                 catch when (currentMaterial == null) //Material unset.
                 {
@@ -135,7 +136,7 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
         /// <returns></returns>
         public List<ConvertedGCodeLine> SetWriteG00Command(
             MaterialModel currentMaterial, PrinterModel printerModel,
-            CoordinateModel xCoord, CoordinateModel yCoord, CoordinateModel zCoord, CoordinateModel currentEModiPrintCoord)
+            CoordinateModel eRepRapCoord, CoordinateModel xCoord, CoordinateModel yCoord, CoordinateModel zCoord, CoordinateModel currentEModiPrintCoord)
         {
             //The return GCode.
             List<ConvertedGCodeLine> convertedGCodeLinesList = null;
@@ -150,14 +151,15 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
                     {
                         remainingDropletMovementArr = _parametersModel.ResetDropletPrintParameters(currentMaterial, null);
                     }
-                    
+
                     //Append the remaining droplet print movement to the new G00 movement.
                     convertedGCodeLinesList = WriteG00.WriteAxesMovement(
                         printerModel.AxisModelList[0].MmPerStep, printerModel.AxisModelList[1].MmPerStep, currentMaterial.PrintheadModel.AttachedZAxisModel.MmPerStep,
-                        xCoord.CurrentCoord - xCoord.PreviousCoord + remainingDropletMovementArr[0], 
-                        yCoord.CurrentCoord - yCoord.PreviousCoord + remainingDropletMovementArr[1],
-                        zCoord.CurrentCoord - zCoord.PreviousCoord + remainingDropletMovementArr[2],
-                        printerModel.AxisModelList[0].IsDirectionInverted, printerModel.AxisModelList[1].IsDirectionInverted, currentMaterial.PrintheadModel.AttachedZAxisModel.IsDirectionInverted);
+                        xCoord.DeltaCoord + remainingDropletMovementArr[0],
+                        yCoord.DeltaCoord + remainingDropletMovementArr[1],
+                        zCoord.DeltaCoord + remainingDropletMovementArr[2],
+                        printerModel.AxisModelList[0].IsDirectionInverted, printerModel.AxisModelList[1].IsDirectionInverted, currentMaterial.PrintheadModel.AttachedZAxisModel.IsDirectionInverted,
+                        ref xCoord.DeltaCoordRemainder, ref yCoord.DeltaCoordRemainder, ref zCoord.DeltaCoordRemainder);
                 }
                 else if (_parametersModel.IsPrinting == true) //If G01 (printing is occurring), then select the appropriate printhead and print style...
                 {
@@ -172,9 +174,9 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
                                     ContinuousPrintStyleModel continousPrintStyleModel = (ContinuousPrintStyleModel)currentMaterial.PrintStyleModel;
                                     convertedGCodeLinesList = WriteG00.WriteMotorizedContinuousPrint(
                                         motorizedPrintheadTypeModel.MmPerStep, printerModel.AxisModelList[0].MmPerStep, printerModel.AxisModelList[1].MmPerStep, currentMaterial.PrintheadModel.AttachedZAxisModel.MmPerStep,
-                                        continousPrintStyleModel.MotorizedDispenseDistancePermm,
-                                        xCoord.CurrentCoord - xCoord.PreviousCoord, yCoord.CurrentCoord - yCoord.PreviousCoord, zCoord.CurrentCoord - zCoord.PreviousCoord,
-                                        printerModel.AxisModelList[0].IsDirectionInverted, printerModel.AxisModelList[1].IsDirectionInverted, currentMaterial.PrintheadModel.AttachedZAxisModel.IsDirectionInverted, motorizedPrintheadTypeModel.IsDirectionInverted,
+                                        eRepRapCoord.DeltaCoord, xCoord.DeltaCoord, yCoord.DeltaCoord, zCoord.DeltaCoord,
+                                        motorizedPrintheadTypeModel.IsDirectionInverted, printerModel.AxisModelList[0].IsDirectionInverted, printerModel.AxisModelList[1].IsDirectionInverted, currentMaterial.PrintheadModel.AttachedZAxisModel.IsDirectionInverted,
+                                        ref eRepRapCoord.DeltaCoordRemainder, ref xCoord.DeltaCoordRemainder, ref yCoord.DeltaCoordRemainder, ref zCoord.DeltaCoordRemainder,
                                         currentEModiPrintCoord);
                                     break;
 
@@ -185,6 +187,7 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
                                         dropletPrintStyleModel.MotorizedDispenseDistance,
                                         xCoord.PreviousCoord, xCoord.CurrentCoord, yCoord.PreviousCoord, yCoord.CurrentCoord, zCoord.PreviousCoord, zCoord.CurrentCoord,
                                         printerModel.AxisModelList[0].IsDirectionInverted, printerModel.AxisModelList[1].IsDirectionInverted, currentMaterial.PrintheadModel.AttachedZAxisModel.IsDirectionInverted, motorizedPrintheadTypeModel.IsDirectionInverted,
+                                        ref eRepRapCoord.DeltaCoordRemainder, ref xCoord.DeltaCoordRemainder, ref yCoord.DeltaCoordRemainder, ref zCoord.DeltaCoordRemainder,
                                         currentEModiPrintCoord, _parametersModel.DropletModel);
                                     break;
 
@@ -200,8 +203,9 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
                                     ContinuousPrintStyleModel continousPrintStyleModel = (ContinuousPrintStyleModel)currentMaterial.PrintStyleModel;
                                     convertedGCodeLinesList = WriteG00.WriteValveContinuousPrint(
                                         printerModel.AxisModelList[0].MmPerStep, printerModel.AxisModelList[1].MmPerStep, currentMaterial.PrintheadModel.AttachedZAxisModel.MmPerStep,
-                                        xCoord.PreviousCoord, xCoord.CurrentCoord, yCoord.PreviousCoord, yCoord.CurrentCoord, zCoord.PreviousCoord, zCoord.CurrentCoord,
-                                        printerModel.AxisModelList[0].IsDirectionInverted, printerModel.AxisModelList[1].IsDirectionInverted, currentMaterial.PrintheadModel.AttachedZAxisModel.IsDirectionInverted);
+                                        xCoord.DeltaCoord, yCoord.DeltaCoord, zCoord.DeltaCoord,
+                                        printerModel.AxisModelList[0].IsDirectionInverted, printerModel.AxisModelList[1].IsDirectionInverted, currentMaterial.PrintheadModel.AttachedZAxisModel.IsDirectionInverted,
+                                        ref xCoord.DeltaCoordRemainder, ref yCoord.DeltaCoordRemainder, ref zCoord.DeltaCoordRemainder);
                                     break;
 
                                 case PrintStyle.Droplet:
@@ -211,7 +215,8 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
                                         dropletPrintStyleModel.ValveOpenTime,
                                         xCoord.PreviousCoord, xCoord.CurrentCoord, yCoord.PreviousCoord, yCoord.CurrentCoord, zCoord.PreviousCoord, zCoord.CurrentCoord,
                                         printerModel.AxisModelList[0].IsDirectionInverted, printerModel.AxisModelList[1].IsDirectionInverted, currentMaterial.PrintheadModel.AttachedZAxisModel.IsDirectionInverted,
-                                        _parametersModel.DropletModel);
+                                        ref xCoord.DeltaCoordRemainder, ref yCoord.DeltaCoordRemainder, ref zCoord.DeltaCoordRemainder,
+                                    _parametersModel.DropletModel);
                                     break;
 
                                 case PrintStyle.Unset:

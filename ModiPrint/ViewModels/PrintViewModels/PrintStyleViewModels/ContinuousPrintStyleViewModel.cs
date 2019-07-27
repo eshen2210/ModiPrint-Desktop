@@ -19,18 +19,6 @@ namespace ModiPrint.ViewModels.PrintViewModels.PrintStyleViewModels
         {
             get { return _continuousPrintStyleModel; }
         }
-
-        //The parameter used by the Motorized Printhead while printing with this Continuous Style.
-        //This parameters specifies the distance (in milimeters) of Printhead motor movement per milimeter of Axis movement.
-        public double MotorizedDispenseDistancePermm
-        {
-            get { return _continuousPrintStyleModel.MotorizedDispenseDistancePermm; }
-            set
-            {
-                _continuousPrintStyleModel.MotorizedDispenseDistancePermm = value;
-                OnPropertyChanged("MotorizedDispenseDistancePermm");
-            }
-        }
         #endregion
 
         #region Constructor

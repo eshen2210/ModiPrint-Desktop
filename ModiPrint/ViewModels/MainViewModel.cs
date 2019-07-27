@@ -135,6 +135,12 @@ namespace ModiPrint.ViewModels
         {
             get { return _saveLoadViewModel; }
         }
+
+        private UnsetMainViewModel _unsetMainViewModel;
+        public UnsetMainViewModel UnsetMainViewModel
+        {
+            get { return _unsetMainViewModel; }
+        }
         #endregion
 
         #region GUI-Related Fields and Properties
@@ -148,7 +154,7 @@ namespace ModiPrint.ViewModels
 
         #region Constructor
         public MainViewModel()
-        {            
+        {                        
             //Error Handling.
             _errorListViewModel = new ErrorListViewModel();
             
@@ -196,6 +202,9 @@ namespace ModiPrint.ViewModels
 
             //Settings.
             _saveLoadViewModel = new SaveLoadViewModel(_gcodeManagerViewModel, _printerViewModel, _printViewModel, _errorListViewModel);
+
+            //Unset Main Window.
+            _unsetMainViewModel = new UnsetMainViewModel();
         }
         #endregion
 

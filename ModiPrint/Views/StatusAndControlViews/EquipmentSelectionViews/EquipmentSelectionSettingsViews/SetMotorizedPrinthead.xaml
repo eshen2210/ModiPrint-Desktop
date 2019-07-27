@@ -69,7 +69,13 @@
                             <ToggleButton Name="tgbtnInterpolateRounding"
                                             IsChecked="{Binding Path=MaximizeSpeeds}"
                                             Style="{DynamicResource ThematicToggleButton}"
-                                            Width="{DynamicResource StandardToggleButtonWidth}"/>
+                                            Width="{DynamicResource StandardToggleButtonWidth}">
+                                <ToggleButton.ToolTip>
+                                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                        Set speeds to their maximum values as set in the Printer menu.
+                                    </TextBlock>
+                                </ToggleButton.ToolTip>
+                            </ToggleButton>
                             <TextBlock Style="{StaticResource MaximizePrintSpeedsTextBlock}"
                                         IsHitTestVisible="False"
                                         Width="{DynamicResource NarrowControlWidth}"/>
@@ -90,7 +96,13 @@
                         <TextBox Text="{Binding Path=MaxSpeed, Mode=TwoWay, 
                                                 UpdateSourceTrigger=PropertyChanged, Delay=250}"
                                  Style="{DynamicResource ThematicTextBox}"
-                                 Width="{DynamicResource StandardControlWidth}"/>
+                                 Width="{DynamicResource StandardControlWidth}">
+                            <TextBox.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                    The printhead will accelerate to this speed for all following commands.
+                                </TextBlock>
+                            </TextBox.ToolTip>
+                        </TextBox>
                         <TextBlock Text="mm/s"
                                    Style="{DynamicResource ThematicTextBlock}"
                                    Width="{DynamicResource NarrowControlWidth}"/>
@@ -113,7 +125,13 @@
                                    Width="{DynamicResource StandardControlWidth}"/>
                         <TextBlock Text="mm/s²"
                                    Style="{DynamicResource ThematicTextBlock}"
-                                   Width="{DynamicResource NarrowControlWidth}"/>
+                                   Width="{DynamicResource NarrowControlWidth}">
+                            <TextBlock.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                    The printhead will use this acceleration value for all following commands.
+                                </TextBlock>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
@@ -144,6 +162,11 @@
                             </StackPanel>
                         </ControlTemplate>
                     </Button.Template>
+                    <Button.ToolTip>
+                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                            Use this printhead for all following commands with the specified parameters.
+                        </TextBlock>
+                    </Button.ToolTip>
                 </Button>
             </Border>
 

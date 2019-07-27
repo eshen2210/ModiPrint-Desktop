@@ -264,14 +264,6 @@ namespace ModiPrint.ViewModels.ManualControlViewModels
             get { return _interpolateDistance; }
             set { _interpolateDistance = (value >= 0) ? value : _interpolateDistance; }
         }
-
-        //If the interpolate distance does not fit perfectly within the travel distance, then round the interpolate distance up or down.
-        private bool _interpolateRoundUp = false;
-        public bool InterpolateRoundUp
-        {
-            get { return _interpolateRoundUp; }
-            set { _interpolateRoundUp = value; }
-        }
         #endregion
 
         #region Constructor
@@ -284,6 +276,37 @@ namespace ModiPrint.ViewModels.ManualControlViewModels
             _axesPrintStylesList.Add(new MovementOnlyStyle());
             _axesPrintStylesList.Add(new DropletPrintStyle());
             _axesPrintStylesList.Add(new ContinuousPrintStyle());
+        }
+        #endregion
+
+        #region Methods
+        /// <summary>
+        /// Interprets a movement type string and returns XYZ movement distances.
+        /// Resets parameters after retrieving them.
+        /// </summary>
+        /// <param name="movementType"></param>
+        /// <param name="xDistance"></param>
+        /// <param name="yDistance"></param>
+        /// <param name="zDistance"></param>
+        private void ParseMovement(ref double xDistance, ref double yDistance, ref double zDistance)
+        {
+            xDistance = (_xMoveAxisPositiveDistance != 0) ? _xMoveAxisPositiveDistance : _xMoveAxisNegativeDistance;
+            yDistance = (_yMoveAxisPositiveDistance != 0) ? _yMoveAxisPositiveDistance : _yMoveAxisNegativeDistance;
+            zDistance = (_zMoveAxisPositiveDistance != 0) ? _zMoveAxisPositiveDistance : _zMoveAxisNegativeDistance;
+
+            //Reset parameters.
+            _xMoveAxisPositiveDistance = 0;
+            _xMoveAxisNegativeDistance = 0;
+            _yMoveAxisPositiveDistance = 0;
+            _yMoveAxisNegativeDistance = 0;
+            _zMoveAxisPositiveDistance = 0;
+            _zMoveAxisNegativeDistance = 0;
+            OnPropertyChanged("XMoveAxisPositiveDistance");
+            OnPropertyChanged("XMoveAxisNegativeDistance");
+            OnPropertyChanged("YMoveAxisPositiveDistance");
+            OnPropertyChanged("YMoveAxisNegativeDistance");
+            OnPropertyChanged("ZMoveAxisPositiveDistance");
+            OnPropertyChanged("ZMoveAxisNegativeDistance");
         }
         #endregion
 
@@ -326,7 +349,6 @@ namespace ModiPrint.ViewModels.ManualControlViewModels
                 _eDispensePerDistance = 0;
                 _valveOpenTime = 0;
                 _interpolateDistance = 0;
-                _interpolateRoundUp = false;
             }
 
             _menu = parameters;
@@ -462,13 +484,11 @@ namespace ModiPrint.ViewModels.ManualControlViewModels
 
             ParseMovement(ref xDistance, ref yDistance, ref zDistance);
 
-            _manualControlModel.ProcessManualMotorDropletPrintCommand(xDistance, yDistance, zDistance, _interpolateDistance, _interpolateRoundUp, _eMoveAxisPositiveDistance);
+            _manualControlModel.ProcessManualMotorDropletPrintCommand(xDistance, yDistance, zDistance, _interpolateDistance, _eMoveAxisPositiveDistance);
 
             _interpolateDistance = 0;
-            _interpolateRoundUp = false;
             _eMoveAxisPositiveDistance = 0;
             OnPropertyChanged("InterpolateDistance");
-            OnPropertyChanged("InterpolateRoundUp");
             OnPropertyChanged("EMoveAxisPositiveDistance");
 
             _menu = "Base";
@@ -565,13 +585,11 @@ namespace ModiPrint.ViewModels.ManualControlViewModels
 
             ParseMovement(ref xDistance, ref yDistance, ref zDistance);
 
-            _manualControlModel.ProcessManualValveDropletPrintCommand(xDistance, yDistance, zDistance, _interpolateDistance, _interpolateRoundUp, _valveOpenTime);
+            _manualControlModel.ProcessManualValveDropletPrintCommand(xDistance, yDistance, zDistance, _interpolateDistance, _valveOpenTime);
 
             _interpolateDistance = 0;
-            _interpolateRoundUp = false;
             _valveOpenTime = 0;
             OnPropertyChanged("InterpolateDistance");
-            OnPropertyChanged("InterpolateRoundUp");
             OnPropertyChanged("ValveOpenTime");
 
             _menu = "Base";
@@ -700,34 +718,52 @@ namespace ModiPrint.ViewModels.ManualControlViewModels
         }
 
         /// <summary>
-        /// Interprets a movement type string and returns XYZ movement distances.
-        /// Resets parameters after retrieving them.
+        /// Reset the Combobox selection for Axis selection.
         /// </summary>
-        /// <param name="movementType"></param>
-        /// <param name="xDistance"></param>
-        /// <param name="yDistance"></param>
-        /// <param name="zDistance"></param>
-        private void ParseMovement(ref double xDistance, ref double yDistance, ref double zDistance)
+        private RelayCommand<object> _axisSelectionNullCommand;
+        public ICommand AxisSelectionNullCommand
         {
-            xDistance = (_xMoveAxisPositiveDistance != 0) ? _xMoveAxisPositiveDistance : _xMoveAxisNegativeDistance;
-            yDistance = (_yMoveAxisPositiveDistance != 0) ? _yMoveAxisPositiveDistance : _yMoveAxisNegativeDistance;
-            zDistance = (_zMoveAxisPositiveDistance != 0) ? _zMoveAxisPositiveDistance : _zMoveAxisNegativeDistance;
-
-            //Reset parameters.
-            _xMoveAxisPositiveDistance = 0;
-            _xMoveAxisNegativeDistance = 0;
-            _yMoveAxisPositiveDistance = 0;
-            _yMoveAxisNegativeDistance = 0;
-            _zMoveAxisPositiveDistance = 0;
-            _zMoveAxisNegativeDistance = 0;
-            OnPropertyChanged("XMoveAxisPositiveDistance");
-            OnPropertyChanged("XMoveAxisNegativeDistance");
-            OnPropertyChanged("YMoveAxisPositiveDistance");
-            OnPropertyChanged("YMoveAxisNegativeDistance");
-            OnPropertyChanged("ZMoveAxisPositiveDistance");
-            OnPropertyChanged("ZMoveAxisNegativeDistance");
+            get
+            {
+                if (_axisSelectionNullCommand == null)
+                { _axisSelectionNullCommand = new RelayCommand<object>(ExecuteAxisSelectionNullCommand, CanExecuteAxisSelectionNullCommand); }
+                return _axisSelectionNullCommand;
+            }
         }
 
+        public bool CanExecuteAxisSelectionNullCommand(object notUsed)
+        {
+            return true;
+        }
+
+        public void ExecuteAxisSelectionNullCommand(object notUsed)
+        {
+            AxisName = "";
+        }
+
+        /// <summary>
+        /// Reset the Combobox selection for Printhead selection.
+        /// </summary>
+        private RelayCommand<object> _printheadSelectionNullCommand;
+        public ICommand PrintheadSelectionNullCommand
+        {
+            get
+            {
+                if (_printheadSelectionNullCommand == null)
+                { _printheadSelectionNullCommand = new RelayCommand<object>(ExecutePrintheadSelectionNullCommand, CanExecutePrintheadSelectionNullCommand); }
+                return _printheadSelectionNullCommand;
+            }
+        }
+
+        public bool CanExecutePrintheadSelectionNullCommand(object notUsed)
+        {
+            return true;
+        }
+
+        public void ExecutePrintheadSelectionNullCommand(object notUsed)
+        {
+            PrintheadName = "";
+        }
         #endregion
     }
 }

@@ -45,9 +45,6 @@ namespace ModiPrint.Models.XMLSerializerModels.PrintXMLSerializerModels.PrintSty
 
                     switch (xmlReader.Name)
                     {
-                        case "MotorizedDispenseDistancePermm":
-                            continuousPrintStyleViewModel.MotorizedDispenseDistancePermm = xmlReader.ReadElementContentAsDouble();
-                            break;
                         default:
                             base.ReportErrorUnrecognizedElement(xmlReader);
                             break;

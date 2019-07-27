@@ -31,6 +31,11 @@
                     </StackPanel>
                 </ControlTemplate>
             </Button.Template>
+            <Button.ToolTip>
+                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                    Begin printing. Valve printhead will move to specified intervals along the toolpath and dispense droplets.
+                </TextBlock>
+            </Button.ToolTip>
         </Button>
     </Border>
             

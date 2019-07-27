@@ -57,7 +57,7 @@ namespace ModiPrint.Models.GCodeConverterModels
         private string _convertedGCode;
 
         //Tells the GCodeConverter whether or not to add RepRap line numbers to the converted GCode.
-        private bool _commentLineNumber = true; //To Do: If this is set to true, then stuff breaks.
+        private bool _commentLineNumber = true;
         public bool CommentLineNumber
         {
             get { return _commentLineNumber; }

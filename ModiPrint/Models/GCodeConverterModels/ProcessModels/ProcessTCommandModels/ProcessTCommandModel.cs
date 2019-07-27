@@ -104,10 +104,12 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessTCommandMod
                     //Execute movement for the remaining movement left in droplet movements.
                     MaterialModel newMaterialParameter = (matchingMaterial.PrintStyle == PrintStyle.Droplet) ? matchingMaterial : null;
                     double[] remainingDropletMovementArr = _parametersModel.ResetDropletPrintParameters(currentMaterial, newMaterialParameter);
+                    double unused = 0;
                     List<ConvertedGCodeLine> remainingDropletMovement = WriteG00.WriteAxesMovement(
                         xAxis.MmPerStep, yAxis.MmPerStep, zAxisCurrent.MmPerStep,
                         remainingDropletMovementArr[0], remainingDropletMovementArr[1], remainingDropletMovementArr[2],
-                        xAxis.IsDirectionInverted, yAxis.IsDirectionInverted, zAxisCurrent.IsDirectionInverted);
+                        xAxis.IsDirectionInverted, yAxis.IsDirectionInverted, zAxisCurrent.IsDirectionInverted,
+                        ref unused, ref unused, ref unused);
                     if (remainingDropletMovement != null)
                     { convertedGCodeLinesList.AddRange(remainingDropletMovement); }
                 }

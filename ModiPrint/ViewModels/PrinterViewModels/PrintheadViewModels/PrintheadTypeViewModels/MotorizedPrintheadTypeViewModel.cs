@@ -165,30 +165,6 @@ namespace ModiPrint.ViewModels.PrinterViewModels.PrintheadViewModels.PrintheadTy
             get { return _motorizedPrintheadTypeModel.IsDirectionInverted; }
             set { _motorizedPrintheadTypeModel.IsDirectionInverted = value; }
         }
-
-        //Diameter of the resevoir that this Printhead is dispensing from.
-        //In mm.
-        public double ResevoirDiameter
-        {
-            get { return _motorizedPrintheadTypeModel.ResevoirDiameter; }
-            set
-            {
-                _motorizedPrintheadTypeModel.ResevoirDiameter = value;
-                OnPropertyChanged("ResevoirDiameter");
-            }
-        }
-
-        //Total volume of the resevoir that this Printhead is dispensing from.
-        //In mL of cc.
-        public double ResevoirVolume
-        {
-            get { return _motorizedPrintheadTypeModel.ResevoirVolume; }
-            set
-            {
-                _motorizedPrintheadTypeModel.ResevoirVolume = value;
-                OnPropertyChanged("ResevoirVolume");
-            }
-        }
         #endregion
 
         #region Constructor

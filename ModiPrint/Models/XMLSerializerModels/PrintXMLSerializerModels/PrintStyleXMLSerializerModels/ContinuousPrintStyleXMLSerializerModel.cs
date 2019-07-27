@@ -33,14 +33,8 @@ namespace ModiPrint.Models.XMLSerializerModels.PrintXMLSerializerModels.PrintSty
         {
             ContinuousPrintStyleViewModel continuousPrintStyleViewModel = (ContinuousPrintStyleViewModel)printStyleViewModel;
 
-            //Outmost element should be "ContinousPrintStyle".
-            xmlWriter.WriteStartElement("ContinuousPrintStyle");
-
-            //Motorized Dispense Distance Per mm.
-            xmlWriter.WriteElementString("MotorizedDispenseDistancePermm", continuousPrintStyleViewModel.MotorizedDispenseDistancePermm.ToString());
-
-            //Close outmost element "ContinuousPrintStyle".
-            xmlWriter.WriteEndElement();
+            //Only element should be "ContinousPrintStyle".
+            xmlWriter.WriteElementString("ContinuousPrintStyle", " ");
         }
         #endregion
     }

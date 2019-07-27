@@ -42,7 +42,13 @@
                         <TextBox Text="{Binding Path=XMoveAxisNegativeDistance, Mode=TwoWay, 
                                                 UpdateSourceTrigger=PropertyChanged, Delay=250}"
                                    Style="{DynamicResource ThematicTextBox}"
-                                   Width="{DynamicResource StandardControlWidth}"/>
+                                   Width="{DynamicResource StandardControlWidth}">
+                            <TextBox.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                    Distance to be traversed by the actuator. Both actuators will begin travel and stop simultaneously.
+                                </TextBlock>
+                            </TextBox.ToolTip>
+                        </TextBox>
                         <TextBlock Text="mm"
                                    Style="{DynamicResource ThematicTextBlock}"
                                    Width="{DynamicResource NarrowControlWidth}"/>
@@ -62,7 +68,13 @@
                         <TextBox Text="{Binding Path=YMoveAxisNegativeDistance, Mode=TwoWay, 
                                                 UpdateSourceTrigger=PropertyChanged, Delay=250}"
                                  Style="{DynamicResource ThematicTextBox}"
-                                 Width="{DynamicResource StandardControlWidth}"/>
+                                 Width="{DynamicResource StandardControlWidth}">
+                            <TextBox.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                    Distance to be traversed by the actuator. Both actuators will begin travel and stop simultaneously.
+                                </TextBlock>
+                            </TextBox.ToolTip>
+                        </TextBox>
                         <TextBlock Text="mm"
                                    Style="{DynamicResource ThematicTextBlock}"
                                    Width="{DynamicResource NarrowControlWidth}"/>

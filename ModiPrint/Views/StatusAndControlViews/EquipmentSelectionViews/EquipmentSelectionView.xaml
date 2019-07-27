@@ -3,9 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:local="clr-namespace:ModiPrint.Views.StatusAndControlViews.EquipmentSelectionViews"
              xmlns:vmAxis="clr-namespace:ModiPrint.ViewModels.PrinterViewModels.AxisViewModels"
              xmlns:vmPrinthead="clr-namespace:ModiPrint.ViewModels.PrinterViewModels.PrintheadViewModels"
+             xmlns:uControlFunctions="clr-namespace:ModiPrint.Utilities.ControlFunctions"
              mc:Ignorable="d">
 
     <Grid>
@@ -50,47 +52,17 @@
                 <TextBlock Text="Set Axis"
                            Style="{DynamicResource ThematicTextBlock}"
                            Margin="0, 0, 0, 0"/>
-                <!--
-                <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden"
-                              Style="{DynamicResource ThematicScrollViewer}"
-                              Height="150">
-                    <ListView ItemsSource="{Binding PrinterViewModel.AxisViewModelList}"
-                              Style="{DynamicResource ThematicListView}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <Border Style="{DynamicResource ThematicButtonBorder}">
-                                    <Button Command="{Binding SetAxisCommand}"
-                                            CommandParameter="{Binding Name}"
-                                            Style="{DynamicResource ThematicButton}"
-                                            Height="{DynamicResource StandardImageButtonHeight}">
-                                        <Button.Template>
-                                            <ControlTemplate>
-                                                <StackPanel Orientation="Horizontal"
-                                                    Background="Transparent">
-                                                    <Image Source="/Resources/General/Axis.png"
-                                                   Height="{DynamicResource StandardImageButtonHeight}"
-                                                   Style="{DynamicResource ThematicControlImage}"
-                                                   Margin="0, 0, 0, 0"/>
-                                                    <TextBlock Text="{Binding Name}"
-                                                       VerticalAlignment="Center"
-                                                       Style="{DynamicResource ThematicTextBlock}"/>
-                                                </StackPanel>
-                                            </ControlTemplate>
-                                        </Button.Template>
-                                    </Button>
-                                </Border>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </ScrollViewer>
-                -->
-                
                 <ComboBox ItemsSource="{Binding PrinterViewModel.AxisViewModelList}"
                           SelectedValuePath="Name"
                           SelectedValue="{Binding ManualControlViewModel.AxisName}"
                           Style="{DynamicResource ThematicImageComboBox}"
                           Margin="0, 0, 0, 0"
                           Height="{DynamicResource StandardImageComboBoxHeight}" Width="{DynamicResource StandardImageComboBoxWidth}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="DropDownOpened">
+                            <i:InvokeCommandAction Command="{Binding ManualControlViewModel.AxisSelectionNullCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <Border Style="{StaticResource SetAxisButtonBorder}"
@@ -113,33 +85,38 @@
                             </Border>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
+                    <ComboBox.ToolTip>
+                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                            Set actuator parameters for the XYZ stage and/or set a different Z actuator.
+                            <LineBreak/>
+                            All operations after setting actuator parameters will use these parameters until new parameters are set.
+                            <LineBreak/>
+                            A yellow border around the actuator icon indicates that the printer is currently using that actuator.
+                            <LineBreak/>
+                            A red border around the actuator icon indicates that the printer has sent the command to set a new actuator to the microcontroller but the microcontroller has yet to execute those commands.
+                        </TextBlock>
+                    </ComboBox.ToolTip>
                 </ComboBox>
-
             </StackPanel>
             <!--#endregion-->
 
             <!--#region Set Printhead-->
             <StackPanel Orientation="Vertical">
-                <StackPanel.Resources>
-                    <CollectionViewSource x:Key="EmptyPrintheadViewModelList" Source="{Binding PrinterViewModel.EmptyPrintheadViewModelList}"/>
-                    <CollectionViewSource x:Key="PrintheadViewModelList" Source="{Binding PrinterViewModel.PrintheadViewModelList}"/>
-
-                    <CompositeCollection x:Key="PrintheadViewModelListWithEmptyPrinthead">
-                        <CollectionContainer Collection="{Binding Source={StaticResource EmptyPrintheadViewModelList}}" />
-                        <CollectionContainer Collection="{Binding Source={StaticResource PrintheadViewModelList}}" />
-                    </CompositeCollection>
-                </StackPanel.Resources>
-
                 <TextBlock Text="Set Printhead"
                        Style="{DynamicResource ThematicTextBlock}"
                        Margin="0, 0, 0, 0"/>
 
-                <ComboBox ItemsSource="{Binding Source={StaticResource PrintheadViewModelListWithEmptyPrinthead}}"
+                <ComboBox ItemsSource="{Binding PrinterViewModel.PrintheadViewModelList}"
                           SelectedValuePath="Name"
                           SelectedValue="{Binding ManualControlViewModel.PrintheadName}"
                           Style="{DynamicResource ThematicImageComboBox}"
                           Margin="0, 0, 0, 0"
                           Height="{DynamicResource StandardImageComboBoxHeight}" Width="{DynamicResource StandardImageComboBoxWidth}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="DropDownOpened">
+                            <i:InvokeCommandAction Command="{Binding ManualControlViewModel.PrintheadSelectionNullCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <Border Style="{StaticResource SetPrintheadButtonBorder}"
@@ -162,6 +139,19 @@
                             </Border>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
+                    <ComboBox.ToolTip>
+                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                            Set printhead parameters for the XYZ stage and/or set a different printhead.
+                            <LineBreak/>
+                            When switching printheads, the associated Z actuator will by set as well.
+                            <LineBreak/>
+                            All operations after setting printhead parameters will use these parameters until new parameters are set.
+                            <LineBreak/>
+                            A yellow border around the printhead icon indicates that the printer is currently using that printhead.
+                            <LineBreak/>
+                            A red border around the printhead icon indicates that the printer has sent the command to set a new printhead to the microcontroller but the microcontroller has yet to execute those commands.
+                        </TextBlock>
+                    </ComboBox.ToolTip>
                 </ComboBox>
             </StackPanel>
 
@@ -204,6 +194,19 @@
                             </Border>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
+                    <ComboBox.ToolTip>
+                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                            Set a different movement or print style.
+                            <LineBreak/>
+                            All commands executed in the Control menu will use this style.
+                            <LineBreak/>
+                            Movement will enable all movement commands to operate without the printheads.
+                            <LineBreak/>
+                            Continuous will enable all movement commands to be accompanied by continual dispensing of the set printhead along the toolpath.
+                            <LineBreak/>
+                            Droplet will enable all movement commands to stop at regular intervals with the set printhead dispensing droplets at each interval.
+                        </TextBlock>
+                    </ComboBox.ToolTip>
                 </ComboBox>
             </StackPanel>
             <!--#endregion-->

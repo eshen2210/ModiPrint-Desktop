@@ -25,10 +25,16 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            
+
             <TextBlock Grid.Row="0"
                        Text="Sent Messages"
-                       Style="{DynamicResource ThematicTextBlock}"/>
+                       Style="{DynamicResource ThematicTextBlock}">
+                <TextBlock.ToolTip>
+                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                        All messages sent to the microcontroller.
+                    </TextBlock>
+                </TextBlock.ToolTip>
+            </TextBlock>
             <ScrollViewer Grid.Row="1"
                           VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden"
                           uc:AutoScrollBehavior.AutoScroll="True"
@@ -44,10 +50,16 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            
+
             <TextBlock Grid.Row="0"
                        Text="Received Messages"
-                       Style="{DynamicResource ThematicTextBlock}"/>
+                       Style="{DynamicResource ThematicTextBlock}">
+                <TextBlock.ToolTip>
+                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                        All messages received by the microcontroller.
+                    </TextBlock>
+                </TextBlock.ToolTip>
+            </TextBlock>
             <ScrollViewer Grid.Row="1"
                           VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden"
                           uc:AutoScrollBehavior.AutoScroll="True"

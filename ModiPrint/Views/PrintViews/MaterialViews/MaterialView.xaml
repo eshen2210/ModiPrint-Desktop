@@ -51,6 +51,15 @@
                         </StackPanel>
                     </ControlTemplate>
                 </Button.Template>
+                <Button.ToolTip>
+                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                        Add a new print material.
+                        <LineBreak/>
+                        Each new material represents a different set of print parameters that may use different printheads, speeds, and styles to execute toolpaths.
+                        <LineBreak/>
+                        Be sure to set parameters for this new and any existing materials before operation.
+                    </TextBlock>
+                </Button.ToolTip>
             </Button>
         </Border>
         <!--#endregion-->
@@ -88,7 +97,17 @@
                             <TextBox Text="{Binding Path=RepRapID, Mode=TwoWay, 
                                                     UpdateSourceTrigger=PropertyChanged, Delay=250}" 
                                      Width="{DynamicResource WideControlWidth}"
-                                     Style="{DynamicResource ThematicTextBox}"/>
+                                     Style="{DynamicResource ThematicTextBox}">
+                                <TextBox.ToolTip>
+                                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                        The RepRap T command that's associated with this material.
+                                        <LineBreak/>
+                                        These identifiers come in the form of T0, T1, T2...etc.
+                                        <LineBreak/>
+                                        Upon reading T# in a GCode line, the printer will switch to this Material and its parameters to execute the upcoming toolpaths.
+                                    </TextBlock>
+                                </TextBox.ToolTip>
+                            </TextBox>
                         </StackPanel>
                         <!--#endregion-->
 
@@ -103,13 +122,19 @@
                                            Width="{DynamicResource StandardControlWidth}"
                                            Style="{DynamicResource ThematicTextBlock}"/>
                             </StackPanel>
-                            
+
                             <ComboBox DisplayMemberPath="Name"
                                       ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=2}, 
                                                             Path=DataContext.PrinterViewModel.PrintheadViewModelList}"
                                       SelectedValue="{Binding PrintheadViewModel}"
                                       Height="{DynamicResource StandardControlHeight}" Width="{DynamicResource WideControlWidth}"
-                                      Style="{DynamicResource ThematicComboBox}"/>
+                                      Style="{DynamicResource ThematicComboBox}">
+                                <ComboBox.ToolTip>
+                                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                        The printhead that is used with this material.
+                                    </TextBlock>
+                                </ComboBox.ToolTip>
+                            </ComboBox>
                         </StackPanel>
                         <!--#endregion-->
 
@@ -148,7 +173,17 @@
                                 <ToggleButton Name="tgbtnPauseBeforeActivating"
                                               IsChecked="{Binding Path=PauseBeforeActivating}"
                                               Style="{DynamicResource ThematicToggleButton}"
-                                              Width="{DynamicResource StandardToggleButtonWidth}"/>
+                                              Width="{DynamicResource StandardToggleButtonWidth}">
+                                    <ToggleButton.ToolTip>
+                                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                            Pause a print sequence before switching to this material.
+                                            <LineBreak/>
+                                            This allows you to manually execute commands under the Control menu before the print sequence continues.
+                                            <LineBreak/>
+                                            This was mainly made to unclog printheads before switching printheads.
+                                        </TextBlock>
+                                    </ToggleButton.ToolTip>
+                                </ToggleButton>
                                 <TextBlock Style="{StaticResource ThematicPauseBeforeActivatingTextBlock}"
                                            IsHitTestVisible="False"
                                            Width="{DynamicResource NarrowControlWidth}"/>
@@ -191,7 +226,17 @@
                                 <ToggleButton Name="tgbtnPauseBeforeDeactivating"
                                               IsChecked="{Binding Path=PauseBeforeDeactivating}"
                                               Style="{DynamicResource ThematicToggleButton}"
-                                              Width="{DynamicResource StandardToggleButtonWidth}"/>
+                                              Width="{DynamicResource StandardToggleButtonWidth}">
+                                    <ToggleButton.ToolTip>
+                                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                            Pause a print sequence after switching from this material.
+                                            <LineBreak/>
+                                            This allows you to manually execute commands under the Control menu before the print sequence continues.
+                                            <LineBreak/>
+                                            This was mainly made to unclog printheads before switching printheads.
+                                        </TextBlock>
+                                    </ToggleButton.ToolTip>
+                                </ToggleButton>
                                 <TextBlock Style="{StaticResource ThematicPauseBeforeDeactivatingTextBlock}"
                                            IsHitTestVisible="False"
                                            Width="{DynamicResource NarrowControlWidth}"/>
@@ -214,7 +259,25 @@
                                 <TextBox Text="{Binding Path=JunctionDeviation, Mode=TwoWay, 
                                                         UpdateSourceTrigger=PropertyChanged, Delay=250}"
                                          Style="{DynamicResource ThematicTextBox}"
-                                         Width="{DynamicResource WideControlWidth}"/>
+                                         Width="{DynamicResource WideControlWidth}">
+                                    <TextBox.ToolTip>
+                                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                            Determines the centripedal acceleration of the XYZ stage allowing actuators to skip the initial stages of acceleration.
+                                            <LineBreak/>
+                                            Must be set to a value between 0 and 1. Where 0 has each line segment start at zero velocity.
+                                            <LineBreak/>
+                                            A higher junction deviation enables faster cornering with more constant speeds. 
+                                            <LineBreak/>
+                                            Therefore, a higher junction deviation is beneficial for faster operation and better maintains a consistent filament diameter during continuous extrusion printing.
+                                            <LineBreak/>
+                                            This parameter should be set as high as possible as long as the XYZ stage frame is stiff enough to handle the jerk.
+                                            <LineBreak/> 
+                                            A junction deviation that is too high will result in inaccurate prints.
+                                            <LineBreak/>
+                                            The recommended setting for ModiPrint hardware is 0.01.
+                                        </TextBlock>
+                                    </TextBox.ToolTip>
+                                </TextBox>
                             </StackPanel>
                             <!--#endregion-->
 
@@ -248,11 +311,17 @@
 
                                         </ResourceDictionary>
                                     </Grid.Resources>
-                                        
+
                                     <ToggleButton Name="tgbtnMaxPrintSpeeds"
                                                   IsChecked="{Binding Path=MaximizePrintSpeeds}"
                                                   Style="{DynamicResource ThematicToggleButton}"
-                                                  Width="{DynamicResource StandardToggleButtonWidth}"/>
+                                                  Width="{DynamicResource StandardToggleButtonWidth}">
+                                        <ToggleButton.ToolTip>
+                                            <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                                Set all print speeds to the maximum values as set under the Printer menu.
+                                            </TextBlock>
+                                        </ToggleButton.ToolTip>
+                                    </ToggleButton>
                                     <TextBlock Style="{StaticResource ThematicMaximizePrintSpeedTextBlock}"
                                                IsHitTestVisible="False"
                                                Width="{DynamicResource NarrowControlWidth}"/>
@@ -280,7 +349,17 @@
                                         <TextBox Text="{Binding Path=XPrintSpeed, Mode=TwoWay, 
                                                                 UpdateSourceTrigger=PropertyChanged, Delay=250}"
                                                  Width="{DynamicResource WideControlWidth}" 
-                                                 Style="{DynamicResource ThematicTextBox}"/>
+                                                 Style="{DynamicResource ThematicTextBox}">
+                                            <TextBox.ToolTip>
+                                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                                    Speed at which the actuator will move during printing.
+                                                    <LineBreak/>
+                                                    Higher speeds will reduce operation time.
+                                                    <LineBreak/>
+                                                    For continuous extrusion printing, higher print speeds will decrease filament diameter.
+                                                </TextBlock>
+                                            </TextBox.ToolTip>
+                                        </TextBox>
                                         <TextBlock Text="mm/s"
                                                    Width="{DynamicResource NarrowControlWidth}" 
                                                    Style="{DynamicResource ThematicTextBlock}"/>
@@ -297,7 +376,15 @@
                                         <TextBox Text="{Binding Path=XPrintAcceleration, Mode=TwoWay, 
                                                                 UpdateSourceTrigger=PropertyChanged, Delay=250}"
                                                  Width="{DynamicResource WideControlWidth}"
-                                                 Style="{DynamicResource ThematicTextBox}"/>
+                                                 Style="{DynamicResource ThematicTextBox}">
+                                            <TextBox.ToolTip>
+                                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                                    Acceleration that the actuator will move at during printing.
+                                                    <LineBreak/>
+                                                    Typically, there's no reason why this shouldn't be set to the maximum acceleration value as set in the Printer menu.
+                                                </TextBlock>
+                                            </TextBox.ToolTip>
+                                        </TextBox>
                                         <TextBlock Text="mm/s²"
                                                    Width="{DynamicResource NarrowControlWidth}" 
                                                    Style="{DynamicResource ThematicTextBlock}"/>
@@ -326,7 +413,17 @@
                                         <TextBox Text="{Binding Path=YPrintSpeed, Mode=TwoWay, 
                                                                 UpdateSourceTrigger=PropertyChanged, Delay=250}"
                                                  Width="{DynamicResource WideControlWidth}" 
-                                                 Style="{DynamicResource ThematicTextBox}"/>
+                                                 Style="{DynamicResource ThematicTextBox}">
+                                            <TextBox.ToolTip>
+                                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                                    Speed at which the actuator will move during printing.
+                                                    <LineBreak/>
+                                                    Higher speeds will reduce operation time.
+                                                    <LineBreak/>
+                                                    For continuous extrusion printing, higher print speeds will decrease filament diameter.
+                                                </TextBlock>
+                                            </TextBox.ToolTip>
+                                        </TextBox>
                                         <TextBlock Text="mm/s"
                                                    Width="{DynamicResource NarrowControlWidth}" 
                                                    Style="{DynamicResource ThematicTextBlock}"/>
@@ -343,7 +440,13 @@
                                         <TextBox Text="{Binding Path=YPrintAcceleration, Mode=TwoWay, 
                                                                 UpdateSourceTrigger=PropertyChanged, Delay=250}"
                                                  Width="{DynamicResource WideControlWidth}"
-                                                 Style="{DynamicResource ThematicTextBox}"/>
+                                                 Style="{DynamicResource ThematicTextBox}">
+                                            <TextBox.ToolTip>
+                                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                                    Typically, there's no reason why this shouldn't be set to the maximum acceleration value as set in the Printer menu.
+                                                </TextBlock>
+                                            </TextBox.ToolTip>
+                                        </TextBox>
                                         <TextBlock Text="mm/s²"
                                                    Width="{DynamicResource NarrowControlWidth}" 
                                                    Style="{DynamicResource ThematicTextBlock}"/>
@@ -372,7 +475,17 @@
                                         <TextBox Text="{Binding Path=ZPrintSpeed, Mode=TwoWay, 
                                                                 UpdateSourceTrigger=PropertyChanged, Delay=250}"
                                                  Width="{DynamicResource WideControlWidth}" 
-                                                 Style="{DynamicResource ThematicTextBox}"/>
+                                                 Style="{DynamicResource ThematicTextBox}">
+                                            <TextBox.ToolTip>
+                                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                                    Speed at which the actuator will move during printing.
+                                                    <LineBreak/>
+                                                    Higher speeds will reduce operation time.
+                                                    <LineBreak/>
+                                                    For continuous extrusion printing, higher print speeds will decrease filament diameter.
+                                                </TextBlock>
+                                            </TextBox.ToolTip>
+                                        </TextBox>
                                         <TextBlock Text="mm/s"
                                                    Width="{DynamicResource NarrowControlWidth}" 
                                                    Style="{DynamicResource ThematicTextBlock}"/>
@@ -389,7 +502,13 @@
                                         <TextBox Text="{Binding Path=ZPrintAcceleration, Mode=TwoWay, 
                                                                 UpdateSourceTrigger=PropertyChanged, Delay=250}"
                                                  Width="{DynamicResource WideControlWidth}"
-                                                 Style="{DynamicResource ThematicTextBox}"/>
+                                                 Style="{DynamicResource ThematicTextBox}">
+                                            <TextBox.ToolTip>
+                                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                                    Typically, there's no reason why this shouldn't be set to the maximum acceleration value as set in the Printer menu.
+                                                </TextBlock>
+                                            </TextBox.ToolTip>
+                                        </TextBox>
                                         <TextBlock Text="mm/s²"
                                                    Width="{DynamicResource NarrowControlWidth}" 
                                                    Style="{DynamicResource ThematicTextBlock}"/>
@@ -414,7 +533,15 @@
 
                             <ComboBox SelectedItem="{Binding PrintStyle}" ItemsSource="{Binding PrintStyleValues}"
                                       Height="{DynamicResource StandardControlHeight}" Width="{DynamicResource WideControlWidth}"
-                                      Style="{DynamicResource ThematicComboBox}"/>
+                                      Style="{DynamicResource ThematicComboBox}">
+                                <ComboBox.ToolTip>
+                                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                        If set to continuous print, the printhead will continually dispense as the XYZ stage is moving.
+                                        <LineBreak/>
+                                        If set to droplet print, the printhead will stop at regular intervals along the toolpath and dispense specified volumes for these droplets.
+                                    </TextBlock>
+                                </ComboBox.ToolTip>
+                            </ComboBox>
                         </StackPanel>
 
                         <Grid>
@@ -442,7 +569,6 @@
                             </Grid.Resources>
 
                             <!--The Datacontext is set within the Usercontrols inside the Datatemplates-->
-                            <!--This prevents a really weird Databinding bug-->
                             <ContentControl Content="{Binding }">
                                 <ContentControl.Style>
                                     <Style TargetType="{x:Type ContentControl}">
@@ -514,6 +640,11 @@
                                         </StackPanel>
                                     </ControlTemplate>
                                 </Button.Template>
+                                <Button.ToolTip>
+                                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                        Remove this material from the software. Note that parameters will not be saved.
+                                    </TextBlock>
+                                </Button.ToolTip>
                             </Button>
                         </Border>
                         <!--#endregion-->
