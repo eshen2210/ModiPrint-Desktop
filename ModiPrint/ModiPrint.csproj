@@ -802,29 +802,6 @@
     <Resource Include="Resources\Buttons\RemovePrinthead.PNG" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\MainWindow\Background.PNG" />
-    <Resource Include="Resources\MainWindow\CloseWindow.PNG" />
-    <Resource Include="Resources\MainWindow\CloseWindowMouseOver.PNG" />
-    <Resource Include="Resources\MainWindow\Control.PNG" />
-    <Resource Include="Resources\MainWindow\ControlMouseOver.PNG" />
-    <Resource Include="Resources\MainWindow\Errors.PNG" />
-    <Resource Include="Resources\MainWindow\ErrorsMouseOver.PNG" />
-    <Resource Include="Resources\MainWindow\Load.PNG" />
-    <Resource Include="Resources\MainWindow\LoadMouseOver.PNG" />
-    <Resource Include="Resources\MainWindow\PrinterMouseOver.PNG" />
-    <Resource Include="Resources\MainWindow\PrintMouseOver.PNG" />
-    <Resource Include="Resources\MainWindow\Save.PNG" />
-    <Resource Include="Resources\MainWindow\SaveMouseOver.PNG" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\MainWindow\MaximizeWindow.PNG" />
-    <Resource Include="Resources\MainWindow\MaximizeWindowMouseOver.PNG" />
-    <Resource Include="Resources\MainWindow\MinimizeWindow.PNG" />
-    <Resource Include="Resources\MainWindow\MinimizeWindowMouseOver.PNG" />
-    <Resource Include="Resources\MainWindow\Print.PNG" />
-    <Resource Include="Resources\MainWindow\Printer.PNG" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Buttons\UploadFile.png" />
   </ItemGroup>
   <ItemGroup>
@@ -902,12 +879,6 @@
     <Resource Include="Resources\General\USB.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\MainWindow\ControlSelected.png" />
-    <Resource Include="Resources\MainWindow\ErrorsSelected.png" />
-    <Resource Include="Resources\MainWindow\PrinterSelected.png" />
-    <Resource Include="Resources\MainWindow\PrintSelected.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\XYZEControl\ValveClose.png" />
     <Resource Include="Resources\XYZEControl\ValveCloseMouseOver.png" />
   </ItemGroup>
@@ -963,12 +934,6 @@
     <Resource Include="Resources\General\GradientShape.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\MainWindow\ErrorsAttention.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\MainWindow\ErrorsAttentionMouseOver.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\General\JunctionDeviation.png" />
   </ItemGroup>
   <ItemGroup>
@@ -991,6 +956,37 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\ConcentrationGradientFormulas.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\MainWindow\Background.PNG" />
+    <Resource Include="Resources\MainWindow\CloseWindow.PNG" />
+    <Resource Include="Resources\MainWindow\CloseWindowMouseOver.PNG" />
+    <Resource Include="Resources\MainWindow\Control.png" />
+    <Resource Include="Resources\MainWindow\ControlMouseOver.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\MainWindow\ControlSelected.png" />
+    <Resource Include="Resources\MainWindow\Errors.png" />
+    <Resource Include="Resources\MainWindow\ErrorsAttention.png" />
+    <Resource Include="Resources\MainWindow\ErrorsAttentionMouseOver.png" />
+    <Resource Include="Resources\MainWindow\ErrorsMouseOver.png" />
+    <Resource Include="Resources\MainWindow\Load.png" />
+    <Resource Include="Resources\MainWindow\LoadMouseOver.png" />
+    <Resource Include="Resources\MainWindow\MaximizeWindow.PNG" />
+    <Resource Include="Resources\MainWindow\MaximizeWindowMouseOver.PNG" />
+    <Resource Include="Resources\MainWindow\MinimizeWindow.PNG" />
+    <Resource Include="Resources\MainWindow\MinimizeWindowMouseOver.PNG" />
+    <Resource Include="Resources\MainWindow\Print.png" />
+    <Resource Include="Resources\MainWindow\Printer.png" />
+    <Resource Include="Resources\MainWindow\PrinterMouseOver.png" />
+    <Resource Include="Resources\MainWindow\PrinterSelected.png" />
+    <Resource Include="Resources\MainWindow\PrintMouseOver.png" />
+    <Resource Include="Resources\MainWindow\PrintSelected.png" />
+    <Resource Include="Resources\MainWindow\Save.png" />
+    <Resource Include="Resources\MainWindow\SaveMouseOver.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\MainWindow\ErrorsSelected.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

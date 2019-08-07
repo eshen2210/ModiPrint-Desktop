@@ -54,7 +54,7 @@
 
         <Border Style="{DynamicResource ThematicButtonBorder}">
             <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=2}, 
-                                      Path= DataContext.ManualControlViewModel.SetMenuCommand}"
+                                      Path=DataContext.ManualControlViewModel.SetMenuCommand}"
                     CommandParameter="SetOrigin"
                     Style="{DynamicResource ThematicButton}"
                     Height="{DynamicResource StandardImageButtonHeight}">
