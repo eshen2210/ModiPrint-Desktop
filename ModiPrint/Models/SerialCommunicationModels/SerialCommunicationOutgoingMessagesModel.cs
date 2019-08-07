@@ -76,7 +76,8 @@ namespace ModiPrint.Models.SerialCommunicationModels
             string prospectiveOutgoingMessage = "";
 
             prospectiveOutgoingMessage = _prospectiveOutgoingMessageList[0];
-            _prospectiveOutgoingMessageList.RemoveAt(0); 
+            System.Threading.Thread.Sleep(10); //To Do: Some hacked together solution because of weird out of range errors.
+            _prospectiveOutgoingMessageList.Remove(prospectiveOutgoingMessage); //Using RemoveAt(0) somehow gives an out of range error.
 
             return prospectiveOutgoingMessage;
         }

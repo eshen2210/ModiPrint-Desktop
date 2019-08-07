@@ -205,9 +205,9 @@
                            Style="{DynamicResource ThematicTextBlock}"/>
                 <StackPanel.ToolTip>
                     <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                        Maximum speed that this actuator is able to traverse. 
+                        Maximum speed that this actuator can traverse. 
                         <LineBreak/>
-                        Higher max speeds decrease operation time and enable higher print speeds for lower extrusion filament diameters.
+                        Higher max speeds decrease operation time.
                         <LineBreak/>
                         This value should be set as high as possible given the following criteria:
                         <LineBreak/>
@@ -239,7 +239,9 @@
                            Style="{DynamicResource ThematicTextBlock}"/>
                 <StackPanel.ToolTip>
                     <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                        Maximum acceleration that this actuator is able to traverse. 
+                        Maximum acceleration that this actuator can traverse. 
+                        <LineBreak/>
+                        Higher accelerations decrease operation time.
                         <LineBreak/>
                         This value should be set as high as possible given the following criteria:
                         <LineBreak/>
@@ -350,7 +352,9 @@
                                Width="{DynamicResource NarrowControlWidth}"/>
                     <Grid.ToolTip>
                         <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                            Determines what direction is considered positive movement. Toggling this value will flip the direction of movement for this actuator.
+                            Determines what direction is considered positive movement. Toggling this value will mirror the direction of movement for this actuator.
+                            <LineBreak/>
+                            Relative positions sent to the microcontroller always turn motors clockwise.
                             <LineBreak/>
                             This value should be set such that positive relative positions in the GCode causes the printhead to dispense and negative values cause retraction.
                             <LineBreak/>
@@ -380,7 +384,7 @@
                     <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
                         Traverse from the upper limit switch to the lowest print position.
                         <LineBreak/>
-                        This is suppose to be automatically set during the calibration process. It is not recommended that you manually set these values unless you are sure by what margin these values deviate.
+                        This is supposed to be automatically set during the calibration process. It is not recommended that you manually set these values unless you are sure by what margin these values deviate.
                     </TextBlock>
                 </StackPanel.ToolTip>
             </StackPanel>
@@ -405,7 +409,7 @@
                     <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
                         Should always be zero (origin) and represents the lowest print position.
                         <LineBreak/>
-                        This is suppose to be automatically set during the calibration process. It is not recommended that you manually set these values unless you are sure by what margin these values deviate.
+                        This is supposed to be automatically set during the calibration process. It is not recommended that you manually set these values unless you are sure by what margin these values deviate.
                     </TextBlock>
                 </StackPanel.ToolTip>
             </StackPanel>

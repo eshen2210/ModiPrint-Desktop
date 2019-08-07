@@ -47,6 +47,13 @@
                         </StackPanel>
                     </ControlTemplate>
                 </Button.Template>
+                <Button.ToolTip>
+                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                        Add a printhead to the printer. 
+                        <LineBreak/>
+                        Be sure to set parameters for this new and any existing printheads before operation.
+                    </TextBlock>
+                </Button.ToolTip>
             </Button>
         </Border>
         <!--#endregion-->
@@ -101,7 +108,7 @@
                                 <Image Source="/Resources/General/Axis.png"
                                        Style="{DynamicResource ThematicControlImage}"
                                        Width="{DynamicResource NarrowControlWidth}"/>
-                                <TextBlock Text="Z Axis"
+                                <TextBlock Text="Z Actuator"
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource StandardControlWidth}"/>
                             </StackPanel>
@@ -111,6 +118,13 @@
                                       SelectedValue="{Binding AttachedZAxisViewModel}"
                                       Style="{DynamicResource ThematicComboBox}"
                                       Height="{DynamicResource StandardControlHeight}" Width="{DynamicResource WideControlWidth}">
+                                <ComboBox.ToolTip>
+                                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                        The Z actuator this printhead is attached to.
+                                        <LineBreak/>
+                                        All operations done by this printhead will use this Z actuator for vertical movement.
+                                    </TextBlock>
+                                </ComboBox.ToolTip>
                             </ComboBox>
                         </StackPanel>
                         <!--#endregion-->
@@ -130,7 +144,17 @@
                                 <TextBox Text="{Binding Path=XOffset, Mode=TwoWay, 
                                                         UpdateSourceTrigger=PropertyChanged, Delay=250}"
                                          Style="{DynamicResource ThematicTextBox}"
-                                         Width="{DynamicResource WideControlWidth}"/>
+                                         Width="{DynamicResource WideControlWidth}">
+                                    <TextBox.ToolTip>
+                                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                            The X axis distance from some arbitrary origin that this printhead is located.
+                                            <LineBreak/>
+                                            Offsets from all printheads must be set relative to the same origin.
+                                            <LineBreak/>
+                                            This parameter is intended to be automatically set during the calibration process. Only manually set these values if you are sure of what margin these values deviate.
+                                        </TextBlock>
+                                    </TextBox.ToolTip>
+                                </TextBox>
                                 <TextBlock Text="mm"
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource NarrowControlWidth}"/>
@@ -148,7 +172,17 @@
                                 <TextBox Text="{Binding Path=YOffset, Mode=TwoWay, 
                                                         UpdateSourceTrigger=PropertyChanged, Delay=250}"
                                          Style="{DynamicResource ThematicTextBox}"
-                                         Width="{DynamicResource WideControlWidth}"/>
+                                         Width="{DynamicResource WideControlWidth}">
+                                    <TextBox.ToolTip>
+                                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                            The Y axis distance from some arbitrary origin that this printhead is located.
+                                            <LineBreak/>
+                                            Offsets from all printheads must be set relative to the same origin.
+                                            <LineBreak/>
+                                            This parameter is intended to be automatically set during the calibration process. Only manually set these values if you are sure of what margin these values deviate.
+                                        </TextBlock>
+                                    </TextBox.ToolTip>
+                                </TextBox>
                                 <TextBlock Text="mm"
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource NarrowControlWidth}"/>
@@ -166,7 +200,17 @@
                                 <TextBox Text="{Binding Path=AttachedZAxisViewModel.MaxPosition, Mode=TwoWay, 
                                                         UpdateSourceTrigger=PropertyChanged, Delay=250}"
                                          Style="{DynamicResource ThematicTextBox}"
-                                         Width="{DynamicResource WideControlWidth}"/>
+                                         Width="{DynamicResource WideControlWidth}">
+                                    <TextBox.ToolTip>
+                                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                            The Z axis distance from some arbitrary origin that this printhead is located.
+                                            <LineBreak/>
+                                            Offsets from all printheads must be set relative to the same origin.
+                                            <LineBreak/>
+                                            This parameter is intended to be automatically set during the calibration process. Only manually set these values if you are sure of what margin these values deviate.
+                                        </TextBlock>
+                                    </TextBox.ToolTip>
+                                </TextBox>
                                 <TextBlock Text="mm"
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource NarrowControlWidth}"/>
@@ -191,6 +235,15 @@
                                       SelectedItem="{Binding PrintheadType}" 
                                       Style="{DynamicResource ThematicComboBox}"
                                       Height="{DynamicResource StandardControlHeight}" Width="{DynamicResource WideControlWidth}">
+                                <ComboBox.ToolTip>
+                                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                        Is this a valve-based or motorized printhead?
+                                        <LineBreak/>
+                                        If you are following ModiPrint hardware guides, then the pneumatic extruder and microdispensing are considered valve printheads.
+                                        <LineBreak/>
+                                        Any printheads driven by a stepper motor will be considered motorized.
+                                    </TextBlock>
+                                </ComboBox.ToolTip>
                             </ComboBox>
                         </StackPanel>
 
@@ -269,6 +322,11 @@
                                         </StackPanel>
                                     </ControlTemplate>
                                 </Button.Template>
+                                <Button.ToolTip>
+                                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                        Remove this printhead from the software. Note that parameters will not be saved.
+                                    </TextBlock>
+                                </Button.ToolTip>
                             </Button>
                         </Border>
                         <!--#endregion-->

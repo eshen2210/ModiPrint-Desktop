@@ -38,7 +38,7 @@
                 </Button.Template>
                 <Button.ToolTip>
                     <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                        The following sequence will happen:
+                        The following sequence will occur:
                         <LineBreak/>
                         1. Retract all Z actuators until the upper limit switches are hit. Z actuator min/max positions will not be recorded.
                         <LineBreak/>
@@ -84,7 +84,7 @@
                     <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
                         Move to the center of the XY stage with a specified offsets.
                         <LineBreak/>
-                        Set that new position as the origin X and Y positions equal zero).
+                        Set that new position as the origin where (X0, Y0) is at the physical center of the XYZ stage.
                         <LineBreak/>
                         Use this button only after Find Limits.
                     </TextBlock>

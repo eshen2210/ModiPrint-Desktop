@@ -73,8 +73,8 @@ namespace ModiPrint.Models.PrinterModels
         {
             _microcontrollerModel = new MicrocontrollerModel();
 
-            _axisModelList.Add(new AxisModel("X Axis", 'X'));
-            _axisModelList.Add(new AxisModel("Y Axis", 'Y'));
+            _axisModelList.Add(new AxisModel("X Actuator", 'X'));
+            _axisModelList.Add(new AxisModel("Y Actuator", 'Y'));
             AddZAxis();
 
             AddPrinthead();
@@ -150,7 +150,7 @@ namespace ModiPrint.Models.PrinterModels
         /// </summary>
         public void AddZAxis()
         {
-            AxisModel newZAxis = new AxisModel("Z Axis " + ++_zAxesCreatedCount, 'Z');
+            AxisModel newZAxis = new AxisModel("Z Actuator " + ++_zAxesCreatedCount, 'Z');
             _axisModelList.Add(newZAxis);
             _zAxisModelList.Add(newZAxis);
         }

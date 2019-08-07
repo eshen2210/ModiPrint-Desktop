@@ -17,148 +17,185 @@
     <UserControl.Resources>
         <u:TrueToFalseConverter x:Key="TrueToFalseConverter"/>
     </UserControl.Resources>
-    
-    <GroupBox Header="Droplet Motorized Print Parameters"
-              Style="{DynamicResource ThematicGroupBox}">
-        <StackPanel Orientation="Vertical">
 
-            <!--Dispense Distance Per Droplet-->
-            <StackPanel Orientation="Horizontal"
-                        VerticalAlignment="Center"
-                        Height="{DynamicResource StandardControlHeight}">
-                <Image Source="/Resources/General/MotorizedPrinthead.png"
-                       Style="{DynamicResource ThematicControlImage}"
-                       Width="{DynamicResource NarrowControlWidth}"/>
-                <TextBlock Text="Dispense Distance Per Droplet"
-                           Style="{DynamicResource ThematicTextBlock}"
-                           Width="{DynamicResource WideControlWidth}"/>
-                <TextBox Text="{Binding Path=MotorizedDispenseDistance, Mode=TwoWay, 
+    <StackPanel Orientation="Vertical">
+        <GroupBox Header="Droplet Motorized Print Parameters"
+                  Style="{DynamicResource ThematicGroupBox}">
+            <StackPanel Orientation="Vertical">
+
+                <!--Dispense Distance-->
+                <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Center"
+                            Height="{DynamicResource StandardControlHeight}">
+                    <Image Source="/Resources/General/MotorizedPrinthead.png"
+                           Style="{DynamicResource ThematicControlImage}"
+                           Width="{DynamicResource NarrowControlWidth}"/>
+                    <TextBlock Text="Dispense Distance"
+                               Style="{DynamicResource ThematicTextBlock}"
+                               Width="{DynamicResource WideControlWidth}"/>
+                    <TextBox Text="{Binding Path=MotorizedDispenseDistance, Mode=TwoWay, 
                                         UpdateSourceTrigger=PropertyChanged, Delay=250}"
-                         Style="{DynamicResource ThematicTextBox}"
-                         Width="{DynamicResource StandardControlWidth}">
-                    <TextBox.ToolTip>
-                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                             Style="{DynamicResource ThematicTextBox}"
+                             Width="{DynamicResource StandardControlWidth}">
+                        <TextBox.ToolTip>
+                            <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
                             Each droplet will be dispensed via this traverse of the motorized printhead.
-                        </TextBlock>
-                    </TextBox.ToolTip>
-                </TextBox>
-                <TextBlock Text="mm"
-                           Style="{DynamicResource ThematicTextBlock}"
-                           Width="{DynamicResource NarrowControlWidth}"/>
-            </StackPanel>
+                            </TextBlock>
+                        </TextBox.ToolTip>
+                    </TextBox>
+                    <TextBlock Text="mm"
+                               Style="{DynamicResource ThematicTextBlock}"
+                               Width="{DynamicResource NarrowControlWidth}"/>
+                </StackPanel>
 
-            <!--Dispense Max Speed-->
-            <StackPanel Orientation="Horizontal"
-                        VerticalAlignment="Center"
-                        Height="{DynamicResource StandardControlHeight}">
-                <Image Source="/Resources/General/MaxSpeed.png"
-                       Style="{DynamicResource ThematicControlImage}"
-                       Width="{DynamicResource NarrowControlWidth}"/>
-                <TextBlock Text="Dispense Max Speed"
-                           Style="{DynamicResource ThematicTextBlock}"
-                           Width="{DynamicResource WideControlWidth}"/>
-                <TextBox Text="{Binding Path=MotorizedDispenseMaxSpeed, Mode=TwoWay, 
+                <!--Dispense Max Speed-->
+                <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Center"
+                            Height="{DynamicResource StandardControlHeight}">
+                    <Image Source="/Resources/General/MaxSpeed.png"
+                           Style="{DynamicResource ThematicControlImage}"
+                           Width="{DynamicResource NarrowControlWidth}"/>
+                    <TextBlock Text="Dispense Max Speed"
+                               Style="{DynamicResource ThematicTextBlock}"
+                               Width="{DynamicResource WideControlWidth}"/>
+                    <TextBox Text="{Binding Path=MotorizedDispenseMaxSpeed, Mode=TwoWay, 
                                         UpdateSourceTrigger=PropertyChanged, Delay=250}"
-                         Style="{DynamicResource ThematicTextBox}"
-                         Width="{DynamicResource StandardControlWidth}">
-                    <TextBox.ToolTip>
-                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                            Maximum speed that this actuator is able to traverse during dispensing of droplets.
+                             Style="{DynamicResource ThematicTextBox}"
+                             Width="{DynamicResource StandardControlWidth}">
+                        <TextBox.ToolTip>
+                            <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                            Maximum speed that this actuator can traverse during dispensing of droplets.
                             <LineBreak/>
-                            Higher values will cause more force being applied for shorter durations to the ink but the droplet volume should (in theory) not change.
-                        </TextBlock>
-                    </TextBox.ToolTip>
-                </TextBox>
-                <TextBlock Text="mm/s"
-                           Style="{DynamicResource ThematicTextBlock}"
-                           Width="{DynamicResource NarrowControlWidth}"/>
-            </StackPanel>
+                            Higher values will cause more force to be applied for shorter durations to the ink but the droplet volume should (in theory) not change.
+                            </TextBlock>
+                        </TextBox.ToolTip>
+                    </TextBox>
+                    <TextBlock Text="mm/s"
+                               Style="{DynamicResource ThematicTextBlock}"
+                               Width="{DynamicResource NarrowControlWidth}"/>
+                </StackPanel>
 
-            <!--Acceleration-->
-            <StackPanel Orientation="Horizontal"
-                        VerticalAlignment="Center"
-                        Height="{DynamicResource StandardControlHeight}">
-                <Image Source="/Resources/General/Acceleration.png"
-                       Style="{DynamicResource ThematicControlImage}"
-                       Width="{DynamicResource NarrowControlWidth}"/>
-                <TextBlock Text="E Acceleration"
-                           Style="{DynamicResource ThematicTextBlock}"
-                           Width="{DynamicResource WideControlWidth}"/>
-                <TextBox Text="{Binding Path=MotorizedDispenseAcceleration, Mode=TwoWay, 
+                <!--Dispense Acceleration-->
+                <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Center"
+                            Height="{DynamicResource StandardControlHeight}">
+                    <Image Source="/Resources/General/Acceleration.png"
+                           Style="{DynamicResource ThematicControlImage}"
+                           Width="{DynamicResource NarrowControlWidth}"/>
+                    <TextBlock Text="Dispense Acceleration"
+                               Style="{DynamicResource ThematicTextBlock}"
+                               Width="{DynamicResource WideControlWidth}"/>
+                    <TextBox Text="{Binding Path=MotorizedDispenseAcceleration, Mode=TwoWay, 
                                         UpdateSourceTrigger=PropertyChanged, Delay=250}"
-                         Style="{DynamicResource ThematicTextBox}"
-                         Width="{DynamicResource StandardControlWidth}">
-                    <TextBox.ToolTip>
-                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                            Maximum acceleration that this actuator is able to traverse during dispensing of each droplet.
+                             Style="{DynamicResource ThematicTextBox}"
+                             Width="{DynamicResource StandardControlWidth}">
+                        <TextBox.ToolTip>
+                            <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                            Maximum acceleration that this actuator can traverse during dispensing of each droplet.
                             <LineBreak/>
                             Typically, there's no reason why this shouldn't be set to the maximum acceleration value as set in the Printer menu.
-                        </TextBlock>
-                    </TextBox.ToolTip>
-                </TextBox>
+                            </TextBlock>
+                        </TextBox.ToolTip>
+                    </TextBox>
                     <TextBlock Text="mm/s²"
-                           Style="{DynamicResource ThematicTextBlock}"
-                           Width="{DynamicResource NarrowControlWidth}"/>
-            </StackPanel>
+                               Style="{DynamicResource ThematicTextBlock}"
+                               Width="{DynamicResource NarrowControlWidth}"/>
+                </StackPanel>
 
-            <!--Interpolate Distance-->
-            <StackPanel Orientation="Horizontal"
-                        VerticalAlignment="Center"
-                        Height="{DynamicResource StandardControlHeight}">
-                <Image Source="/Resources/General/InterpolateDistance.png"
-                       Style="{DynamicResource ThematicControlImage}"
-                       Width="{DynamicResource NarrowControlWidth}"/>
-                <TextBlock Text="Interpolate Distance"
-                           Style="{DynamicResource ThematicTextBlock}"
-                           Width="{DynamicResource WideControlWidth}"/>
-                <TextBox Text="{Binding Path=InterpolateDistance, Mode=TwoWay, 
+                <!--Interpolate Distance-->
+                <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Center"
+                            Height="{DynamicResource StandardControlHeight}">
+                    <Image Source="/Resources/General/InterpolateDistance.png"
+                           Style="{DynamicResource ThematicControlImage}"
+                           Width="{DynamicResource NarrowControlWidth}"/>
+                    <TextBlock Text="Interpolate Distance"
+                               Style="{DynamicResource ThematicTextBlock}"
+                               Width="{DynamicResource WideControlWidth}"/>
+                    <TextBox Text="{Binding Path=InterpolateDistance, Mode=TwoWay, 
                                         UpdateSourceTrigger=PropertyChanged, Delay=250}"
-                         Style="{DynamicResource ThematicTextBox}"
-                         Width="{DynamicResource StandardControlWidth}">
-                    <TextBox.ToolTip>
-                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                             Style="{DynamicResource ThematicTextBox}"
+                             Width="{DynamicResource StandardControlWidth}">
+                        <TextBox.ToolTip>
+                            <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
                             Pitch distance between each droplet.
-                        </TextBlock>
-                    </TextBox.ToolTip>
-                </TextBox>
-                <TextBlock Text="mm"
-                           Style="{DynamicResource ThematicTextBlock}"
-                           Width="{DynamicResource NarrowControlWidth}"/>
-            </StackPanel>
+                            </TextBlock>
+                        </TextBox.ToolTip>
+                    </TextBox>
+                    <TextBlock Text="mm"
+                               Style="{DynamicResource ThematicTextBlock}"
+                               Width="{DynamicResource NarrowControlWidth}"/>
+                </StackPanel>
 
-            <!--#region Gradient Settings-->
+
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox Header="Gradient Parameters"
+                  Style="{DynamicResource ThematicGroupBox}">
             <StackPanel Orientation="Vertical">
-                <StackPanel.Resources>
-                    <!--Unset Template-->
-                    <DataTemplate x:Key="UnsetTemplate"/>
 
-                    <!--Gradient Template-->
-                    <DataTemplate x:Key="GradientTemplate">
-                        <local:GradientView
-                            DataContext="{Binding }"
-                            Margin="0, 0, 0, 0"/>
-                    </DataTemplate>
-                </StackPanel.Resources>
+                <!--#region Gradient Shape-->
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal"
+                                Height="{DynamicResource StandardControlHeight}">
+                        <Image Source="/Resources/General/GradientShape.png"
+                               Style="{DynamicResource ThematicControlImage}"
+                               Width="{DynamicResource NarrowControlWidth}"/>
+                        <TextBlock Text="Gradient Shape"
+                                   VerticalAlignment="Center" HorizontalAlignment="Center"
+                                   Width="{DynamicResource WideControlWidth}"
+                                   Style="{DynamicResource ThematicTextBlock}"/>
+                    </StackPanel>
 
-                <ContentControl Content="{Binding }">
-                    <ContentControl.Style>
-                        <Style TargetType="{x:Type ContentControl}">
+                    <ComboBox SelectedItem="{Binding GradientShape}" ItemsSource="{Binding GradientShapeValues}"
+                              Height="{DynamicResource StandardControlHeight}" Width="{DynamicResource WideControlWidth}"
+                              Style="{DynamicResource ThematicComboBox}">
+                        <ComboBox.ToolTip>
+                            <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                            Determines what shape the gradient radiates from.
+                            <LineBreak/>
+                            Point would produce a spherical gradient, line a cylindrical gradient, and plane a linear gradient.
+                            </TextBlock>
+                        </ComboBox.ToolTip>
+                    </ComboBox>
+                </StackPanel>
+                <!--#endregion-->
 
-                            <!--Unset-->
-                            <Setter Property="ContentTemplate" Value="{StaticResource GradientTemplate}"/>
-                            <Style.Triggers>
-                                <!--Gradient-->
-                                <DataTrigger Binding="{Binding GradientShape}" Value="{x:Static GradientModels:GradientShape.None}">
-                                    <Setter Property="ContentTemplate" Value="{StaticResource UnsetTemplate}"/>
-                                </DataTrigger>
-                            </Style.Triggers>
+                <!--#region Gradient Settings-->
+                <StackPanel Orientation="Vertical">
+                    <StackPanel.Resources>
+                        <!--Unset Template-->
+                        <DataTemplate x:Key="UnsetTemplate"/>
 
-                        </Style>
-                    </ContentControl.Style>
-                </ContentControl>
+                        <!--Gradient Template-->
+                        <DataTemplate x:Key="GradientTemplate">
+                            <local:GradientView
+                                DataContext="{Binding }"
+                                Margin="0, 0, 0, 0"/>
+                        </DataTemplate>
+                    </StackPanel.Resources>
+
+                    <ContentControl Content="{Binding }">
+                        <ContentControl.Style>
+                            <Style TargetType="{x:Type ContentControl}">
+
+                                <!--Unset-->
+                                <Setter Property="ContentTemplate" Value="{StaticResource GradientTemplate}"/>
+                                <Style.Triggers>
+                                    <!--Gradient-->
+                                    <DataTrigger Binding="{Binding GradientShape}" Value="{x:Static GradientModels:GradientShape.None}">
+                                        <Setter Property="ContentTemplate" Value="{StaticResource UnsetTemplate}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+
+                            </Style>
+                        </ContentControl.Style>
+                    </ContentControl>
+                </StackPanel>
+                <!--#endregion-->
+
             </StackPanel>
-            <!--#endregion-->
-
-        </StackPanel>
-    </GroupBox>
+        </GroupBox>
+    </StackPanel>
 </UserControl>

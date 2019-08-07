@@ -11,7 +11,7 @@
 
     <TabControl Style="{DynamicResource ThematicTabControl}">
         
-        <!--Axis-->
+        <!--XYZ Stage-->
         <TabItem>
             <TabItem.Header>
                 <StackPanel Orientation="Horizontal"
@@ -20,7 +20,7 @@
                            Style="{DynamicResource ThematicControlImage}"
                            Width="{DynamicResource NarrowControlWidth}"
                            Margin="0, 0, 0, 0"/>
-                    <TextBlock Text="Axes"
+                    <TextBlock Text="XYZ Stage"
                                VerticalAlignment="Center"
                                Style="{DynamicResource ThematicTabControlTextBlock}"
                                Margin="0, 0, 0, 0"/>
@@ -58,6 +58,7 @@
         </TabItem>
 
         <!--Microcontroller-->
+        <!-- This is a totally unnessecary feature.
         <TabItem>
             <TabItem.Header>
                 <StackPanel Orientation="Horizontal"
@@ -79,6 +80,7 @@
                     Margin="10, 10, 10, 10"/>
             </ScrollViewer>
         </TabItem>
+        -->
     </TabControl>
 
 </UserControl>

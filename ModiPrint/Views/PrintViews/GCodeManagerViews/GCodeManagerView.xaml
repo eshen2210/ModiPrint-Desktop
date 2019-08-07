@@ -46,7 +46,7 @@
                                             <TextBlock Text="Upload"
                                                        Style="{DynamicResource ThematicTextBlock}"
                                                        Margin="0, 0, 0, 0"/>
-                                            <TextBlock Text="GCode"
+                                            <TextBlock Text="G-code"
                                                        Style="{DynamicResource ThematicTextBlock}"
                                                        Margin="0, 0, 0, 0"/>
                                         </StackPanel>
@@ -89,7 +89,7 @@
                                             <TextBlock Text="Convert"
                                                        Style="{DynamicResource ThematicTextBlock}"
                                                        Margin="0, 0, 0, 0"/>
-                                            <TextBlock Text="GCode"
+                                            <TextBlock Text="G-code"
                                                        Style="{DynamicResource ThematicTextBlock}"
                                                        Margin="0, 0, 0, 0"/>
                                         </StackPanel>
@@ -128,7 +128,7 @@
                                             <TextBlock Text="Save"
                                                        Style="{DynamicResource ThematicTextBlock}"
                                                        Margin="0, 0, 0, 0"/>
-                                            <TextBlock Text="GCode"
+                                            <TextBlock Text="G-code"
                                                        Style="{DynamicResource ThematicTextBlock}"
                                                        Margin="0, 0, 0, 0"/>
                                         </StackPanel>

@@ -63,7 +63,7 @@
                 Grid.Column="0" Grid.ColumnSpan="3">
             <Viewbox Stretch="Fill">
                 <Grid>
-
+                    
                     <!--#region Main Menu Buttons-->
                     <!--Printer Button-->
                     <Button Command="{Binding SetMenuCommand}" CommandParameter="Printer">

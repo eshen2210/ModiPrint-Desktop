@@ -23,7 +23,7 @@
                   Style="{DynamicResource ThematicGroupBox}">
             <StackPanel Orientation="Vertical">
 
-                <!--Valve Open Time Per Droplet-->
+                <!--Valve Open Time-->
                 <StackPanel Orientation="Horizontal"
                             VerticalAlignment="Center"
                             Height="{DynamicResource StandardControlHeight}">
@@ -41,7 +41,7 @@
                             <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
                                 Each droplet will be dispensed via opening the valve printhead for this duration of time.
                                 <LineBreak/>
-                                If you are using the VHS series of microdispensing solenoid valves, then the minimum open time value is ~100 us.`
+                                If you are using the VHS series of microdispensing solenoid valves, then the minimum open time value is ~100 us.
                             </TextBlock>
                         </TextBox.ToolTip>
                     </TextBox>
@@ -86,24 +86,24 @@
                 <!--#region Gradient Shape-->
                 <StackPanel Orientation="Horizontal">
                     <StackPanel Orientation="Horizontal"
-                                Height="{DynamicResource StandardControlHeight}">
+                            Height="{DynamicResource StandardControlHeight}">
                         <Image Source="/Resources/General/GradientShape.png"
-                               Style="{DynamicResource ThematicControlImage}"
-                               Width="{DynamicResource NarrowControlWidth}"/>
+                           Style="{DynamicResource ThematicControlImage}"
+                           Width="{DynamicResource NarrowControlWidth}"/>
                         <TextBlock Text="Gradient Shape"
-                                   VerticalAlignment="Center" HorizontalAlignment="Center"
-                                   Width="{DynamicResource WideControlWidth}"
-                                   Style="{DynamicResource ThematicTextBlock}"/>
+                               VerticalAlignment="Center" HorizontalAlignment="Center"
+                               Width="{DynamicResource WideControlWidth}"
+                               Style="{DynamicResource ThematicTextBlock}"/>
                     </StackPanel>
 
                     <ComboBox SelectedItem="{Binding GradientShape}" ItemsSource="{Binding GradientShapeValues}"
-                              Height="{DynamicResource StandardControlHeight}" Width="{DynamicResource WideControlWidth}"
-                              Style="{DynamicResource ThematicComboBox}">
+                          Height="{DynamicResource StandardControlHeight}" Width="{DynamicResource WideControlWidth}"
+                          Style="{DynamicResource ThematicComboBox}">
                         <ComboBox.ToolTip>
                             <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                                Determines what shape the gradient radiates from.
-                                <LineBreak/>
-                                Point would produce a spherical gradient, line a cylindrical gradient, and plane a linear gradient.
+                            Determines what shape the gradient radiates from.
+                            <LineBreak/>
+                            Point would produce a spherical gradient, line a cylindrical gradient, and plane a rectangular gradient.
                             </TextBlock>
                         </ComboBox.ToolTip>
                     </ComboBox>

@@ -91,7 +91,7 @@
                             <Image Source="/Resources/General/TextFile.png"
                                    Style="{DynamicResource ThematicControlImage}"
                                    Width="{DynamicResource NarrowControlWidth}"/>
-                            <TextBlock Text="GCode ID" 
+                            <TextBlock Text="G-code ID" 
                                        Width="{DynamicResource StandardControlWidth}"
                                        Style="{DynamicResource ThematicTextBlock}"/>
                             <TextBox Text="{Binding Path=RepRapID, Mode=TwoWay, 
@@ -132,6 +132,8 @@
                                 <ComboBox.ToolTip>
                                     <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
                                         The printhead that is used with this material.
+                                        <LineBreak/>
+                                        The printhead and its parameters should be set before this parameter is set.
                                     </TextBlock>
                                 </ComboBox.ToolTip>
                             </ComboBox>
@@ -262,7 +264,7 @@
                                          Width="{DynamicResource WideControlWidth}">
                                     <TextBox.ToolTip>
                                         <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                                            Determines the centripedal acceleration of the XYZ stage allowing actuators to skip the initial stages of acceleration.
+                                            Determines the centripetal acceleration of the XYZ stage allowing actuators to skip the initial stages of acceleration.
                                             <LineBreak/>
                                             Must be set to a value between 0 and 1. Where 0 has each line segment start at zero velocity.
                                             <LineBreak/>
@@ -539,6 +541,8 @@
                                         If set to continuous print, the printhead will continually dispense as the XYZ stage is moving.
                                         <LineBreak/>
                                         If set to droplet print, the printhead will stop at regular intervals along the toolpath and dispense specified volumes for these droplets.
+                                        <LineBreak/>
+                                        Leaving this value as unset will produce errors while converting g-code.
                                     </TextBlock>
                                 </ComboBox.ToolTip>
                             </ComboBox>

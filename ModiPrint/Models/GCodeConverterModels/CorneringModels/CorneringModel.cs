@@ -393,7 +393,7 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
         private double CalculateJunctionAngle(MovementModel movement1, MovementModel movement2)
         {
             //The E Axis is not taken into account here because I don't want to implement a Vector4D.
-            //Why an E angle does not need to be calculated is because the E Axis's distance moved should be always proportional to the distance moved by XYZ.
+            //Why an E angle does not need to be calculated is because the E Axis' distance moved should be always proportional to the distance moved by XYZ.
                 
             //Find the angle between the line created by the new movement and the previous movement.
             Vector3D line1 = new Vector3D(movement1.X *-1, movement1.Y *-1, movement1.Z * -1);
