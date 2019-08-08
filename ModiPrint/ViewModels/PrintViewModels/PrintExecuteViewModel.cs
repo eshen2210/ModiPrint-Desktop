@@ -191,10 +191,13 @@ namespace ModiPrint.ViewModels.PrintViewModels
         /// <param name="sender"></param>
         private void UpdatePrintSequencePaused(object sender)
         {
-            PrintStatus = PrintStatus.PrintSequencePaused;
-            OnPropertyChanged("PrintStatus");
-            if (_resumeCommand != null)
-            { _resumeCommand.RaiseCanExecuteChanged(); }
+            if (_printStatus == PrintStatus.Printing)
+            {
+                PrintStatus = PrintStatus.PrintSequencePaused;
+                OnPropertyChanged("PrintStatus");
+                if (_resumeCommand != null)
+                { _resumeCommand.RaiseCanExecuteChanged(); }
+            }
         }
 
         /// <summary>

@@ -117,6 +117,10 @@ namespace ModiPrint.Models.SerialCommunicationModels
             get { return _shouldResumeMicrocontroller; }
             set { _shouldResumeMicrocontroller = value; }
         }
+
+        //For some reason, every time a serial connection is established, the microcontroller thinks it's receiving an incorrect command.
+        //So this is just some really hacky piece of logic that prevents that error from being recorded.
+        private bool _shouldProcessNextError = true;
         #endregion
 
         #region Events
@@ -357,17 +361,30 @@ namespace ModiPrint.Models.SerialCommunicationModels
                     if (!String.IsNullOrWhiteSpace(incomingMessage))
                     {
                         //If the micrcontroller has interpreted the previous command, then go ahead and send it new commands.
-                        //To Do: Pause on error?
-                        if ((incomingMessage[0] == SerialMessageCharacters.SerialTaskQueuedCharacter) || (incomingMessage[0] == SerialMessageCharacters.SerialErrorCharacter))
+                        if (incomingMessage[0] == SerialMessageCharacters.SerialTaskQueuedCharacter)
                         {
                             _shouldSend = true;
                         }
 
-                        //Triggers the appropriate message received event.
-                        SerialMessageEventArgs serialMessageEventArgs = new SerialMessageEventArgs(incomingMessage);
+                        if (incomingMessage[0] == SerialMessageCharacters.SerialErrorCharacter)
+                        {
+                            _shouldSend = true;
+                            OnSerialCommunicationPrintSequencePaused(); //Pause a print sequence if an error was read.
+                        }
 
-                        Application.Current.Dispatcher.Invoke(() =>
-                        OnSerialCommunicationMessageReceived(serialMessageEventArgs));
+                        if ((incomingMessage[0] != SerialMessageCharacters.SerialErrorCharacter)
+                         || ((incomingMessage[0] == SerialMessageCharacters.SerialErrorCharacter) && (_shouldProcessNextError == true)))
+                        {
+                            //Triggers the appropriate message received event.
+                            SerialMessageEventArgs serialMessageEventArgs = new SerialMessageEventArgs(incomingMessage);
+
+                            Application.Current.Dispatcher.Invoke(() =>
+                            OnSerialCommunicationMessageReceived(serialMessageEventArgs));
+                        }
+                        else if ((incomingMessage[0] == SerialMessageCharacters.SerialErrorCharacter) && (_shouldProcessNextError == false))
+                        {
+                            _shouldProcessNextError = true;
+                        }
                     }
                 }
             }
@@ -452,6 +469,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
             if (_serialPort.IsOpen == false)
             {
                 ClearBuffer();
+                _shouldProcessNextError = false;
                 _serialPort.Open();
                 OnSerialConnectionChanged();
 
