@@ -77,23 +77,14 @@ namespace ModiPrint.Models.XMLSerializerModels.PrintXMLSerializerModels.Material
                         case "JunctionDeviation":
                             materialViewModel.JunctionDeviation = xmlReader.ReadElementContentAsDouble();
                             break;
-                        case "MaximizePrintSpeeds":
-                            materialViewModel.MaximizePrintSpeeds = bool.Parse(xmlReader.ReadElementContentAsString());
-                            break;
-                        case "XPrintSpeed":
-                            materialViewModel.XPrintSpeed = xmlReader.ReadElementContentAsDouble();
-                            break;
-                        case "YPrintSpeed":
-                            materialViewModel.YPrintSpeed = xmlReader.ReadElementContentAsDouble();
+                        case "XYPrintSpeed":
+                            materialViewModel.XYPrintSpeed = xmlReader.ReadElementContentAsDouble();
                             break;
                         case "ZPrintSpeed":
                             materialViewModel.ZPrintSpeed = xmlReader.ReadElementContentAsDouble();
                             break;
-                        case "XPrintAcceleration":
-                            materialViewModel.XPrintAcceleration = xmlReader.ReadElementContentAsDouble();
-                            break;
-                        case "YPrintAcceleration":
-                            materialViewModel.YPrintAcceleration = xmlReader.ReadElementContentAsDouble();
+                        case "XYPrintAcceleration":
+                            materialViewModel.XYPrintAcceleration = xmlReader.ReadElementContentAsDouble();
                             break;
                         case "ZPrintAcceleration":
                             materialViewModel.ZPrintAcceleration = xmlReader.ReadElementContentAsDouble();

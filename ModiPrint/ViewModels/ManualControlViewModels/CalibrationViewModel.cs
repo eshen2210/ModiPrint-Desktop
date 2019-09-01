@@ -26,6 +26,28 @@ namespace ModiPrint.ViewModels.ManualControlViewModels
         //Contains Printer parameters.
         PrinterViewModel _printerViewModel;
 
+        //Parameters for setting the movement speeds of hitting all limit switches.
+        //In mm/s.
+        private double _xCalibrationSpeed = 10;
+        public double XCalibrationSpeed
+        {
+            get { return _xCalibrationSpeed;  }
+            set { _xCalibrationSpeed = value; }
+        }
+
+        private double _yCalibrationSpeed = 10;
+        public double YCalibrationSpeed
+        {
+            get { return _yCalibrationSpeed; }
+            set { _yCalibrationSpeed = value; }
+        }
+
+        private double _zCalibrationSpeed = 10;
+        public double ZCalibrationSpeed
+        {
+            get { return _zCalibrationSpeed; }
+            set { _zCalibrationSpeed = value; }
+        }
 
         //Parameters for setting the origin.
         //Distance from the center.
@@ -77,32 +99,9 @@ namespace ModiPrint.ViewModels.ManualControlViewModels
 
         public void ExecuteCalibrateXYAndZMaxCommand(object notUsed)
         {
-            _calibrationModel.CalibrateXYAndZMax();
-        }
+            _calibrationModel.CalibrateXYAndZMax(_xCalibrationSpeed, _yCalibrationSpeed, _zCalibrationSpeed);
 
-        /// <summary>
-        /// Sends outgoing commands that mark the position of the currently active Printhead's point to printing (centered and closest to the print surface).
-        /// Should be called directly after setting the XY origin to zero.
-        /// </summary>
-        private RelayCommand<object> _calibratePrintheadOffsetCommand;
-        public ICommand CalibratePrintheadOffsetCommand
-        {
-            get
-            {
-                if (_calibratePrintheadOffsetCommand == null)
-                { _calibratePrintheadOffsetCommand = new RelayCommand<object>(ExecuteCalibratePrintheadOffsetCommand, CanExecuteCalibratePrintheadOffsetCommand); }
-                return _calibratePrintheadOffsetCommand;
-            }
-        }
-
-        public bool CanExecuteCalibratePrintheadOffsetCommand(object notUsed)
-        {
-            return true;
-        }
-
-        public void ExecuteCalibratePrintheadOffsetCommand(object notUsed)
-        {
-            _calibrationModel.CalibratePrintheadOffset();
+            _manualControlViewModel.Menu = "Base";
         }
 
         /// <summary>
@@ -129,6 +128,32 @@ namespace ModiPrint.ViewModels.ManualControlViewModels
             _calibrationModel.CalibrateXYOrigin(_xDistanceFromCenter, _yDistanceFromCenter);
 
             _manualControlViewModel.Menu = "Base";
+        }
+
+
+        /// <summary>
+        /// Sends outgoing commands that mark the position of the currently active Printhead's point to printing (centered and closest to the print surface).
+        /// Should be called directly after setting the XY origin to zero.
+        /// </summary>
+        private RelayCommand<object> _calibratePrintheadOffsetCommand;
+        public ICommand CalibratePrintheadOffsetCommand
+        {
+            get
+            {
+                if (_calibratePrintheadOffsetCommand == null)
+                { _calibratePrintheadOffsetCommand = new RelayCommand<object>(ExecuteCalibratePrintheadOffsetCommand, CanExecuteCalibratePrintheadOffsetCommand); }
+                return _calibratePrintheadOffsetCommand;
+            }
+        }
+
+        public bool CanExecuteCalibratePrintheadOffsetCommand(object notUsed)
+        {
+            return true;
+        }
+
+        public void ExecuteCalibratePrintheadOffsetCommand(object notUsed)
+        {
+            _calibrationModel.CalibratePrintheadOffset();
         }
         #endregion
     }

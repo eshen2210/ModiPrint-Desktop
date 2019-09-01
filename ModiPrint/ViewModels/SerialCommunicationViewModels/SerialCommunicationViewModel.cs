@@ -182,8 +182,9 @@ namespace ModiPrint.ViewModels.SerialCommunicationViewModels
             }
             else
             {
-                //To do: error catching
+                _serialCommunicationMainModel.ErrorReporterViewModel.ReportError("Serial Communication", "Could Not Connect To Serial Port");
             }
+            OnPropertyChanged("IsPortOpen");
             _serialConnectCommand.RaiseCanExecuteChanged();
         }
 
@@ -209,6 +210,7 @@ namespace ModiPrint.ViewModels.SerialCommunicationViewModels
         public void ExecuteSerialDisconnectCommand(object notUsed)
         {
             _serialCommunicationBGWModel.EndConnection();
+            OnPropertyChanged("IsPortOpen");
         }
 
         /// <summary>

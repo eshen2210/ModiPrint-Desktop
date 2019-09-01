@@ -32,7 +32,7 @@ namespace ModiPrint.ViewModels.PrinterViewModels.MicrocontrollerViewModels.PinVi
         //The pin number on the Arduino Mega.
         public int PinID
         {
-            get { return (_gPIOPinModel != null) ? _gPIOPinModel.PinID : GlobalValues.NullPinID; }
+            get { return (_gPIOPinModel != null) ? _gPIOPinModel.PinID : GlobalValues.PinIDNull; }
         }
 
         //What kind of functionality does this Pin perform?

@@ -378,6 +378,9 @@
     <Compile Include="Views\StatusAndControlViews\CalibrationViews\CalibrationView.xaml.cs">
       <DependentUpon>CalibrationView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\StatusAndControlViews\CalibrationViews\FindLimitSettings.xaml.cs">
+      <DependentUpon>FindLimitSettings.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\StatusAndControlViews\CalibrationViews\SetOriginSettings.xaml.cs">
       <DependentUpon>SetOriginSettings.xaml</DependentUpon>
     </Compile>
@@ -615,6 +618,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\StatusAndControlViews\CalibrationViews\CalibrationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\StatusAndControlViews\CalibrationViews\FindLimitSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

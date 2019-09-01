@@ -51,6 +51,10 @@ namespace ModiPrint.Models.SerialCommunicationModels
 
         //SerialCommunication will pass errors to this object.
         private ErrorReporterViewModel _errorReporterViewModel;
+        public ErrorReporterViewModel ErrorReporterViewModel
+        {
+            get { return _errorReporterViewModel; }
+        }
 
         //Serial port where messages will be sent to and received from the microcontroller..
         private SerialPort _serialPort;
@@ -174,7 +178,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
             _realTimeStatusDataModel = RealTimeStatusDataModel;
             _errorReporterViewModel = new ErrorReporterViewModel(ErrorListViewModel);
 
-            _serialCommunicationCommandSetsModel = new SerialCommunicationCommandSetsModel(_realTimeStatusDataModel, this, PrinterModel, PrintModel);
+            _serialCommunicationCommandSetsModel = new SerialCommunicationCommandSetsModel(_realTimeStatusDataModel, this, PrinterModel, PrintModel, ErrorListViewModel);
 
             InitializeSerialPort();
 
@@ -244,7 +248,12 @@ namespace ModiPrint.Models.SerialCommunicationModels
                                 IdleProtocol();
                             }
 
-                            string[] commandSet = _serialCommunicationCommandSetsModel.InterpretCommandSet(_serialCommunicationOutgoingMessagesModel.RetrieveNextProspectiveOutgoingMessage());
+                            string commandSetString;
+                            lock (_serialCommunicationOutgoingMessagesModel)
+                            {
+                                commandSetString = _serialCommunicationOutgoingMessagesModel.RetrieveNextProspectiveOutgoingMessage();
+                            }
+                            string[] commandSet = _serialCommunicationCommandSetsModel.InterpretCommandSet(commandSetString);
 
                             if (commandSet != null)
                             {
@@ -259,7 +268,10 @@ namespace ModiPrint.Models.SerialCommunicationModels
                         {                        
                             //Sends a message through the serial port.
                             string outgoingMessage;
-                            outgoingMessage = _serialCommunicationOutgoingMessagesModel.RetrieveNextProspectiveOutgoingMessage();
+                            lock(_serialCommunicationOutgoingMessagesModel)
+                            {
+                                outgoingMessage = _serialCommunicationOutgoingMessagesModel.RetrieveNextProspectiveOutgoingMessage();
+                            }
                             SendMessage(outgoingMessage);
                         }
 
@@ -287,6 +299,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
                 _errorReporterViewModel.ReportError("Serial Communication", exception.Message);
                 SerialDisconnect();
             }
+            
         }
 
         /// <summary>

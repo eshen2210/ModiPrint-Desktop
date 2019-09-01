@@ -44,6 +44,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
         private SerialCommunicationMainModel _serialCommunicationMainModel;
         private PrinterModel _printerModel;
         private PrintModel _printModel;
+        private ErrorListViewModel _errorListViewModel;
 
         //Contains functions to output commands.
         WriteSetAxisModel _writeSetAxisModel;
@@ -84,12 +85,13 @@ namespace ModiPrint.Models.SerialCommunicationModels
 
         #region Constructor
         public SerialCommunicationCommandSetsModel(
-            RealTimeStatusDataModel RealTimeStatusDataModel, SerialCommunicationMainModel SerialCommunicationMainModel, PrinterModel PrinterModel, PrintModel PrintModel)
+            RealTimeStatusDataModel RealTimeStatusDataModel, SerialCommunicationMainModel SerialCommunicationMainModel, PrinterModel PrinterModel, PrintModel PrintModel, ErrorListViewModel ErrorListViewModel)
         {
             _realTimeStatusDataModel = RealTimeStatusDataModel;
             _serialCommunicationMainModel = SerialCommunicationMainModel;
             _printerModel = PrinterModel;
             _printModel = PrintModel;
+            _errorListViewModel = ErrorListViewModel;
 
             ParametersModel parametersModel = new ParametersModel(_printerModel, null);
             _writeSetAxisModel = new WriteSetAxisModel(parametersModel);
@@ -526,6 +528,11 @@ namespace ModiPrint.Models.SerialCommunicationModels
             int nameLength = commandSet.Substring(firstNameIndex + 1).IndexOf('"');
             string materialName = commandSet.Substring(firstNameIndex + 1, nameLength);
             MaterialModel materialModel = _printModel.FindMaterialByName(materialName);
+            if (materialModel == null)
+            {
+                _errorListViewModel.AddError("Command Set Invalid", materialName + " Not Set");
+                return null;
+            }
 
             //References to the current and new Printheads.
             PrintheadModel currentPrintheadModel = _printerModel.FindPrinthead(_realTimeStatusDataModel.ActivePrintheadModel.Name);
@@ -533,13 +540,13 @@ namespace ModiPrint.Models.SerialCommunicationModels
 
             //References to the XY Axes and new Z Axis.
             AxisModel currentZAxisModel = _printerModel.FindAxis(currentPrintheadModel.AttachedZAxisModel.Name);
-            int currentZLimitPinID = (currentZAxisModel.AttachedLimitSwitchGPIOPinModel != null) ? currentZAxisModel.AttachedLimitSwitchGPIOPinModel.PinID : GlobalValues.NullPinID;
+            int currentZLimitPinID = (currentZAxisModel.AttachedLimitSwitchGPIOPinModel != null) ? currentZAxisModel.AttachedLimitSwitchGPIOPinModel.PinID : GlobalValues.PinIDNull;
             AxisModel xAxisModel = _printerModel.AxisModelList[0];
-            int xLimitPinID = (xAxisModel.AttachedLimitSwitchGPIOPinModel != null) ? xAxisModel.AttachedLimitSwitchGPIOPinModel.PinID : GlobalValues.NullPinID;
+            int xLimitPinID = (xAxisModel.AttachedLimitSwitchGPIOPinModel != null) ? xAxisModel.AttachedLimitSwitchGPIOPinModel.PinID : GlobalValues.PinIDNull;
             AxisModel yAxisModel = _printerModel.AxisModelList[1];
-            int yLimitPinID = (yAxisModel.AttachedLimitSwitchGPIOPinModel != null) ? yAxisModel.AttachedLimitSwitchGPIOPinModel.PinID : GlobalValues.NullPinID;
+            int yLimitPinID = (yAxisModel.AttachedLimitSwitchGPIOPinModel != null) ? yAxisModel.AttachedLimitSwitchGPIOPinModel.PinID : GlobalValues.PinIDNull;
             AxisModel zAxisModel = _printerModel.FindAxis(newPrintheadModel.AttachedZAxisModel.Name);
-            int zLimitPinID = (zAxisModel.AttachedLimitSwitchGPIOPinModel != null) ? zAxisModel.AttachedLimitSwitchGPIOPinModel.PinID : GlobalValues.NullPinID;
+            int zLimitPinID = (zAxisModel.AttachedLimitSwitchGPIOPinModel != null) ? zAxisModel.AttachedLimitSwitchGPIOPinModel.PinID : GlobalValues.PinIDNull;
 
             //If a new Printhead is required...
             if (newPrintheadModel.Name != currentPrintheadModel.Name)
@@ -582,10 +589,10 @@ namespace ModiPrint.Models.SerialCommunicationModels
             //5.Set the print speed parameters for the new Material.
             //Set associated X Axis at print speeds.
             returnCommands.Add(_writeSetAxisModel.WriteSetAxis('X', xAxisModel.AttachedMotorStepGPIOPinModel.PinID, xAxisModel.AttachedMotorDirectionGPIOPinModel.PinID,
-                xAxisModel.StepPulseTime, xLimitPinID, materialModel.XPrintSpeed, materialModel.XPrintAcceleration, xAxisModel.MmPerStep));
+                xAxisModel.StepPulseTime, xLimitPinID, materialModel.XYPrintSpeed, materialModel.XYPrintAcceleration, xAxisModel.MmPerStep));
             //Set associated Y Axis at print speeds.
             returnCommands.Add(_writeSetAxisModel.WriteSetAxis('Y', yAxisModel.AttachedMotorStepGPIOPinModel.PinID, yAxisModel.AttachedMotorDirectionGPIOPinModel.PinID,
-                yAxisModel.StepPulseTime, yLimitPinID, materialModel.YPrintSpeed, materialModel.YPrintAcceleration, yAxisModel.MmPerStep));
+                yAxisModel.StepPulseTime, yLimitPinID, materialModel.XYPrintSpeed, materialModel.XYPrintAcceleration, yAxisModel.MmPerStep));
             //Set associated Z Axis at print speeds.
             returnCommands.Add(_writeSetAxisModel.WriteSetAxis('Z', zAxisModel.AttachedMotorStepGPIOPinModel.PinID, zAxisModel.AttachedMotorDirectionGPIOPinModel.PinID,
                 zAxisModel.StepPulseTime, zLimitPinID, materialModel.ZPrintSpeed, materialModel.ZPrintAcceleration, zAxisModel.MmPerStep));

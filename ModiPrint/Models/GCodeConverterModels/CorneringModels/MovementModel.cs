@@ -179,12 +179,12 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
             distanceArr[2] = Math.Abs(_z);
             distanceArr[3] = Math.Abs(_e);
             double[] maxSpeedArr = new double[4];
-            maxSpeedArr[0] = materialModel.XPrintSpeed / _printerModel.AxisModelList[0].MmPerStep;
-            maxSpeedArr[1] = materialModel.YPrintSpeed / _printerModel.AxisModelList[1].MmPerStep;
+            maxSpeedArr[0] = materialModel.XYPrintSpeed / _printerModel.AxisModelList[0].MmPerStep;
+            maxSpeedArr[1] = materialModel.XYPrintSpeed / _printerModel.AxisModelList[1].MmPerStep;
             maxSpeedArr[2] = materialModel.ZPrintSpeed / _materialModel.PrintheadModel.AttachedZAxisModel.MmPerStep;
             double[] accelerationArr = new double[4];
-            accelerationArr[0] = materialModel.XPrintAcceleration / _printerModel.AxisModelList[0].MmPerStep;
-            accelerationArr[1] = materialModel.YPrintAcceleration / _printerModel.AxisModelList[1].MmPerStep;
+            accelerationArr[0] = materialModel.XYPrintAcceleration / _printerModel.AxisModelList[0].MmPerStep;
+            accelerationArr[1] = materialModel.XYPrintAcceleration / _printerModel.AxisModelList[1].MmPerStep;
             accelerationArr[2] = materialModel.ZPrintAcceleration / _materialModel.PrintheadModel.AttachedZAxisModel.MmPerStep;
             if (materialModel.PrintheadModel.PrintheadType == PrintheadType.Motorized)
             {

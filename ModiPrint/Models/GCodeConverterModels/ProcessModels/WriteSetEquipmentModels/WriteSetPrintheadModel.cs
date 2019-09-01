@@ -43,7 +43,7 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.WriteSetEquipmentM
 
                 try
                 {
-                    int limitPin = GlobalValues.NullPinID;
+                    int limitPin = GlobalValues.PinIDNull;
                     if (motorizedPrinthead.AttachedLimitSwitchGPIOPinModel != null)
                     { limitPin = motorizedPrinthead.AttachedLimitSwitchGPIOPinModel.PinID; }
 

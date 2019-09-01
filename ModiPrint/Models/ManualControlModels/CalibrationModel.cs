@@ -52,15 +52,24 @@ namespace ModiPrint.Models.ManualControlModels
         /// <summary>
         /// Sends outgoing commands that retracts all Z Axes and moves X and Y Axes to the limit switches.
         /// </summary>
-        public void CalibrateXYAndZMax()
+        public void CalibrateXYAndZMax(double xCalibrationSpeed, double yCalibrationSpeed, double zCalibrationSpeed)
         {
             //Retract Z Axes.
-            RetractAllZ();
+            RetractAllZ(zCalibrationSpeed);
 
-            //Set X Axis to max speeds.
+            //Set X Axis to calibration speeds.
             AxisModel xAxis = _printerModel.AxisModelList[0];
-            string switchX = _writeSetAxisModel.WriteSetAxis(xAxis);
+            int xLimitPinID = (xAxis.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : xAxis.AttachedLimitSwitchGPIOPinModel.PinID;
+            string switchX = _writeSetAxisModel.WriteSetAxis(xAxis.AxisID, xAxis.AttachedMotorStepGPIOPinModel.PinID, xAxis.AttachedMotorDirectionGPIOPinModel.PinID, xAxis.StepPulseTime, 
+                xLimitPinID, xCalibrationSpeed, xAxis.MaxAcceleration, xAxis.MmPerStep);
             _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(switchX);
+
+            //Set Y Axis to max speeds.
+            AxisModel yAxis = _printerModel.AxisModelList[1];
+            int yLimitPinID = (yAxis.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : yAxis.AttachedLimitSwitchGPIOPinModel.PinID;
+            string switchY = _writeSetAxisModel.WriteSetAxis(yAxis.AxisID, yAxis.AttachedMotorStepGPIOPinModel.PinID, yAxis.AttachedMotorDirectionGPIOPinModel.PinID, yAxis.StepPulseTime,
+                yLimitPinID, yCalibrationSpeed, yAxis.MaxAcceleration, yAxis.MmPerStep);
+            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(switchY);
 
             //Hit the min and max limit switches on X.
             double unused = 0;
@@ -87,11 +96,6 @@ namespace ModiPrint.Models.ManualControlModels
                 xAxis.IsDirectionInverted, false, false,
                 ref unused, ref unused, ref unused));
             _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(xMoveAwayFromLimit);
-
-            //Set Y Axis to max speeds.
-            AxisModel yAxis = _printerModel.AxisModelList[1];
-            string switchY = _writeSetAxisModel.WriteSetAxis(yAxis);
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(switchY);
 
             //Hit the min and max limit switches on Y.
             string yPositive = GCodeLinesConverter.GCodeLinesListToString(
@@ -171,15 +175,17 @@ namespace ModiPrint.Models.ManualControlModels
         /// <summary>
         /// Sends outgoing commands that retracts all Z Axes.
         /// </summary>
-        private void RetractAllZ()
+        private void RetractAllZ(double zCalibrationSpeed)
         {
-            foreach (AxisModel zAxisModel in _printerModel.ZAxisModelList)
+            foreach (AxisModel zAxis in _printerModel.ZAxisModelList)
             {
                 //Switch to another Z Axis, hit the upper Limit Switch, and then move to default position.
-                string switchZ = _writeSetAxisModel.WriteSetAxis(zAxisModel);
+                int zLimitPinID = (zAxis.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : zAxis.AttachedLimitSwitchGPIOPinModel.PinID;
+                string switchZ = _writeSetAxisModel.WriteSetAxis(zAxis.AxisID, zAxis.AttachedMotorStepGPIOPinModel.PinID, zAxis.AttachedMotorDirectionGPIOPinModel.PinID, zAxis.StepPulseTime,
+                    zLimitPinID, zCalibrationSpeed, zAxis.MaxAcceleration, zAxis.MmPerStep);
                 _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(switchZ);
                 _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(SerialMessageCharacters.SerialCommandSetCharacter + "RetractZLimit");
-;
+;               
             }
         }
         #endregion

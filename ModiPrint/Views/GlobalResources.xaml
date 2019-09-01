@@ -20,16 +20,16 @@
     <System:Double x:Key="NarrowControlWidth">50</System:Double>
     <System:Double x:Key="StandardControlWidth">120</System:Double>
     <System:Double x:Key="WideControlWidth">170</System:Double>
-    <System:Double x:Key="ExtraWideControlWidth">220</System:Double>
+    <System:Double x:Key="ExtraWideControlWidth">280</System:Double>
     <System:Double x:Key="StandardImageComboBoxWidth">270</System:Double>
     <System:Double x:Key="StandardImageComboBoxContentWidth">229</System:Double>
     <System:Double x:Key="StandardToggleButtonWidth">81.7</System:Double>
 
     <!--Font Parameters-->
-    <System:Double x:Key="SmallFontSize">10</System:Double>
-    <System:Double x:Key="StandardFontSize">12</System:Double>
-    <System:Double x:Key="HeaderControlFontSize">20</System:Double>
-    <System:Double x:Key="SuperscriptFontSize">8</System:Double>
+    <System:Double x:Key="SmallFontSize">12</System:Double>
+    <System:Double x:Key="StandardFontSize">16</System:Double>
+    <System:Double x:Key="HeaderControlFontSize">22</System:Double>
+    <System:Double x:Key="SuperscriptFontSize">10</System:Double>
     <FontFamily x:Key="HeaderTextFont">Serif</FontFamily>
     <FontFamily x:Key="StandardTextFont">Sans Serif</FontFamily>
     
@@ -38,7 +38,7 @@
     <SolidColorBrush x:Key="StandardForeground">White</SolidColorBrush>
     <SolidColorBrush x:Key="StandardBorder">White</SolidColorBrush>
     <SolidColorBrush x:Key="PrimaryColor">Teal</SolidColorBrush>
-    <SolidColorBrush x:Key="SecondaryColor">Aqua</SolidColorBrush>
+    <SolidColorBrush x:Key="SecondaryColor">Turquoise</SolidColorBrush>
     <SolidColorBrush x:Key="TertiaryColor">Gold</SolidColorBrush>
     
     <!--ToolTipService Values-->

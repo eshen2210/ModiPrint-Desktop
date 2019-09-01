@@ -255,7 +255,7 @@ namespace ModiPrint.Models.RealTimeStatusModels
         }
 
         /// <summary>
-        /// Records a anew message to the Error Messages list.
+        /// Records a a new message to the Error Messages list.
         /// </summary>
         /// <param name="errorMessage"></param>
         public void RecordErrorMessage(string errorMessage)

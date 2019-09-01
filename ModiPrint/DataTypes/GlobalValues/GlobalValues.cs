@@ -11,7 +11,7 @@ namespace ModiPrint.DataTypes.GlobalValues
         //PinID property of a GPIOPin that has not been set.
         //Because 0 is a valid PinID.
         private static int _nullPinID = 70;
-        public static int NullPinID
+        public static int PinIDNull
         {
             get { return _nullPinID; }
         }

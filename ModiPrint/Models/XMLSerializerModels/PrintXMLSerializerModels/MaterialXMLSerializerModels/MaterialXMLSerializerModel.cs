@@ -62,23 +62,14 @@ namespace ModiPrint.Models.XMLSerializerModels.PrintXMLSerializerModels.Material
             //Junction Deviation.
             xmlWriter.WriteElementString("JunctionDeviation", materialViewModel.JunctionDeviation.ToString());
 
-            //Maximize Print Speeds.
-            xmlWriter.WriteElementString("MaximizePrintSpeeds", materialViewModel.MaximizePrintSpeeds.ToString());
-
-            //X Print Speed.
-            xmlWriter.WriteElementString("XPrintSpeed", materialViewModel.XPrintSpeed.ToString());
-
-            //Y Print Speed.
-            xmlWriter.WriteElementString("YPrintSpeed", materialViewModel.YPrintSpeed.ToString());
+            //XY Print Speed.
+            xmlWriter.WriteElementString("XYPrintSpeed", materialViewModel.XYPrintSpeed.ToString());
 
             //Z Print Speed.
             xmlWriter.WriteElementString("ZPrintSpeed", materialViewModel.ZPrintSpeed.ToString());
 
-            //X Print Acceleration.
-            xmlWriter.WriteElementString("XPrintAcceleration", materialViewModel.XPrintAcceleration.ToString());
-
-            //Y Print Acceleration.
-            xmlWriter.WriteElementString("YPrintAcceleration", materialViewModel.YPrintAcceleration.ToString());
+            //XY Print Acceleration.
+            xmlWriter.WriteElementString("XYPrintAcceleration", materialViewModel.XYPrintAcceleration.ToString());
 
             //Z Print Acceleration.
             xmlWriter.WriteElementString("ZPrintAcceleration", materialViewModel.ZPrintAcceleration.ToString());

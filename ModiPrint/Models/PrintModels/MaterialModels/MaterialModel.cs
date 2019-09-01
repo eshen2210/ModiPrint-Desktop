@@ -70,66 +70,18 @@ namespace ModiPrint.Models.PrintModels.MaterialModels
             }
         }
 
-        //If true, then print speeds and accelerations are set to the max values of the Axes.
-        //If true, prevents the print speeds and accelerations from being manually set. 
-        private bool _maximizePrintSpeeds = false;
-        public bool MaximizePrintSpeeds
+        //Printing speed for XY axes and Z axes.
+        private double _xyPrintSpeed;
+        public double XYPrintSpeed
         {
-            get { return _maximizePrintSpeeds; }
+            get { return _xyPrintSpeed; }
             set
             {
-                //If true, then set all print speeds and accelerations to their maximum values.
-                if (value == true)
-                {
-                    _xPrintSpeed = _printerModel.AxisModelList[0].MaxSpeed;
-                    _yPrintSpeed = _printerModel.AxisModelList[1].MaxSpeed;
-                    _xPrintAcceleration = _printerModel.AxisModelList[0].MaxAcceleration;
-                    _yPrintAcceleration = _printerModel.AxisModelList[1].MaxAcceleration;
-                    if ((_printheadModel != null) && (_printheadModel.AttachedZAxisModel != null))
-                    {
-                        _zPrintSpeed = _printheadModel.AttachedZAxisModel.MaxSpeed;
-                        _zPrintAcceleration = _printheadModel.AttachedZAxisModel.MaxAcceleration;
-                    }
-                }
-                _maximizePrintSpeeds = value;
-            }
-        }
-
-        //Printing speed for each axis.
-        private double _xPrintSpeed;
-        public double XPrintSpeed
-        {
-            get { return _xPrintSpeed; }
-            set
-            {
-                if ((_maximizePrintSpeeds == false)
-                 && (value >= 0)
-                 && (value <= _printerModel.AxisModelList[0].MaxSpeed))
-                {
-                    _xPrintSpeed = value;
-                }
-                else if (_maximizePrintSpeeds == true)
-                {
-                    _xPrintSpeed = _printerModel.AxisModelList[0].MaxSpeed;
-                }
-            }
-        }
-
-        private double _yPrintSpeed;
-        public double YPrintSpeed
-        {
-            get { return _yPrintSpeed; }
-            set
-            {
-                if ((_maximizePrintSpeeds == false)
-                 && (value >= 0)
+                if ((value >= 0)
+                 && (value <= _printerModel.AxisModelList[0].MaxSpeed)
                  && (value <= _printerModel.AxisModelList[1].MaxSpeed))
                 {
-                    _yPrintSpeed = value;
-                }
-                else if (_maximizePrintSpeeds == true)
-                {
-                    _yPrintSpeed = _printerModel.AxisModelList[1].MaxSpeed;
+                    _xyPrintSpeed = value;
                 }
             }
         }
@@ -140,55 +92,27 @@ namespace ModiPrint.Models.PrintModels.MaterialModels
             get { return _zPrintSpeed; }
             set
             {
-                if ((_maximizePrintSpeeds == false)
-                 && (_printheadModel != null)
+                if ((_printheadModel != null)
                  && (value >= 0)
                  && (value <= _printheadModel.AttachedZAxisModel.MaxSpeed))
                 {
                     _zPrintSpeed = value;
                 }
-                else if (_maximizePrintSpeeds == true)
-                {
-                    _zPrintSpeed = _printheadModel.AttachedZAxisModel.MaxSpeed;
-                }
             }
         }
 
         //Printing acceleration for each axis.
-        private double _xPrintAcceleration;
-        public double XPrintAcceleration
+        private double _xyPrintAcceleration;
+        public double XYPrintAcceleration
         {
-            get { return _xPrintAcceleration; }
+            get { return _xyPrintAcceleration; }
             set
             {
-                if ((_maximizePrintSpeeds == false)
-                 && (value >= 0)
-                 && (value <= _printerModel.AxisModelList[0].MaxAcceleration))
-                {
-                    _xPrintAcceleration = value;
-                }
-                else if (_maximizePrintSpeeds == true)
-                {
-                    _xPrintAcceleration = _printerModel.AxisModelList[0].MaxAcceleration;
-                }
-            }
-        }
-
-        private double _yPrintAcceleration;
-        public double YPrintAcceleration
-        {
-            get { return _yPrintAcceleration; }
-            set
-            {
-                if ((_maximizePrintSpeeds == false)
-                 && (value >= 0)
+                if ((value >= 0)
+                 && (value <= _printerModel.AxisModelList[0].MaxAcceleration)
                  && (value <= _printerModel.AxisModelList[1].MaxAcceleration))
                 {
-                    _yPrintAcceleration = value;
-                }
-                else if (_maximizePrintSpeeds == true)
-                {
-                    _yPrintAcceleration = _printerModel.AxisModelList[1].MaxAcceleration;
+                    _xyPrintAcceleration = value;
                 }
             }
         }
@@ -199,17 +123,12 @@ namespace ModiPrint.Models.PrintModels.MaterialModels
             get { return _zPrintAcceleration; }
             set
             {
-                if ((_maximizePrintSpeeds == false)
-                 && (_printheadModel != null)
+                if ((_printheadModel != null)
                  && (value >= 0)
                  && (_printheadModel.AttachedZAxisModel != null)
                  && (value <= _printheadModel.AttachedZAxisModel.MaxAcceleration))
                 {
                     _zPrintAcceleration = value;
-                }
-                else if (_maximizePrintSpeeds == true)
-                {
-                    _zPrintAcceleration = _printheadModel.AttachedZAxisModel.MaxAcceleration;
                 }
             }
         }
@@ -261,11 +180,9 @@ namespace ModiPrint.Models.PrintModels.MaterialModels
             if(!String.IsNullOrWhiteSpace(_repRapID)
             && (_printheadModel != null)
             && (_printStyle != PrintStyle.Unset)
-            && (_xPrintSpeed > 0)
-            && (_yPrintSpeed > 0)
+            && (_xyPrintSpeed > 0)
             && (_zPrintSpeed > 0)
-            && (_xPrintAcceleration > 0)
-            && (_yPrintAcceleration > 0)
+            && (_xyPrintAcceleration > 0)
             && (_zPrintAcceleration > 0))
             {
                 return true;

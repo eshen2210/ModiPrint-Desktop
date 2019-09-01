@@ -91,19 +91,19 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels
             {
                 _parametersModel.AbsCoordAxis = true;
             }
-            else if (repRapLine[0] == "G91") //Relative coordinates for Axes.
+            else if (repRapLine[0] == "G91") //Relative coordinates for for X, Y, and Z but not E.
             {
                 _parametersModel.AbsCoordAxis = false;
             }
-            else if (repRapLine[0] == "G92") //Set new absolute coordinates for Axes and Extruder.
+            else if (repRapLine[0] == "G92") //Set new absolute coordinates for X, Y, and Z but not E.
             {
                 _processG92CommandModel.ProcessG92Command(repRapLine);
             }
-            else if (repRapLine[0] == "M82") //Absolute coordinates for Motor Printheads. To Do
+            else if (repRapLine[0] == "M82") //Absolute coordinates for E.
             {
                 _parametersModel.AbsCoordExtruder = true;
             }
-            else if (repRapLine[0] == "M83") //Relative coordinates for Motor Printheads.
+            else if (repRapLine[0] == "M83") //Relative coordinates for E.
             {
                 _parametersModel.AbsCoordExtruder = false;
             }

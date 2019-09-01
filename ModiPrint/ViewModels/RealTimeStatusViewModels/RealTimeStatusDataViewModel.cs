@@ -285,8 +285,25 @@ namespace ModiPrint.ViewModels.RealTimeStatusViewModels
         /// <summary>
         /// Calls the OnPropertyChanged event and updates the Error Messages list.
         /// </summary>
-        private void UpdateErrorMessages(string errorMessage)
+        private void UpdateErrorMessages(string incomingMessage)
         {
+            string errorMessage = "";
+            if (incomingMessage.Substring(0, 3) == "Syn")
+            {
+                errorMessage = "Syntax unrecognized";
+            }
+            else if (incomingMessage.Substring(0,3) == "Uns")
+            {
+                errorMessage = "Equipment unset";
+            }
+            else if (incomingMessage.Substring(0,3) == "Cyc")
+            {
+                errorMessage = "Maximum stepper speed exceeded";
+            }
+            else if (incomingMessage.Substring(0,3) == "Ext")
+            {
+                errorMessage = "Incorrect exit speed";
+            }
             _errorListViewModel.AddError("Microcontroller Error: ", errorMessage);
         }
 

@@ -39,6 +39,12 @@
                         Margin="5, 5, 5, 5"/>
                 </DataTemplate>
 
+                <DataTemplate x:Key="FindLimitSettings">
+                    <vCalibration:FindLimitSettings
+                        DataContext="{Binding }"
+                        Margin="5, 5, 5, 5"/>
+                </DataTemplate>
+
                 <DataTemplate x:Key="SetOriginSettings">
                     <vCalibration:SetOriginSettings
                         DataContext="{Binding }"
@@ -140,6 +146,9 @@
                             </DataTrigger>
                             <DataTrigger Binding="{Binding Menu}" Value="SetValve">
                                 <Setter Property="ContentTemplate" Value="{StaticResource SetValvePrintheadSettings}"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Menu}" Value="FindLimit">
+                                <Setter Property="ContentTemplate" Value="{StaticResource FindLimitSettings}"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding Menu}" Value="SetOrigin">
                                 <Setter Property="ContentTemplate" Value="{StaticResource SetOriginSettings}"/>

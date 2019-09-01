@@ -64,7 +64,19 @@
                         <Grid Grid.Column="0">
                             <vEquipmentSelectionViews:EquipmentSelectionView
                                 DataContext="{Binding }"
-                                Margin="5, 5, 5, 5"/>
+                                Margin="5, 5, 5, 5">
+                                <UserControl.Style>
+                                    <Style TargetType="{x:Type UserControl}">
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=2}, 
+                                                                   Path=DataContext.SerialCommunicationViewModel.IsPortOpen}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </UserControl.Style>
+                            </vEquipmentSelectionViews:EquipmentSelectionView>
                         </Grid>
 
                         <ContentControl Grid.Column="1" Content="{Binding }">
@@ -86,7 +98,19 @@
                     <vCalibration:CalibrationView
                         Grid.Column="1"
                         DataContext="{Binding CalibrationViewModel}"
-                        Margin="5, 5, 5, 5"/>
+                        Margin="5, 5, 5, 5">
+                        <UserControl.Style>
+                            <Style TargetType="{x:Type UserControl}">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=2}, 
+                                                                   Path=DataContext.SerialCommunicationViewModel.IsPortOpen}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </UserControl.Style>
+                    </vCalibration:CalibrationView>
                     <!--#endregion-->
                 </Grid>
             </StackPanel>
@@ -94,7 +118,20 @@
             <vSerialCommunication:SerialMessageDisplayView
                 Grid.Row="1"            
                 DataContext="{Binding SerialMessageDisplayViewModel}"
-                Margin="5, 5, 5, 5"/>
+                Margin="5, 5, 5, 5">
+                <UserControl.Style>
+                    <Style TargetType="{x:Type UserControl}">
+                        <Setter Property="Visibility" Value="Hidden"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=2}, 
+                                                                   Path=DataContext.SerialCommunicationViewModel.IsPortOpen}" Value="True">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </UserControl.Style>
+            </vSerialCommunication:SerialMessageDisplayView>
+            
         </Grid>
     </Grid>
 </UserControl>

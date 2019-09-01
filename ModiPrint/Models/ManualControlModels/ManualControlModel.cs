@@ -240,7 +240,7 @@ namespace ModiPrint.Models.ManualControlModels
 
             AxisModel axisModel = _printerModel.FindAxis(axisName);
 
-            int limitPinID = (axisModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.NullPinID : axisModel.AttachedLimitSwitchGPIOPinModel.PinID;
+            int limitPinID = (axisModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : axisModel.AttachedLimitSwitchGPIOPinModel.PinID;
 
             string setAxisString = _writeSetAxisModel.WriteSetAxis(axisModel.AxisID, axisModel.AttachedMotorStepGPIOPinModel.PinID, axisModel.AttachedMotorDirectionGPIOPinModel.PinID,
                 axisModel.StepPulseTime, limitPinID, maxSpeed, acceleration, axisModel.MmPerStep);
@@ -267,7 +267,7 @@ namespace ModiPrint.Models.ManualControlModels
             PrintheadModel printheadModel = _printerModel.FindPrinthead(printheadName);
             MotorizedPrintheadTypeModel motorizedPrintheadTypeModel = (MotorizedPrintheadTypeModel)printheadModel.PrintheadTypeModel;
 
-            int printheadLimitPinID = (motorizedPrintheadTypeModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.NullPinID : motorizedPrintheadTypeModel.AttachedLimitSwitchGPIOPinModel.PinID;
+            int printheadLimitPinID = (motorizedPrintheadTypeModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : motorizedPrintheadTypeModel.AttachedLimitSwitchGPIOPinModel.PinID;
             string setPrintheadString = _writeSetPrintheadModel.WriteSetMotorDrivenPrinthead(motorizedPrintheadTypeModel.AttachedMotorStepGPIOPinModel.PinID, motorizedPrintheadTypeModel.AttachedMotorDirectionGPIOPinModel.PinID,
                 motorizedPrintheadTypeModel.StepPulseTime, printheadLimitPinID, maxSpeed, acceleration, motorizedPrintheadTypeModel.MmPerStep);
             outgoingMessagesList.Add(setPrintheadString);
@@ -275,7 +275,7 @@ namespace ModiPrint.Models.ManualControlModels
             //Send GCode for the Z Axis attached to the Printhead.
             AxisModel axisModel = printheadModel.AttachedZAxisModel;
 
-            int zAxisLimitPinID = (axisModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.NullPinID : axisModel.AttachedLimitSwitchGPIOPinModel.PinID;
+            int zAxisLimitPinID = (axisModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : axisModel.AttachedLimitSwitchGPIOPinModel.PinID;
             string setAxisString = _writeSetAxisModel.WriteSetAxis(axisModel.AxisID, axisModel.AttachedMotorStepGPIOPinModel.PinID, axisModel.AttachedMotorDirectionGPIOPinModel.PinID,
                 axisModel.StepPulseTime, zAxisLimitPinID, axisModel.MaxSpeed, axisModel.MaxAcceleration, axisModel.MmPerStep);
 
@@ -300,7 +300,7 @@ namespace ModiPrint.Models.ManualControlModels
 
             //Send GCode for the Z Axis attached to the Printhead.
             AxisModel axisModel = printheadModel.AttachedZAxisModel;
-            int zAxisLimitPinID = (axisModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.NullPinID : axisModel.AttachedLimitSwitchGPIOPinModel.PinID;
+            int zAxisLimitPinID = (axisModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : axisModel.AttachedLimitSwitchGPIOPinModel.PinID;
             string setAxisString = _writeSetAxisModel.WriteSetAxis(axisModel.AxisID, axisModel.AttachedMotorStepGPIOPinModel.PinID, axisModel.AttachedMotorDirectionGPIOPinModel.PinID,
                 axisModel.StepPulseTime, zAxisLimitPinID, axisModel.MaxSpeed, axisModel.MaxAcceleration, axisModel.MmPerStep);
 

@@ -79,7 +79,7 @@ namespace ModiPrint.Models.RealTimeStatusModels
                 }
                 else
                 {
-                    _errorListViewModel.AddError("Serial Communication Out of Sync", "No Task To Complete");
+                    _errorListViewModel.AddError("Serial communication out of sync: ", "Task completed return does not correspond to a task");
                 }
             }
             else if (incomingMessage[0] == SerialMessageCharacters.SerialStatusCharacter) //Status.
@@ -93,7 +93,7 @@ namespace ModiPrint.Models.RealTimeStatusModels
             }
             else //Also an error.
             {
-                _realTimeStatusDataModel.RecordErrorMessage("Return Message Unrecognized: " + incomingMessage);
+                _realTimeStatusDataModel.RecordErrorMessage("Microcontroller return message unrecognized: " + incomingMessage);
             }
         }
 

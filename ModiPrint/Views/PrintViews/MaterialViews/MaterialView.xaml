@@ -283,240 +283,112 @@
                             </StackPanel>
                             <!--#endregion-->
 
-                            <!--#region Toggle MaximizePrintSpeeds-->
-                            <StackPanel Orientation="Horizontal"
-                                        VerticalAlignment="Center"
-                                        HorizontalAlignment="Center"
-                                        Height="{DynamicResource StandardControlHeight}">
-
-                                <TextBlock Text="Maximize Print Speeds"
-                                           Style="{DynamicResource ThematicTextBlock}"/>
-                                <Grid>
-                                    <Grid.Resources>
-                                        <ResourceDictionary>
-                                            <ResourceDictionary.MergedDictionaries>
-                                                <ResourceDictionary Source="/Views/GlobalResources.xaml"/>
-                                            </ResourceDictionary.MergedDictionaries>
-
-                                            <Style x:Key="ThematicMaximizePrintSpeedTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ThematicTextBlock}">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding ElementName=tgbtnMaxPrintSpeeds, Path=IsChecked}" Value="False">
-                                                        <Setter Property="Text" Value="False"/>
-                                                        <Setter Property="HorizontalAlignment" Value="Right"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding ElementName=tgbtnMaxPrintSpeeds, Path=IsChecked}" Value="True">
-                                                        <Setter Property="Text" Value="True"/>
-                                                        <Setter Property="HorizontalAlignment" Value="Left"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-
-                                        </ResourceDictionary>
-                                    </Grid.Resources>
-
-                                    <ToggleButton Name="tgbtnMaxPrintSpeeds"
-                                                  IsChecked="{Binding Path=MaximizePrintSpeeds}"
-                                                  Style="{DynamicResource ThematicToggleButton}"
-                                                  Width="{DynamicResource StandardToggleButtonWidth}">
-                                        <ToggleButton.ToolTip>
+                            <!--#region XY Axis-->
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Grid.Column="0" Orientation="Horizontal"
+                                            Height="{DynamicResource StandardControlHeight}">
+                                    <Image Source="/Resources/General/MaxSpeed.png"
+                                           Style="{DynamicResource ThematicControlImage}"
+                                           Width="{DynamicResource NarrowControlWidth}"/>
+                                    <TextBlock Text="XY Print Speed"
+                                               Width="{DynamicResource StandardControlWidth}"
+                                               Style="{DynamicResource ThematicTextBlock}"/>
+                                    <TextBox Text="{Binding Path=XYPrintSpeed, Mode=TwoWay, 
+                                                        UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                                             Width="{DynamicResource WideControlWidth}" 
+                                             Style="{DynamicResource ThematicTextBox}">
+                                        <TextBox.ToolTip>
                                             <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                                                Set all print speeds to the maximum values as set under the Printer menu.
+                                            Speed at which the actuator will move during printing.
+                                            <LineBreak/>
+                                            Higher speeds will reduce operation time.
+                                            <LineBreak/>
+                                            For continuous extrusion printing, higher print speeds will decrease filament diameter.
                                             </TextBlock>
-                                        </ToggleButton.ToolTip>
-                                    </ToggleButton>
-                                    <TextBlock Style="{StaticResource ThematicMaximizePrintSpeedTextBlock}"
-                                               IsHitTestVisible="False"
-                                               Width="{DynamicResource NarrowControlWidth}"/>
-                                </Grid>
+                                        </TextBox.ToolTip>
+                                    </TextBox>
+                                    <TextBlock Text="mm/s"
+                                               Width="{DynamicResource NarrowControlWidth}" 
+                                               Style="{DynamicResource ThematicTextBlock}"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1" Orientation="Horizontal"
+                                            Height="{DynamicResource StandardControlHeight}">
+                                    <Image Source="/Resources/General/Acceleration.png"
+                                           Style="{DynamicResource ThematicControlImage}"
+                                           Width="{DynamicResource NarrowControlWidth}"/>
+                                    <TextBlock Text="XY Acceleration"
+                                               Width="{DynamicResource StandardControlWidth}" 
+                                               Style="{DynamicResource ThematicTextBlock}"/>
+                                    <TextBox Text="{Binding Path=XYPrintAcceleration, Mode=TwoWay, 
+                                                        UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                                             Width="{DynamicResource WideControlWidth}"
+                                             Style="{DynamicResource ThematicTextBox}">
+                                        <TextBox.ToolTip>
+                                            <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                                Typically, there's no reason why this shouldn't be set to the maximum acceleration value as set in the Printer menu.
+                                            </TextBlock>
+                                        </TextBox.ToolTip>
+                                    </TextBox>
+                                    <TextBlock Text="mm/s²"
+                                               Width="{DynamicResource NarrowControlWidth}" 
+                                               Style="{DynamicResource ThematicTextBlock}"/>
+                                </StackPanel>
                             </StackPanel>
-                            <!--#endregion-->
-                                
-                            <!--#region X Axis-->
-                            <GroupBox Header="X Axis"
-                                      Style="{DynamicResource ThematicGroupBox}">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="50*"/>
-                                        <ColumnDefinition Width="50*"/>
-                                    </Grid.ColumnDefinitions>
-                                        
-                                    <StackPanel Grid.Column="0" Orientation="Horizontal"
-                                                Height="{DynamicResource StandardControlHeight}">
-                                        <Image Source="/Resources/General/MaxSpeed.png"
-                                               Style="{DynamicResource ThematicControlImage}"
-                                               Width="{DynamicResource NarrowControlWidth}"/>
-                                        <TextBlock Text="Print Speed"
-                                                   Width="{DynamicResource StandardControlWidth}"
-                                                   Style="{DynamicResource ThematicTextBlock}"/>
-                                        <TextBox Text="{Binding Path=XPrintSpeed, Mode=TwoWay, 
-                                                                UpdateSourceTrigger=PropertyChanged, Delay=250}"
-                                                 Width="{DynamicResource WideControlWidth}" 
-                                                 Style="{DynamicResource ThematicTextBox}">
-                                            <TextBox.ToolTip>
-                                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                                                    Speed at which the actuator will move during printing.
-                                                    <LineBreak/>
-                                                    Higher speeds will reduce operation time.
-                                                    <LineBreak/>
-                                                    For continuous extrusion printing, higher print speeds will decrease filament diameter.
-                                                </TextBlock>
-                                            </TextBox.ToolTip>
-                                        </TextBox>
-                                        <TextBlock Text="mm/s"
-                                                   Width="{DynamicResource NarrowControlWidth}" 
-                                                   Style="{DynamicResource ThematicTextBlock}"/>
-                                    </StackPanel>
-
-                                    <StackPanel Grid.Column="1" Orientation="Horizontal"
-                                                Height="{DynamicResource StandardControlHeight}">
-                                        <Image Source="/Resources/General/Acceleration.png"
-                                               Style="{DynamicResource ThematicControlImage}"
-                                               Width="{DynamicResource NarrowControlWidth}"/>
-                                        <TextBlock Text="Acceleration"
-                                                   Width="{DynamicResource StandardControlWidth}" 
-                                                   Style="{DynamicResource ThematicTextBlock}"/>
-                                        <TextBox Text="{Binding Path=XPrintAcceleration, Mode=TwoWay, 
-                                                                UpdateSourceTrigger=PropertyChanged, Delay=250}"
-                                                 Width="{DynamicResource WideControlWidth}"
-                                                 Style="{DynamicResource ThematicTextBox}">
-                                            <TextBox.ToolTip>
-                                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                                                    Acceleration that the actuator will move at during printing.
-                                                    <LineBreak/>
-                                                    Typically, there's no reason why this shouldn't be set to the maximum acceleration value as set in the Printer menu.
-                                                </TextBlock>
-                                            </TextBox.ToolTip>
-                                        </TextBox>
-                                        <TextBlock Text="mm/s²"
-                                                   Width="{DynamicResource NarrowControlWidth}" 
-                                                   Style="{DynamicResource ThematicTextBlock}"/>
-                                    </StackPanel>
-                                </Grid>
-                            </GroupBox>
-                            <!--#endregion-->
-                                    
-                            <!--#region Y Axis-->
-                            <GroupBox Header="Y Axis"
-                                      Style="{DynamicResource ThematicGroupBox}">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="50*"/>
-                                        <ColumnDefinition Width="50*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <StackPanel Grid.Column="0" Orientation="Horizontal"
-                                                Height="{DynamicResource StandardControlHeight}">
-                                        <Image Source="/Resources/General/MaxSpeed.png"
-                                               Style="{DynamicResource ThematicControlImage}"
-                                               Width="{DynamicResource NarrowControlWidth}"/>
-                                        <TextBlock Text="Print Speed"
-                                                   Width="{DynamicResource StandardControlWidth}"
-                                                   Style="{DynamicResource ThematicTextBlock}"/>
-                                        <TextBox Text="{Binding Path=YPrintSpeed, Mode=TwoWay, 
-                                                                UpdateSourceTrigger=PropertyChanged, Delay=250}"
-                                                 Width="{DynamicResource WideControlWidth}" 
-                                                 Style="{DynamicResource ThematicTextBox}">
-                                            <TextBox.ToolTip>
-                                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                                                    Speed at which the actuator will move during printing.
-                                                    <LineBreak/>
-                                                    Higher speeds will reduce operation time.
-                                                    <LineBreak/>
-                                                    For continuous extrusion printing, higher print speeds will decrease filament diameter.
-                                                </TextBlock>
-                                            </TextBox.ToolTip>
-                                        </TextBox>
-                                        <TextBlock Text="mm/s"
-                                                   Width="{DynamicResource NarrowControlWidth}" 
-                                                   Style="{DynamicResource ThematicTextBlock}"/>
-                                    </StackPanel>
-
-                                    <StackPanel Grid.Column="1" Orientation="Horizontal"
-                                                Height="{DynamicResource StandardControlHeight}">
-                                        <Image Source="/Resources/General/Acceleration.png"
-                                               Style="{DynamicResource ThematicControlImage}"
-                                               Width="{DynamicResource NarrowControlWidth}"/>
-                                        <TextBlock Text="Acceleration"
-                                                   Width="{DynamicResource StandardControlWidth}" 
-                                                   Style="{DynamicResource ThematicTextBlock}"/>
-                                        <TextBox Text="{Binding Path=YPrintAcceleration, Mode=TwoWay, 
-                                                                UpdateSourceTrigger=PropertyChanged, Delay=250}"
-                                                 Width="{DynamicResource WideControlWidth}"
-                                                 Style="{DynamicResource ThematicTextBox}">
-                                            <TextBox.ToolTip>
-                                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                                                    Typically, there's no reason why this shouldn't be set to the maximum acceleration value as set in the Printer menu.
-                                                </TextBlock>
-                                            </TextBox.ToolTip>
-                                        </TextBox>
-                                        <TextBlock Text="mm/s²"
-                                                   Width="{DynamicResource NarrowControlWidth}" 
-                                                   Style="{DynamicResource ThematicTextBlock}"/>
-                                    </StackPanel>
-                                </Grid>
-                            </GroupBox>
                             <!--#endregion-->
 
                             <!--#region Z Axis-->
-                            <GroupBox Header="Z Axis"
-                                      Style="{DynamicResource ThematicGroupBox}">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="50*"/>
-                                        <ColumnDefinition Width="50*"/>
-                                    </Grid.ColumnDefinitions>
-                                        
-                                    <StackPanel Grid.Column="0" Orientation="Horizontal"
-                                                Height="{DynamicResource StandardControlHeight}">
-                                        <Image Source="/Resources/General/MaxSpeed.png"
-                                               Style="{DynamicResource ThematicControlImage}"
-                                               Width="{DynamicResource NarrowControlWidth}"/>
-                                        <TextBlock Text="Print Speed"
-                                                   Width="{DynamicResource StandardControlWidth}"
-                                                   Style="{DynamicResource ThematicTextBlock}"/>
-                                        <TextBox Text="{Binding Path=ZPrintSpeed, Mode=TwoWay, 
-                                                                UpdateSourceTrigger=PropertyChanged, Delay=250}"
-                                                 Width="{DynamicResource WideControlWidth}" 
-                                                 Style="{DynamicResource ThematicTextBox}">
-                                            <TextBox.ToolTip>
-                                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                                                    Speed at which the actuator will move during printing.
-                                                    <LineBreak/>
-                                                    Higher speeds will reduce operation time.
-                                                    <LineBreak/>
-                                                    For continuous extrusion printing, higher print speeds will decrease filament diameter.
-                                                </TextBlock>
-                                            </TextBox.ToolTip>
-                                        </TextBox>
-                                        <TextBlock Text="mm/s"
-                                                   Width="{DynamicResource NarrowControlWidth}" 
-                                                   Style="{DynamicResource ThematicTextBlock}"/>
-                                    </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Grid.Column="0" Orientation="Horizontal"
+                                            Height="{DynamicResource StandardControlHeight}">
+                                    <Image Source="/Resources/General/MaxSpeed.png"
+                                           Style="{DynamicResource ThematicControlImage}"
+                                           Width="{DynamicResource NarrowControlWidth}"/>
+                                    <TextBlock Text="Z Print Speed"
+                                               Width="{DynamicResource StandardControlWidth}"
+                                               Style="{DynamicResource ThematicTextBlock}"/>
+                                    <TextBox Text="{Binding Path=ZPrintSpeed, Mode=TwoWay, 
+                                                        UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                                             Width="{DynamicResource WideControlWidth}" 
+                                             Style="{DynamicResource ThematicTextBox}">
+                                        <TextBox.ToolTip>
+                                            <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                            Speed at which the actuator will move during printing.
+                                            <LineBreak/>
+                                            Higher speeds will reduce operation time.
+                                            <LineBreak/>
+                                            For continuous extrusion printing, higher print speeds will decrease filament diameter.
+                                            </TextBlock>
+                                        </TextBox.ToolTip>
+                                    </TextBox>
+                                    <TextBlock Text="mm/s"
+                                               Width="{DynamicResource NarrowControlWidth}" 
+                                               Style="{DynamicResource ThematicTextBlock}"/>
+                                </StackPanel>
 
-                                    <StackPanel Grid.Column="1" Orientation="Horizontal"
-                                                Height="{DynamicResource StandardControlHeight}">
-                                        <Image Source="/Resources/General/Acceleration.png"
-                                               Style="{DynamicResource ThematicControlImage}"
-                                               Width="{DynamicResource NarrowControlWidth}"/>
-                                        <TextBlock Text="Acceleration"
-                                                   Width="{DynamicResource StandardControlWidth}" 
-                                                   Style="{DynamicResource ThematicTextBlock}"/>
-                                        <TextBox Text="{Binding Path=ZPrintAcceleration, Mode=TwoWay, 
-                                                                UpdateSourceTrigger=PropertyChanged, Delay=250}"
-                                                 Width="{DynamicResource WideControlWidth}"
-                                                 Style="{DynamicResource ThematicTextBox}">
-                                            <TextBox.ToolTip>
-                                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                                                    Typically, there's no reason why this shouldn't be set to the maximum acceleration value as set in the Printer menu.
-                                                </TextBlock>
-                                            </TextBox.ToolTip>
-                                        </TextBox>
-                                        <TextBlock Text="mm/s²"
-                                                   Width="{DynamicResource NarrowControlWidth}" 
-                                                   Style="{DynamicResource ThematicTextBlock}"/>
-                                    </StackPanel>
-                                </Grid>
-                            </GroupBox>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal"
+                                            Height="{DynamicResource StandardControlHeight}">
+                                    <Image Source="/Resources/General/Acceleration.png"
+                                           Style="{DynamicResource ThematicControlImage}"
+                                           Width="{DynamicResource NarrowControlWidth}"/>
+                                    <TextBlock Text="Z Acceleration"
+                                               Width="{DynamicResource StandardControlWidth}" 
+                                               Style="{DynamicResource ThematicTextBlock}"/>
+                                    <TextBox Text="{Binding Path=ZPrintAcceleration, Mode=TwoWay, 
+                                                        UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                                             Width="{DynamicResource WideControlWidth}"
+                                             Style="{DynamicResource ThematicTextBox}">
+                                        <TextBox.ToolTip>
+                                            <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                                Typically, there's no reason why this shouldn't be set to the maximum acceleration value as set in the Printer menu.
+                                            </TextBlock>
+                                        </TextBox.ToolTip>
+                                    </TextBox>
+                                    <TextBlock Text="mm/s²"
+                                               Width="{DynamicResource NarrowControlWidth}" 
+                                               Style="{DynamicResource ThematicTextBlock}"/>
+                                </StackPanel>
+                            </StackPanel>
                             <!--#endregion-->
                                     
                         </StackPanel>

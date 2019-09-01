@@ -95,41 +95,14 @@ namespace ModiPrint.ViewModels.PrintViewModels.MaterialViewModels
             get { return Enum.GetValues(typeof(PrintStyle)).Cast<PrintStyle>(); }
         }
 
-        //If true, then print speeds and accelerations are set to the max values of the Axes.
-        //If true, prevents the print speeds and accelerations from being manually set (logic for this is in MaterialModel). 
-        public bool MaximizePrintSpeeds
-        {
-            get { return _materialModel.MaximizePrintSpeeds; }
-            set
-            {
-                _materialModel.MaximizePrintSpeeds = value;
-                OnPropertyChanged("XPrintSpeed");
-                OnPropertyChanged("YPrintSpeed");
-                OnPropertyChanged("ZPrintSpeed");
-                OnPropertyChanged("XPrintAcceleration");
-                OnPropertyChanged("YPrintAcceleration");
-                OnPropertyChanged("ZPrintAcceleration");
-            }
-        }
-
         //Printing speed for each axis.
-        public double XPrintSpeed
+        public double XYPrintSpeed
         {
-            get { return _materialModel.XPrintSpeed; }
+            get { return _materialModel.XYPrintSpeed; }
             set
             {
-                _materialModel.XPrintSpeed = value;
-                OnPropertyChanged("XPrintSpeed");
-            }
-        }
-
-        public double YPrintSpeed
-        {
-            get { return _materialModel.YPrintSpeed; }
-            set
-            {
-                _materialModel.YPrintSpeed = value;
-                OnPropertyChanged("YPrintSpeed");
+                _materialModel.XYPrintSpeed = value;
+                OnPropertyChanged("XYPrintSpeed");
             }
         }
 
@@ -144,23 +117,13 @@ namespace ModiPrint.ViewModels.PrintViewModels.MaterialViewModels
         }
 
         //Printing acceleration for each axis.
-        public double XPrintAcceleration
+        public double XYPrintAcceleration
         {
-            get { return _materialModel.XPrintAcceleration; }
+            get { return _materialModel.XYPrintAcceleration; }
             set
             {
-                _materialModel.XPrintAcceleration = value;
-                OnPropertyChanged("XPrintAcceleration");
-            }
-        }
-
-        public double YPrintAcceleration
-        {
-            get { return _materialModel.YPrintAcceleration; }
-            set
-            {
-                _materialModel.YPrintAcceleration = value;
-                OnPropertyChanged("YPrintAcceleration");
+                _materialModel.XYPrintAcceleration = value;
+                OnPropertyChanged("XYPrintAcceleration");
             }
         }
 

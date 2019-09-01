@@ -38,7 +38,7 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.WriteSetEquipmentM
 
             try
             {
-                int limitPinID = (axisModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.NullPinID : axisModel.AttachedLimitSwitchGPIOPinModel.PinID;
+                int limitPinID = (axisModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : axisModel.AttachedLimitSwitchGPIOPinModel.PinID;
 
                 convertedGCode = WriteSetAxis(axisModel.AxisID, axisModel.AttachedMotorStepGPIOPinModel.PinID, axisModel.AttachedMotorDirectionGPIOPinModel.PinID,
                     axisModel.StepPulseTime, limitPinID, axisModel.MaxSpeed, axisModel.MaxAcceleration, axisModel.MmPerStep);

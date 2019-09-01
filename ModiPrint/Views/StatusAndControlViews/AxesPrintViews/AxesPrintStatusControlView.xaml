@@ -262,7 +262,7 @@
 
                     <Grid.Resources>
                         <Style x:Key="DataDisplayTextBlock" TargetType="{x:Type TextBlock}">
-                            <Setter Property="FontSize" Value="100"/>
+                            <Setter Property="FontSize" Value="140"/>
                             <Setter Property="FontFamily" Value="Calibri"/>
                             <Setter Property="FontWeight" Value="UltraBold"/>
                         </Style>
@@ -302,7 +302,7 @@
                         <StackPanel Orientation="Horizontal"
                                     Style="{StaticResource DataDisplayStackPanel}">
                             <Image Source="/Resources/General/MaxSpeed.png"/>
-                            <TextBlock Text="{Binding XRealTimeStatusAxisViewModel.MaxSpeed, StringFormat=N2}"
+                            <TextBlock Text="{Binding XRealTimeStatusAxisViewModel.MaxSpeed, StringFormat=N0}"
                                        Foreground="Aqua"
                                        Style="{StaticResource DataDisplayTextBlock}"/>
                             <StackPanel.ToolTip>
@@ -315,7 +315,7 @@
                         <StackPanel Orientation="Horizontal"
                                     Style="{StaticResource DataDisplayStackPanel}">
                             <Image Source="/Resources/General/Acceleration.png"/>
-                            <TextBlock Text="{Binding XRealTimeStatusAxisViewModel.Acceleration, StringFormat=N2}"
+                            <TextBlock Text="{Binding XRealTimeStatusAxisViewModel.Acceleration, StringFormat=N0}"
                                        Foreground="Aqua"
                                        Style="{StaticResource DataDisplayTextBlock}"/>
                             <StackPanel.ToolTip>
@@ -357,7 +357,7 @@
                         <StackPanel Orientation="Horizontal"
                                     Style="{StaticResource DataDisplayStackPanel}">
                             <Image Source="/Resources/General/MaxSpeed.png"/>
-                            <TextBlock Text="{Binding YRealTimeStatusAxisViewModel.MaxSpeed, StringFormat=N2}"
+                            <TextBlock Text="{Binding YRealTimeStatusAxisViewModel.MaxSpeed, StringFormat=N0}"
                                        Foreground="Red"
                                        Style="{StaticResource DataDisplayTextBlock}"/>
                             <StackPanel.ToolTip>
@@ -370,7 +370,7 @@
                         <StackPanel Orientation="Horizontal"
                                     Style="{StaticResource DataDisplayStackPanel}">
                             <Image Source="/Resources/General/Acceleration.png"/>
-                            <TextBlock Text="{Binding YRealTimeStatusAxisViewModel.Acceleration, StringFormat=N2}"
+                            <TextBlock Text="{Binding YRealTimeStatusAxisViewModel.Acceleration, StringFormat=N0}"
                                        Foreground="Red"
                                        Style="{StaticResource DataDisplayTextBlock}"/>
                             <StackPanel.ToolTip>
@@ -412,7 +412,7 @@
                         <StackPanel Orientation="Horizontal"
                                     Style="{StaticResource DataDisplayStackPanel}">
                             <Image Source="/Resources/General/MaxSpeed.png"/>
-                            <TextBlock Text="{Binding ZRealTimeStatusAxisViewModel.MaxSpeed, StringFormat=N2}"
+                            <TextBlock Text="{Binding ZRealTimeStatusAxisViewModel.MaxSpeed, StringFormat=N0}"
                                        Foreground="MediumPurple"
                                        Style="{StaticResource DataDisplayTextBlock}"/>
                             <StackPanel.ToolTip>
@@ -425,7 +425,7 @@
                         <StackPanel Orientation="Horizontal"
                                     Style="{StaticResource DataDisplayStackPanel}">
                             <Image Source="/Resources/General/Acceleration.png"/>
-                            <TextBlock Text="{Binding ZRealTimeStatusAxisViewModel.Acceleration, StringFormat=N2}"
+                            <TextBlock Text="{Binding ZRealTimeStatusAxisViewModel.Acceleration, StringFormat=N0}"
                                        Foreground="MediumPurple"
                                        Style="{StaticResource DataDisplayTextBlock}"/>
                             <StackPanel.ToolTip>
@@ -469,7 +469,7 @@
                         <StackPanel Orientation="Horizontal"
                                     Style="{StaticResource DataDisplayStackPanel}">
                             <Image Source="/Resources/General/MaxSpeed.png"/>
-                            <TextBlock Text="{Binding ActivePrintheadViewModel.MaxSpeed, StringFormat=N2}"
+                            <TextBlock Text="{Binding ActivePrintheadViewModel.MaxSpeed, StringFormat=N0}"
                                        Foreground="SeaGreen"
                                        Style="{StaticResource DataDisplayTextBlock}"/>
                             <StackPanel.ToolTip>
@@ -482,7 +482,7 @@
                         <StackPanel Orientation="Horizontal"
                                     Style="{StaticResource DataDisplayStackPanel}">
                             <Image Source="/Resources/General/Acceleration.png"/>
-                            <TextBlock Text="{Binding ActivePrintheadViewModel.Acceleration, StringFormat=N2}"
+                            <TextBlock Text="{Binding ActivePrintheadViewModel.Acceleration, StringFormat=N0}"
                                        Foreground="SeaGreen"
                                        Style="{StaticResource DataDisplayTextBlock}"/>
                             <StackPanel.ToolTip>
