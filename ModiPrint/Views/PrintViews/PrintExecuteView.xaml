@@ -16,24 +16,27 @@
         <uc:BoolToImageConverter x:Key="BoolToImageConverter"/>
     </UserControl.Resources>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <Grid VerticalAlignment="Bottom">
 
-        <StackPanel Grid.Row="0"  Orientation="Horizontal">
+        <Grid.Resources>
+            <System:Double x:Key="PrintButtonHeight">120</System:Double>
+            <System:Double x:Key="AbortButtonHeight">80</System:Double>
+        </Grid.Resources>
 
-            <!--#region Print Command Buttons-->
-            <Viewbox Stretch="Uniform">
+        <StackPanel Orientation="Vertical">
+
+            <!--#region Abort-->
+            <Viewbox Stretch="Uniform"
+                     HorizontalAlignment="Left" VerticalAlignment="Bottom">
                 <Grid>
                     <Grid.Resources>
-                        <System:Double x:Key="PrintButtonHeight">120</System:Double>
+                        <System:Boolean x:Key="True">True</System:Boolean>
+                        <System:Boolean x:Key="False">False</System:Boolean>
                     </Grid.Resources>
 
-                    <!--Print-->
-                    <Button Command="{Binding PrintCommand}"
+                    <!--#region Abort Prompt Button-->
+                    <Button Command="{Binding AbortPromptCommand}"
+                            CommandParameter="{StaticResource True}"
                             Height="{StaticResource PrintButtonHeight}">
                         <Button.Style>
                             <Style TargetType="Button">
@@ -42,313 +45,464 @@
                         </Button.Style>
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
-                                <vControl:OpaqueClickableImage x:Name="Image" Source="/Resources/ImageButtons/Print.png"/>
+                                <vControl:OpaqueClickableImage x:Name="Image" Source="/Resources/ImageButtons/Abort.png"/>
                                 <ControlTemplate.Triggers>
-                                    <DataTrigger Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.Manual}">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsReadyToPrint}" Value="false">
-                                        <Setter TargetName="Image" Property="Source"
-                                                Value="/Resources/ImageButtons/PrintDisabled.png"/>
-                                    </DataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.Printing}"/>
+                                            <Condition Binding="{Binding AbortPrompt}" Value="false"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <MultiDataTrigger.Setters>
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </MultiDataTrigger.Setters>
+                                    </MultiDataTrigger>
                                     <Trigger Property="IsMouseOver" Value="true">
                                         <Setter TargetName="Image" Property="Source"
-                                                Value="/Resources/ImageButtons/PrintMouseOver.png"/>
+                                                Value="/Resources/ImageButtons/AbortMouseOver.png"/>
                                     </Trigger>
                                     <Trigger Property="IsPressed" Value="true">
                                         <Setter TargetName="Image" Property="Source"
-                                                Value="/Resources/ImageButtons/Print.png"/>
+                                                Value="/Resources/ImageButtons/Abort.png"/>
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Button.Template>
                         <Button.ToolTip>
                             <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                                Executes a print sequence. This program will sequentially send all commands contained within a .mdpt file or a converted .gcode file.
-                                <LineBreak/>
-                                Only availible if all conditions (to the right of this icon) are met.
+                            You will be prompted to abort a print sequence.
+                            <LineBreak/>
+                            If aborted, all operations will stop as soon as possible.
                             </TextBlock>
                         </Button.ToolTip>
                     </Button>
-
-                    <!--Pause-->
-                    <Button Command="{Binding PauseCommand}"
-                            Height="{StaticResource PrintButtonHeight}">
-                        <Button.Style>
-                            <Style TargetType="Button">
+                    <!--#endregion-->
+                    
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
                                 <Setter Property="Visibility" Value="Hidden"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding AbortPrompt}" Value="true">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
                             </Style>
-                        </Button.Style>
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <vControl:OpaqueClickableImage x:Name="Image" Source="/Resources/ImageButtons/Pause.png"/>
-                                <ControlTemplate.Triggers>
-                                    <DataTrigger Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.Printing}">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                    </DataTrigger>
-                                    <Trigger Property="IsMouseOver" Value="true">
-                                        <Setter TargetName="Image" Property="Source"
-                                                Value="/Resources/ImageButtons/PauseMouseOver.png"/>
-                                    </Trigger>
-                                    <Trigger Property="IsPressed" Value="true">
-                                        <Setter TargetName="Image" Property="Source"
-                                                Value="/Resources/ImageButtons/Pause.png"/>
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </Button.Template>
-                        <Button.ToolTip>
-                            <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                                Pause the print sequence.
-                                <LineBreak/>
-                                Specifically, stop sending serial messages and tell the microcontroller to stop processing its received queue of commands ASAP.
-                            </TextBlock>
-                        </Button.ToolTip>
-                    </Button>
+                        </StackPanel.Style>
 
-                    <!--Resume-->
-                    <Button Command="{Binding ResumeCommand}"
-                            Height="{StaticResource PrintButtonHeight}">
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Visibility" Value="Hidden"/>
-                            </Style>
-                        </Button.Style>
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <vControl:OpaqueClickableImage x:Name="Image" Source="/Resources/ImageButtons/Resume.png"/>
-                                <ControlTemplate.Triggers>
-                                    <DataTrigger Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.MicrocontrollerPaused}">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.PrintSequencePaused}">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                    </DataTrigger>
-                                    <Trigger Property="IsMouseOver" Value="true">
-                                        <Setter TargetName="Image" Property="Source"
-                                                Value="/Resources/ImageButtons/ResumeMouseOver.png"/>
-                                    </Trigger>
-                                    <Trigger Property="IsPressed" Value="true">
-                                        <Setter TargetName="Image" Property="Source"
-                                                Value="/Resources/ImageButtons/Resume.png"/>
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </Button.Template>
-                        <LineBreak/>
-                        <Button.ToolTip>
-                            <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                                Resume the print sequence.
-                            </TextBlock>
-                        </Button.ToolTip>
-                    </Button>
+                        <TextBlock Text="Abort Print?"
+                                   FontFamily="{DynamicResource HeaderTextFont}"
+                                   Style="{DynamicResource ThematicHeaderTextBlock}"/>
 
+                        <StackPanel Orientation="Horizontal">
+
+                            <!--Return-->
+                            <Button Command="{Binding AbortCommand}"
+                                    CommandParameter="{StaticResource False}"
+                                    Height="50">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <vControl:OpaqueClickableImage x:Name="Image" Source="/Resources/Buttons/Back.png"/>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="true">
+                                                <Setter TargetName="Image" Property="Source"
+                                                        Value="/Resources/Buttons/BackMouseOver.png"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                                <Button.ToolTip>
+                                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                        Return and do not abort.
+                                    </TextBlock>
+                                </Button.ToolTip>
+                            </Button>
+
+                            <!--Abort-->
+                            <Button Command="{Binding AbortCommand}"
+                                    CommandParameter="{StaticResource True}"
+                                    Height="{StaticResource AbortButtonHeight}">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <vControl:OpaqueClickableImage x:Name="Image" Source="/Resources/ImageButtons/Abort.png"/>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="true">
+                                                <Setter TargetName="Image" Property="Source"
+                                                        Value="/Resources/ImageButtons/AbortMouseOver.png"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                                <Button.ToolTip>
+                                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                        Abort a print sequence.
+                                        <LineBreak/>
+                                        All operations will stop as soon as possible.
+                                    </TextBlock>
+                                </Button.ToolTip>
+                            </Button>
+                            
+                        </StackPanel>
+
+                    </StackPanel>
                 </Grid>
             </Viewbox>
             <!--#endregion-->
 
-            <!--#region Printer Status Display-->
-            <Grid>
-                <Grid.Resources>
+            <StackPanel  Orientation="Horizontal">
 
-                    <!--Printer Manual-->
-                    <DataTemplate x:Key="PrinterManualTemplate">
-                        <TextBlock Text=""
-                                   FontSize="16"
-                                   Style="{DynamicResource ThematicTextBlock}"/>
-                    </DataTemplate>
+                <!--#region Print Command Buttons-->
+                <Viewbox Stretch="Uniform">
+                    <Grid>
 
-                    <!--Printer Printing-->
-                    <DataTemplate x:Key="PrinterPrintingTemplate">
-                        <TextBlock Text="Printing"
-                                   FontSize="16"
-                                   Style="{DynamicResource ThematicTextBlock}"/>
-                    </DataTemplate>
+                        <!--Print-->
+                        <Button Command="{Binding PrintCommand}"
+                                Height="{StaticResource PrintButtonHeight}">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Visibility" Value="Hidden"/>
+                                </Style>
+                            </Button.Style>
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <vControl:OpaqueClickableImage x:Name="Image" Source="/Resources/ImageButtons/Print.png"/>
+                                    <ControlTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.Manual}">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsReadyToPrint}" Value="false">
+                                            <Setter TargetName="Image" Property="Source"
+                                                    Value="/Resources/ImageButtons/PrintDisabled.png"/>
+                                        </DataTrigger>
+                                        <Trigger Property="IsMouseOver" Value="true">
+                                            <Setter TargetName="Image" Property="Source"
+                                                    Value="/Resources/ImageButtons/PrintMouseOver.png"/>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="true">
+                                            <Setter TargetName="Image" Property="Source"
+                                                    Value="/Resources/ImageButtons/Print.png"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                            <Button.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                Executes a print sequence. This program will sequentially send all commands contained within a .mdpt file or a converted .gcode file.
+                                <LineBreak/>
+                                Only availible if all conditions (to the right of this icon) are met.
+                                </TextBlock>
+                            </Button.ToolTip>
+                        </Button>
 
-                    <!--Microcontroller Paused-->
-                    <DataTemplate x:Key="MicrocontrollerPausedTemplate">
-                        <StackPanel Orientation="Vertical">
-                            <TextBlock Text="Microcontroller"
-                                       FontSize="16"
-                                       Style="{DynamicResource ThematicTextBlock}"/>
-                            <TextBlock Text="Paused"
-                                       FontSize="16"
-                                       Style="{DynamicResource ThematicTextBlock}"/>
-                        </StackPanel>
-                        
-                    </DataTemplate>
+                        <!--Pause-->
+                        <Button Command="{Binding PauseCommand}"
+                                Height="{StaticResource PrintButtonHeight}">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Visibility" Value="Hidden"/>
+                                </Style>
+                            </Button.Style>
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <vControl:OpaqueClickableImage x:Name="Image" Source="/Resources/ImageButtons/Pause.png"/>
+                                    <ControlTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.Printing}">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                        <Trigger Property="IsMouseOver" Value="true">
+                                            <Setter TargetName="Image" Property="Source"
+                                                Value="/Resources/ImageButtons/PauseMouseOver.png"/>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="true">
+                                            <Setter TargetName="Image" Property="Source"
+                                                Value="/Resources/ImageButtons/Pause.png"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                            <Button.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                Pause the print sequence.
+                                <LineBreak/>
+                                Specifically, stop sending serial messages and tell the microcontroller to stop processing its received queue of commands ASAP.
+                                </TextBlock>
+                            </Button.ToolTip>
+                        </Button>
 
-                    <!--Printer Paused-->
-                    <DataTemplate x:Key="PrintSequencePausedTemplate">
-                        <StackPanel Orientation="Vertical">
-                            <TextBlock Text="Print"
-                                       FontSize="16"
-                                       Style="{DynamicResource ThematicTextBlock}"/>
-                            <TextBlock Text="Sequence"
-                                       FontSize="16"
-                                       Style="{DynamicResource ThematicTextBlock}"/>
-                            <TextBlock Text="Paused"
-                                       FontSize="16"
-                                       Style="{DynamicResource ThematicTextBlock}"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </Grid.Resources>
+                        <!--Resume-->
+                        <Button Command="{Binding ResumeCommand}"
+                                Height="{StaticResource PrintButtonHeight}">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Visibility" Value="Hidden"/>
+                                </Style>
+                            </Button.Style>
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <vControl:OpaqueClickableImage x:Name="Image" Source="/Resources/ImageButtons/Resume.png"/>
+                                    <ControlTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.PrintSequencePaused}">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                        <Trigger Property="IsMouseOver" Value="true">
+                                            <Setter TargetName="Image" Property="Source"
+                                                Value="/Resources/ImageButtons/ResumeMouseOver.png"/>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="true">
+                                            <Setter TargetName="Image" Property="Source"
+                                                Value="/Resources/ImageButtons/Resume.png"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                            <LineBreak/>
+                            <Button.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                Resume the print sequence.
+                                </TextBlock>
+                            </Button.ToolTip>
+                        </Button>
 
-                <ContentControl Content="{Binding }">
-                    <ContentControl.Style>
-                        <Style TargetType="{x:Type ContentControl}">
+                        <!--Resume Microcontroller-->
+                        <Button Command="{Binding ResumeCommand}"
+                                Height="{StaticResource PrintButtonHeight}">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Visibility" Value="Hidden"/>
+                                </Style>
+                            </Button.Style>
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <vControl:OpaqueClickableImage x:Name="Image" Source="/Resources/ImageButtons/ResumeMicrocontroller.png"/>
+                                    <ControlTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.MicrocontrollerPaused}">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                        <Trigger Property="IsMouseOver" Value="true">
+                                            <Setter TargetName="Image" Property="Source"
+                                                Value="/Resources/ImageButtons/ResumeMicrocontrollerMouseOver.png"/>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="true">
+                                            <Setter TargetName="Image" Property="Source"
+                                                Value="/Resources/ImageButtons/ResumeMicrocontroller.png"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                            <LineBreak/>
+                            <Button.ToolTip>
+                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                Resume the print sequence.
+                                </TextBlock>
+                            </Button.ToolTip>
+                        </Button>
+                    </Grid>
+                </Viewbox>
+                <!--#endregion-->
+
+                <!--#region Printer Status Display-->
+                <Grid>
+                    <Grid.Resources>
+
+                        <!--Printer Manual-->
+                        <DataTemplate x:Key="PrinterManualTemplate">
+                            <TextBlock Text=""
+                                       FontSize="{DynamicResource HeaderControlFontSize}"
+                                       Style="{DynamicResource ThematicTextBlock}"/>
+                        </DataTemplate>
+
+                        <!--Printer Printing-->
+                        <DataTemplate x:Key="PrinterPrintingTemplate">
+                            <TextBlock Text="Printing"
+                                       FontSize="{DynamicResource HeaderControlFontSize}"
+                                       Style="{DynamicResource ThematicTextBlock}"/>
+                        </DataTemplate>
+
+                        <!--Microcontroller Paused-->
+                        <DataTemplate x:Key="MicrocontrollerPausedTemplate">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="Microcontroller"
+                                           FontSize="{DynamicResource HeaderControlFontSize}"
+                                           Style="{DynamicResource ThematicTextBlock}"/>
+                                <TextBlock Text="Paused"
+                                           FontSize="{DynamicResource HeaderControlFontSize}"
+                                           Style="{DynamicResource ThematicTextBlock}"/>
+                            </StackPanel>
+
+                        </DataTemplate>
+
+                        <!--Printer Paused-->
+                        <DataTemplate x:Key="PrintSequencePausedTemplate">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="Print"
+                                           FontSize="{DynamicResource HeaderControlFontSize}"
+                                           Style="{DynamicResource ThematicTextBlock}"/>
+                                <TextBlock Text="Sequence"
+                                           FontSize="{DynamicResource HeaderControlFontSize}"
+                                           Style="{DynamicResource ThematicTextBlock}"/>
+                                <TextBlock Text="Paused"
+                                           FontSize="{DynamicResource HeaderControlFontSize}"
+                                           Style="{DynamicResource ThematicTextBlock}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Grid.Resources>
+
+                    <ContentControl Content="{Binding }">
+                        <ContentControl.Style>
+                            <Style TargetType="{x:Type ContentControl}">
+                                <Style.Triggers>
+
+                                    <!--Printer Manual-->
+                                    <DataTrigger Binding="{Binding PrintStatus}"  Value="{x:Static vmPrint:PrintStatus.Manual}">
+                                        <Setter Property="ContentTemplate" Value="{StaticResource PrinterManualTemplate}"/>
+                                    </DataTrigger>
+
+                                    <!--Printer Paused-->
+                                    <DataTrigger Binding="{Binding PrintStatus}"  Value="{x:Static vmPrint:PrintStatus.Printing}">
+                                        <Setter Property="ContentTemplate" Value="{StaticResource PrinterPrintingTemplate}"/>
+                                    </DataTrigger>
+
+                                    <!--Microcontroller Paused-->
+                                    <DataTrigger Binding="{Binding PrintStatus}"  Value="{x:Static vmPrint:PrintStatus.MicrocontrollerPaused}">
+                                        <Setter Property="ContentTemplate" Value="{StaticResource MicrocontrollerPausedTemplate}"/>
+                                    </DataTrigger>
+
+                                    <!--Print Sequence Paused-->
+                                    <DataTrigger Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.PrintSequencePaused}">
+                                        <Setter Property="ContentTemplate" Value="{StaticResource PrintSequencePausedTemplate}"/>
+                                    </DataTrigger>
+
+                                </Style.Triggers>
+                            </Style>
+                        </ContentControl.Style>
+                    </ContentControl>
+                </Grid>
+                <!--#endregion-->
+
+                <!--#region Print Ready Check-->
+                <StackPanel Orientation="Vertical"
+                            VerticalAlignment="Center">
+                    <StackPanel.Style>
+                        <Style TargetType="{x:Type StackPanel}">
+                            <Setter Property="Visibility" Value="Hidden"/>
                             <Style.Triggers>
-
-                                <!--Printer Manual-->
-                                <DataTrigger Binding="{Binding PrintStatus}"  Value="{x:Static vmPrint:PrintStatus.Manual}">
-                                    <Setter Property="ContentTemplate" Value="{StaticResource PrinterManualTemplate}"/>
+                                <DataTrigger Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.Manual}">
+                                    <Setter Property="Visibility" Value="Visible"/>
                                 </DataTrigger>
-
-                                <!--Printer Paused-->
-                                <DataTrigger Binding="{Binding PrintStatus}"  Value="{x:Static vmPrint:PrintStatus.Printing}">
-                                    <Setter Property="ContentTemplate" Value="{StaticResource PrinterPrintingTemplate}"/>
-                                </DataTrigger>
-
-                                <!--Microcontroller Paused-->
-                                <DataTrigger Binding="{Binding PrintStatus}"  Value="{x:Static vmPrint:PrintStatus.MicrocontrollerPaused}">
-                                    <Setter Property="ContentTemplate" Value="{StaticResource MicrocontrollerPausedTemplate}"/>
-                                </DataTrigger>
-
-                                <!--Print Sequence Paused-->
-                                <DataTrigger Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.PrintSequencePaused}">
-                                    <Setter Property="ContentTemplate" Value="{StaticResource PrintSequencePausedTemplate}"/>
-                                </DataTrigger>
-
                             </Style.Triggers>
                         </Style>
-                    </ContentControl.Style>
-                </ContentControl>
-            </Grid>
-            <!--#endregion-->
+                    </StackPanel.Style>
 
-            <!--#region Print Ready Check-->
-            <StackPanel Orientation="Vertical"
-                        VerticalAlignment="Center">
-                <StackPanel.Style>
-                    <Style TargetType="{x:Type StackPanel}">
-                        <Setter Property="Visibility" Value="Hidden"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.Manual}">
-                                <Setter Property="Visibility" Value="Visible"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </StackPanel.Style>
+                    <StackPanel.Resources>
+                        <ResourceDictionary>
+                            <ResourceDictionary.MergedDictionaries>
+                                <ResourceDictionary Source="/Views/GlobalResources.xaml"/>
+                            </ResourceDictionary.MergedDictionaries>
 
-                <StackPanel.Resources>
-                    <ResourceDictionary>
-                        <ResourceDictionary.MergedDictionaries>
-                            <ResourceDictionary Source="/Views/GlobalResources.xaml"/>
-                        </ResourceDictionary.MergedDictionaries>
-
-                        <Style x:Key="GCodeReadyCheckToolTipStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ThematicToolTipTextBlock}">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsModiPrintGCodeReadyToPrint}" Value="True">
-                                    <Setter Property="Text" Value="GCode is uploaded/converted and ready for print."/>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding IsModiPrintGCodeReadyToPrint}" Value="False">
-                                    <Setter Property="Text" Value="A .mdpt file needs to be uploaded or a .gcode file needs to be converted from the Print menu."/>
-                                 </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-
-                        <Style x:Key="SerialConnectionReadyCheckToolTipStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ThematicToolTipTextBlock}">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsSerialCommunicationReadyToPrint}" Value="True">
-                                    <Setter Property="Text" Value="Serial connection established and ready for print."/>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding IsSerialCommunicationReadyToPrint}" Value="False">
-                                    <Setter Property="Text" Value="Serial connection needs to be established. Connect the microcontroller to a serial port and establish a conenction from the Control menu."/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-
-                        <Style x:Key="PrintheadSetReadyCheckToolTipStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ThematicToolTipTextBlock}">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsActivePrintheadReadyToPrint}" Value="True">
-                                    <Setter Property="Text" Value="Printhead is set and ready for print."/>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding IsActivePrintheadReadyToPrint}" Value="False">
-                                    <Setter Property="Text" Value="Printhead needs to be set to establish a starting location. Set the printhead from the Control menu."/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ResourceDictionary>
-                </StackPanel.Resources>
-
-                <!--Display if the GCode has been uploaded or converted and is ready for a print-->
-                <StackPanel Orientation="Horizontal"
-                            Height="{DynamicResource StandardControlHeight}">
-                    <Image Width="{DynamicResource NarrowControlWidth}">
-                        <Image.Style>
-                            <Style TargetType="Image">
+                            <Style x:Key="GCodeReadyCheckToolTipStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ThematicToolTipTextBlock}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsModiPrintGCodeReadyToPrint}" Value="True">
-                                        <Setter Property="Source" Value="/Resources/PrintSequenceControl/GCodeEnabled.png"/>
+                                        <Setter Property="Text" Value="GCode is uploaded/converted and ready for print."/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding IsModiPrintGCodeReadyToPrint}" Value="False">
-                                        <Setter Property="Source" Value="/Resources/PrintSequenceControl/GCodeDisabled.png"/>
+                                        <Setter Property="Text" Value="A .mdpt file needs to be uploaded or a .gcode file needs to be converted from the Print menu."/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </Image.Style>
-                        <Image.ToolTip>
-                            <TextBlock Style="{StaticResource GCodeReadyCheckToolTipStyle}"/>
-                        </Image.ToolTip>
-                    </Image>
-                </StackPanel>
 
-                <!--Display if the Serial Communication port is established-->
-                <StackPanel Orientation="Horizontal"
-                            Height="{DynamicResource StandardControlHeight}">
-                    <Image Width="{DynamicResource NarrowControlWidth}">
-                        <Image.Style>
-                            <Style TargetType="Image">
+                            <Style x:Key="SerialConnectionReadyCheckToolTipStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ThematicToolTipTextBlock}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsSerialCommunicationReadyToPrint}" Value="True">
-                                        <Setter Property="Source" Value="/Resources/PrintSequenceControl/ConnectionEnabled.png"/>
+                                        <Setter Property="Text" Value="Serial connection established and ready for print."/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding IsSerialCommunicationReadyToPrint}" Value="False">
-                                        <Setter Property="Source" Value="/Resources/PrintSequenceControl/ConnectionDisabled.png"/>
+                                        <Setter Property="Text" Value="Serial connection needs to be established. Connect the microcontroller to a serial port and establish a conenction from the Control menu."/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </Image.Style>
-                        <Image.ToolTip>
-                            <TextBlock Style="{StaticResource SerialConnectionReadyCheckToolTipStyle}"/>
-                        </Image.ToolTip>
-                    </Image>
-                </StackPanel>
 
-                <!--Display if there is an active Printhead-->
-                <StackPanel Orientation="Horizontal"
-                            Height="{DynamicResource StandardControlHeight}">
-                    <Image Width="{DynamicResource NarrowControlWidth}">
-                        <Image.Style>
-                            <Style TargetType="Image">
+                            <Style x:Key="PrintheadSetReadyCheckToolTipStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ThematicToolTipTextBlock}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsActivePrintheadReadyToPrint}" Value="True">
-                                        <Setter Property="Source" Value="/Resources/PrintSequenceControl/PrintheadEnabled.png"/>
+                                        <Setter Property="Text" Value="Printhead is set and ready for print."/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding IsActivePrintheadReadyToPrint}" Value="False">
-                                        <Setter Property="Source" Value="/Resources/PrintSequenceControl/PrintheadDisabled.png"/>
+                                        <Setter Property="Text" Value="Printhead needs to be set to establish a starting location. Set the printhead from the Control menu."/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </Image.Style>
-                        <Image.ToolTip>
-                            <TextBlock Style="{StaticResource PrintheadSetReadyCheckToolTipStyle}"/>
-                        </Image.ToolTip>
-                    </Image>
+                        </ResourceDictionary>
+                    </StackPanel.Resources>
+
+                    <!--Display if the GCode has been uploaded or converted and is ready for a print-->
+                    <StackPanel Orientation="Horizontal"
+                                Height="{DynamicResource StandardControlHeight}">
+                        <Image Width="{DynamicResource NarrowControlWidth}">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsModiPrintGCodeReadyToPrint}" Value="True">
+                                            <Setter Property="Source" Value="/Resources/PrintSequenceControl/GCodeEnabled.png"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsModiPrintGCodeReadyToPrint}" Value="False">
+                                            <Setter Property="Source" Value="/Resources/PrintSequenceControl/GCodeDisabled.png"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                            <Image.ToolTip>
+                                <TextBlock Style="{StaticResource GCodeReadyCheckToolTipStyle}"/>
+                            </Image.ToolTip>
+                        </Image>
+                    </StackPanel>
+
+                    <!--Display if the Serial Communication port is established-->
+                    <StackPanel Orientation="Horizontal"
+                                Height="{DynamicResource StandardControlHeight}">
+                        <Image Width="{DynamicResource NarrowControlWidth}">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSerialCommunicationReadyToPrint}" Value="True">
+                                            <Setter Property="Source" Value="/Resources/PrintSequenceControl/ConnectionEnabled.png"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsSerialCommunicationReadyToPrint}" Value="False">
+                                            <Setter Property="Source" Value="/Resources/PrintSequenceControl/ConnectionDisabled.png"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                            <Image.ToolTip>
+                                <TextBlock Style="{StaticResource SerialConnectionReadyCheckToolTipStyle}"/>
+                            </Image.ToolTip>
+                        </Image>
+                    </StackPanel>
+
+                    <!--Display if there is an active Printhead-->
+                    <StackPanel Orientation="Horizontal"
+                                Height="{DynamicResource StandardControlHeight}">
+                        <Image Width="{DynamicResource NarrowControlWidth}">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsActivePrintheadReadyToPrint}" Value="True">
+                                            <Setter Property="Source" Value="/Resources/PrintSequenceControl/PrintheadEnabled.png"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsActivePrintheadReadyToPrint}" Value="False">
+                                            <Setter Property="Source" Value="/Resources/PrintSequenceControl/PrintheadDisabled.png"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                            <Image.ToolTip>
+                                <TextBlock Style="{StaticResource PrintheadSetReadyCheckToolTipStyle}"/>
+                            </Image.ToolTip>
+                        </Image>
+                    </StackPanel>
+
                 </StackPanel>
+                <!--#endregion-->
+
             </StackPanel>
-            <!--#endregion-->
-            
         </StackPanel>
     </Grid>
 </UserControl>

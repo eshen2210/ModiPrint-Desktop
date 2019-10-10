@@ -17,26 +17,17 @@ namespace ModiPrint.ViewModels.RealTimeStatusViewModels
     {
         #region Fields and Properties
         //Contains information on the Printer during operation.
-        RealTimeStatusDataModel _realTimeStatusDataModel;
+        private RealTimeStatusDataModel _realTimeStatusDataModel;
+        public RealTimeStatusDataModel RealTimeStatusDataModel
+        {
+            get { return _realTimeStatusDataModel; }
+        }
 
         //Fires events that updates the Position property of RealTimeStatusDataModel equipment.
-        SerialCommunicationCommandSetsModel _serialCommunicationCommandSetsModel;
+        private SerialCommunicationCommandSetsModel _serialCommunicationCommandSetsModel;
 
         //Displays errors.
-        ErrorListViewModel _errorListViewModel;
-
-        //Tasks that are in the process of execution by the microcontroller.
-        //These tasks are removed from the list as task completed messages are received.
-        public ObservableCollection<string> TaskQueuedMessagesList
-        {
-            get { return _realTimeStatusDataModel.TaskQueuedMessagesList; }
-        }
-
-        //Messages that arise out of the normal order of command -> execution (emergency messages, etc.)
-        public ObservableCollection<string> StatusMessagesList
-        {
-            get { return _realTimeStatusDataModel.StatusMessagesList; }
-        }
+        private ErrorListViewModel _errorListViewModel;
 
         //Parameters of the Printer.
 
@@ -86,7 +77,7 @@ namespace ModiPrint.ViewModels.RealTimeStatusViewModels
             _yRealTimeStatusAxisViewModel = new RealTimeStatusAxisViewModel(_realTimeStatusDataModel.YRealTimeStatusAxisModel);
             _zRealTimeStatusAxisViewModel = new RealTimeStatusAxisViewModel(_realTimeStatusDataModel.ZRealTimeStatusAxisModel);
 
-            UpdateSetPrinthead();
+            UpdateSetPrinthead("unused");
 
             //Subscribe to events.
             _realTimeStatusDataModel.RecordSetAxisExecuted += new RecordSetAxisExecutedEventHandler(UpdateRecordSetAxis);
@@ -111,8 +102,11 @@ namespace ModiPrint.ViewModels.RealTimeStatusViewModels
         /// <summary>
         /// Calls the OnPropertyChanged event and updates properties related to the Set Axis command.
         /// </summary>
-        private void UpdateRecordSetAxis(char axisID)
+        private void UpdateRecordSetAxis(string axisName)
         {
+            char axisID;
+            axisID = _realTimeStatusDataModel.PrinterModel.FindAxis(axisName).AxisID;
+
             switch (axisID)
             {
                 case 'X':
@@ -136,7 +130,7 @@ namespace ModiPrint.ViewModels.RealTimeStatusViewModels
         /// <summary>
         /// Instantiates a new ActivePrintheadViewModel with the appropriate derived class.
         /// </summary>
-        private void UpdateSetPrinthead()
+        private void UpdateSetPrinthead(string printheadName)
         {
             switch (_realTimeStatusDataModel.ActivePrintheadType)
             {

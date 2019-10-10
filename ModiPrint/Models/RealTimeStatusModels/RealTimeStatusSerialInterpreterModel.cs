@@ -72,9 +72,9 @@ namespace ModiPrint.Models.RealTimeStatusModels
             else if (incomingMessage[0] == SerialMessageCharacters.SerialTaskCompletedCharacter) //Task completed.
              {
                 //Earliest queued tasks are completed first.
-                if (_realTimeStatusDataModel.TaskQueuedMessagesList.Count > 0)
+                if (_realTimeStatusDataModel.IsTaskQueuedEmpty() == false)
                 {
-                    InterpretTaskCompletedMessage(_realTimeStatusDataModel.TaskQueuedMessagesList[0]);
+                    InterpretTaskCompletedMessage(_realTimeStatusDataModel.RetrieveNextTaskQueuedMessage());
                     _realTimeStatusDataModel.RecordTaskCompleted();
                 }
                 else
@@ -220,7 +220,7 @@ namespace ModiPrint.Models.RealTimeStatusModels
                 InterpretLimit(statusMessage);
 
                 //Remove the movement command that was never completed because a Limit Switch was hit.
-                _realTimeStatusDataModel.TaskQueuedMessagesList.RemoveAt(0);
+                _realTimeStatusDataModel.RemoveNextTaskQueuedMessage();
             }
         }
 

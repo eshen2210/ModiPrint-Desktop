@@ -57,6 +57,11 @@ namespace ModiPrint.Models.ManualControlModels
             //Retract Z Axes.
             RetractAllZ(zCalibrationSpeed);
 
+            //Z Axes should be in default positions.
+            AxisModel zAxisModel = _printerModel.ZAxisModelList[_printerModel.ZAxisModelList.Count - 1]; 
+            double zPosition = zAxisModel.MaxPosition - GlobalValues.LimitBuffer;
+            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(SerialMessageCharacters.SerialCommandSetCharacter + "SetMinMaxPos " + "Z" + zPosition);
+
             //Set X Axis to calibration speeds.
             AxisModel xAxis = _printerModel.AxisModelList[0];
             int xLimitPinID = (xAxis.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : xAxis.AttachedLimitSwitchGPIOPinModel.PinID;

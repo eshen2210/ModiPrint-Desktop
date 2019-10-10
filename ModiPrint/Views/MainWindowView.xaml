@@ -60,7 +60,7 @@
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Row="0" Grid.RowSpan="4"
-                Grid.Column="0" Grid.ColumnSpan="3">
+              Grid.Column="0" Grid.ColumnSpan="3">
             <Viewbox Stretch="Fill">
                 <Grid>
                     
@@ -315,8 +315,8 @@
         <!--#region Execute Print Sequence-->
         <Grid Grid.Row="2" Grid.Column="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="10*"/>
-                <RowDefinition Height="2.6*"/>
+                <RowDefinition Height="6*"/>
+                <RowDefinition Height="6*"/>
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>

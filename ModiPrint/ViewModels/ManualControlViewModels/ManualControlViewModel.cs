@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System.Collections.ObjectModel;
 using ModiPrint.Models.ManualControlModels;
 using ModiPrint.Models.PrinterModels.PrintheadModels.PrintheadTypeModels;
+using ModiPrint.Models.RealTimeStatusModels;
 using ModiPrint.ViewModels.PrinterViewModels.AxisViewModels;
 using ModiPrint.ViewModels.PrinterViewModels.PrintheadViewModels;
 using ModiPrint.ViewModels.PrinterViewModels.PrintheadViewModels.PrintheadTypeViewModels;
@@ -267,15 +268,19 @@ namespace ModiPrint.ViewModels.ManualControlViewModels
         #endregion
 
         #region Constructor
-        public ManualControlViewModel(ManualControlModel ManualControlMovel, RealTimeStatusDataViewModel RealTimeStatusDataViewModel, PrinterViewModel PrinterViewModel)
+        public ManualControlViewModel(ManualControlModel ManualControlModel, RealTimeStatusDataViewModel RealTimeStatusDataViewModel, PrinterViewModel PrinterViewModel)
         {
-            _manualControlModel = ManualControlMovel;
+            _manualControlModel = ManualControlModel;
             _realTimeStatusDataViewModel = RealTimeStatusDataViewModel;
             _printerViewModel = PrinterViewModel;
 
             _axesPrintStylesList.Add(new MovementOnlyStyle());
             _axesPrintStylesList.Add(new DropletPrintStyle());
             _axesPrintStylesList.Add(new ContinuousPrintStyle());
+
+            _realTimeStatusDataViewModel.RealTimeStatusDataModel.RecordSetAxisExecuted += new RecordSetAxisExecutedEventHandler(UpdateSetAxis);
+            _realTimeStatusDataViewModel.RealTimeStatusDataModel.RecordSetMotorizedPrintheadExecuted += new RecordSetMotorizedPrintheadExecutedEventHandler(UpdateSetPrinthead);
+            _realTimeStatusDataViewModel.RealTimeStatusDataModel.RecordSetValvePrintheadExecuted += new RecordSetValvePrintheadExecutedEventHandler(UpdateSetPrinthead);
         }
         #endregion
 
@@ -307,6 +312,31 @@ namespace ModiPrint.ViewModels.ManualControlViewModels
             OnPropertyChanged("YMoveAxisNegativeDistance");
             OnPropertyChanged("ZMoveAxisPositiveDistance");
             OnPropertyChanged("ZMoveAxisNegativeDistance");
+        }
+
+        /// <summary>
+        /// Updates the active Axis' name if a new Z Axis was set.
+        /// Called when the microcontroller finishes setting an Axis.
+        /// </summary>
+        /// <param name="axisName"></param>
+        private void UpdateSetAxis(string axisName)
+        {
+            if (axisName[0] == 'Z')
+            {
+                _axisName = axisName;
+                OnPropertyChanged("AxisName");
+            }
+        }
+
+        /// <summary>
+        /// Updates the active Printhead's name.
+        /// Called when the microcontroller finishes setting a Printhead.
+        /// </summary>
+        /// <param name="printheadName"></param>
+        private void UpdateSetPrinthead(string printheadName)
+        {
+            _printheadName = printheadName;
+            OnPropertyChanged("PrintheadName");
         }
         #endregion
 

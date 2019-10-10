@@ -36,9 +36,6 @@ namespace ModiPrint.ViewModels.SerialCommunicationViewModels
         }
         private SerialCommunicationOutgoingMessagesModel _serialCommunicationOutgoingMessagesModel;
 
-        //Manages a thread that operates functions related to serial communication.
-        private SerialCommunicationBGWModel _serialCommunicationBGWModel;
-
         //Manages the queue of outgoing and incoming serial messages.
         private SerialMessageDisplayViewModel _serialMessageDisplayViewModel;
 
@@ -63,20 +60,19 @@ namespace ModiPrint.ViewModels.SerialCommunicationViewModels
         //Is the Serial Port open?
         public bool IsPortOpen
         {
-            get { return _serialCommunicationMainModel.IsPortOpen(); }
+            get { return _serialCommunicationMainModel.IsPortOpen; }
         }
         #endregion
 
         #region Constructors
-        public SerialCommunicationViewModel(SerialCommunicationMainModel SerialCommunicationMainModel, SerialCommunicationOutgoingMessagesModel SerialCommunicationOutgoingMessagesModel,
-            SerialCommunicationBGWModel SerialCommunicationBGWModel, SerialMessageDisplayViewModel SerialMessageDisplayModel)
+        public SerialCommunicationViewModel(SerialCommunicationMainModel SerialCommunicationMainModel, 
+            SerialCommunicationOutgoingMessagesModel SerialCommunicationOutgoingMessagesModel, 
+            SerialMessageDisplayViewModel SerialMessageDisplayModel)
         {
             _serialCommunicationMainModel = SerialCommunicationMainModel;
             _serialCommunicationOutgoingMessagesModel = SerialCommunicationOutgoingMessagesModel;
-            _serialCommunicationBGWModel = SerialCommunicationBGWModel;
             _serialMessageDisplayViewModel = SerialMessageDisplayModel;
 
-            _serialCommunicationBGWModel.SerialCommunicationBGWTerminated += new SerialCommunicationBGWTerminatedEventHandler(SerialCommunicationBGWTerminated);
             _serialCommunicationMainModel.SerialCommunicationMessageSent += new SerialCommunicationMessageSentEventHandler(SerialCommunicationMessageSent);
             _serialCommunicationMainModel.SerialCommunicationMessageReceived += new SerialCommunicationMessageReceivedEventHandler(SerialCommunicationMessageReceived);
             _serialCommunicationMainModel.SerialConnectionChanged += new SerialConnectionChangedEventHandler(UpdateSerialConnectionStatus);
@@ -177,8 +173,8 @@ namespace ModiPrint.ViewModels.SerialCommunicationViewModels
         {
             if (!String.IsNullOrWhiteSpace(portName))
             {
-                //Begins the thread that will manage all serial communications.
-                _serialCommunicationBGWModel.StartConnection(portName);
+                //Begins serial communications.
+                _serialCommunicationMainModel.SerialConnect(portName);
             }
             else
             {
@@ -209,7 +205,7 @@ namespace ModiPrint.ViewModels.SerialCommunicationViewModels
 
         public void ExecuteSerialDisconnectCommand(object notUsed)
         {
-            _serialCommunicationBGWModel.EndConnection();
+            _serialCommunicationMainModel.SerialDisconnect();
             OnPropertyChanged("IsPortOpen");
         }
 

@@ -161,7 +161,6 @@
     <Compile Include="Models\RealTimeStatusModels\RealTimeStatusPrintheadModels\RealTimeStatusUnsetPrintheadModel.cs" />
     <Compile Include="Models\RealTimeStatusModels\RealTimeStatusPrintheadModels\RealTimeStatusValvePrintheadModel.cs" />
     <Compile Include="Models\SerialCommunicationModels\ReportingModels\SerialMessageEventArgs.cs" />
-    <Compile Include="Models\SerialCommunicationModels\SerialCommunicationBGWModel.cs" />
     <Compile Include="Models\SerialCommunicationModels\SerialCommunicationOutgoingMessagesModel.cs" />
     <Compile Include="Models\RealTimeStatusModels\RealTimeStatusSerialInterpreterModel.cs" />
     <Compile Include="Models\SerialCommunicationModels\SerialCommunicationCommandSetsModel.cs" />
@@ -977,8 +976,6 @@
     <Resource Include="Resources\MainWindow\ErrorsAttention.png" />
     <Resource Include="Resources\MainWindow\ErrorsAttentionMouseOver.png" />
     <Resource Include="Resources\MainWindow\ErrorsMouseOver.png" />
-    <Resource Include="Resources\MainWindow\Load.png" />
-    <Resource Include="Resources\MainWindow\LoadMouseOver.png" />
     <Resource Include="Resources\MainWindow\MaximizeWindow.PNG" />
     <Resource Include="Resources\MainWindow\MaximizeWindowMouseOver.PNG" />
     <Resource Include="Resources\MainWindow\MinimizeWindow.PNG" />
@@ -989,11 +986,25 @@
     <Resource Include="Resources\MainWindow\PrinterSelected.png" />
     <Resource Include="Resources\MainWindow\PrintMouseOver.png" />
     <Resource Include="Resources\MainWindow\PrintSelected.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\MainWindow\ErrorsSelected.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ImageButtons\ResumeMicrocontroller.png" />
+    <Resource Include="Resources\ImageButtons\ResumeMicrocontrollerMouseOver.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ImageButtons\Abort.png" />
+    <Resource Include="Resources\ImageButtons\AbortMouseOver.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="Resources\MainWindow\Save.png" />
     <Resource Include="Resources\MainWindow\SaveMouseOver.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\MainWindow\ErrorsSelected.png" />
+    <Resource Include="Resources\MainWindow\Load.png" />
+    <Resource Include="Resources\MainWindow\LoadMouseOver.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

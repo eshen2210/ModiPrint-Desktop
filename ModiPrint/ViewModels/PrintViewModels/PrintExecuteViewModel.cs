@@ -28,7 +28,7 @@ namespace ModiPrint.ViewModels.PrintViewModels
         MicrocontrollerPaused, //In the process of printing but the microcontroller protocol is on pause. No actions can be taken except unpausing.
         PrintSequencePaused //In the process of printing but this program's protocol is on pause. Manual actions may be taken before resuming.
     }
-    
+
     /// <summary>
     /// Contains functions to begin Printing and perform pre-Print checks.
     /// </summary>
@@ -47,30 +47,15 @@ namespace ModiPrint.ViewModels.PrintViewModels
         private SerialMessageDisplayViewModel _serialMessageDisplayViewModel;
 
         //Current state of operations of the Printer.
-        private PrintStatus _printStatus = PrintStatus.Manual;
         public PrintStatus PrintStatus
         {
-            get { return _printStatus; }
+            get { return _realTimeStatusDataModel.PrintStatus; }
             set
             {
-                _printStatus = value;
+                _realTimeStatusDataModel.PrintStatus = value;
                 OnPropertyChanged("PrintStatus");
                 OnPropertyChanged("IsReadyToPrint");
             }
-        }
-
-        //Set to true if all serial communication should be halted.
-        public bool ShouldPauseMicrocontroller
-        {
-            get { return _serialCommunicationViewModel.SerialCommunicationMainModel.ShouldPauseMicrocontroller; }
-            set { _serialCommunicationViewModel.SerialCommunicationMainModel.ShouldPauseMicrocontroller = value; }
-        }
-
-        //Set to true to resume hardware operations after pausing.
-        public bool ShouldResume
-        {
-            get { return _serialCommunicationViewModel.SerialCommunicationMainModel.ShouldResumeMicrocontroller; }
-            set { _serialCommunicationViewModel.SerialCommunicationMainModel.ShouldResumeMicrocontroller = value; }
         }
 
         //Are various aspects of this program ready to execute a Print?
@@ -90,6 +75,13 @@ namespace ModiPrint.ViewModels.PrintViewModels
                     return false;
                 }
             }
+        }
+
+        //If true, display a menu to execute a print sequence abort.
+        private bool _abortPrompt = false;
+        public bool AbortPrompt
+        {
+            get { return _abortPrompt; }
         }
 
         public bool IsModiPrintGCodeReadyToPrint
@@ -137,13 +129,8 @@ namespace ModiPrint.ViewModels.PrintViewModels
         {
             //Queue each line of GCode for printing.
             string[] modiPrintGCodeArr = _modiPrintGCodeModel.GCodeStrToArr();
-            lock(_serialCommunicationOutgoingMessagesModel)
-            {
-                for (int line = 0; line < modiPrintGCodeArr.Length; line++)
-                {
-                    _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(modiPrintGCodeArr[line]);
-                }
-            }
+            List<string> modiPrintGCodeList = modiPrintGCodeArr.ToList<string>();
+            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(modiPrintGCodeList);
         }
 
         /// <summary>
@@ -170,7 +157,7 @@ namespace ModiPrint.ViewModels.PrintViewModels
         /// Linked to RecordSetMotorizedPrintheadExecutedEventHandler and RecordSetValvePrintheadExecutedEventHandler.
         /// Fires when a new Printhead is set.
         /// </summary>
-        private void UpdateActivePrintheadType()
+        private void UpdateActivePrintheadType(string printheadName)
         {
             OnPropertyChanged("IsActivePrintheadReadyToPrint");
         }
@@ -182,7 +169,6 @@ namespace ModiPrint.ViewModels.PrintViewModels
         private void UpdatePrintFinished(object sender)
         {
             PrintStatus = PrintStatus.Manual;
-            OnPropertyChanged("PrintStatus");
             if (_printCommand != null)
             { _printCommand.RaiseCanExecuteChanged(); }
         }
@@ -194,10 +180,9 @@ namespace ModiPrint.ViewModels.PrintViewModels
         /// <param name="sender"></param>
         private void UpdatePrintSequencePaused(object sender)
         {
-            if (_printStatus == PrintStatus.Printing)
+            if (PrintStatus == PrintStatus.Printing)
             {
                 PrintStatus = PrintStatus.PrintSequencePaused;
-                OnPropertyChanged("PrintStatus");
                 if (_resumeCommand != null)
                 { _resumeCommand.RaiseCanExecuteChanged(); }
             }
@@ -209,7 +194,7 @@ namespace ModiPrint.ViewModels.PrintViewModels
         /// </summary>
         private void UpdateLimitHit()
         {
-            if (_printStatus == PrintStatus.Printing)
+            if (PrintStatus == PrintStatus.Printing)
             {
                 PrintStatus = PrintStatus.MicrocontrollerPaused;
                 if (_pauseCommand != null)
@@ -217,9 +202,9 @@ namespace ModiPrint.ViewModels.PrintViewModels
                 if (_resumeCommand != null)
                 { _resumeCommand.RaiseCanExecuteChanged(); }
             }
-            else if (_printStatus == PrintStatus.Manual)
+            else if (PrintStatus == PrintStatus.Manual)
             {
-                ShouldResume = true;
+                _serialCommunicationViewModel.SerialCommunicationMainModel.ResumeMicrocontroller();
             }
         }
         #endregion
@@ -267,12 +252,12 @@ namespace ModiPrint.ViewModels.PrintViewModels
 
         public bool CanExecutePauseCommand(object notUsed)
         {
-            return (_printStatus == PrintStatus.Printing) ? true : false;
+            return (PrintStatus == PrintStatus.Printing) ? true : false;
         }
 
         public void ExecutePauseCommand(object notUsed)
         {
-            _serialCommunicationViewModel.SerialCommunicationMainModel.ShouldPauseMicrocontroller = true;
+            _serialCommunicationViewModel.SerialCommunicationMainModel.PauseMicrocontroller();
             PrintStatus = PrintStatus.MicrocontrollerPaused;
         }
 
@@ -292,21 +277,75 @@ namespace ModiPrint.ViewModels.PrintViewModels
 
         public bool CanExecuteResumeCommand(object notUsed)
         {
-            return ((_printStatus == PrintStatus.MicrocontrollerPaused) || (_printStatus == PrintStatus.PrintSequencePaused)) ? true : false;
+            return ((PrintStatus == PrintStatus.MicrocontrollerPaused) || (PrintStatus == PrintStatus.PrintSequencePaused)) ? true : false;
         }
 
         public void ExecuteResumeCommand(object notUsed)
         {
-            if (_printStatus == PrintStatus.MicrocontrollerPaused)
+            if (PrintStatus == PrintStatus.MicrocontrollerPaused)
             {
-                _serialCommunicationViewModel.SerialCommunicationMainModel.ShouldPauseMicrocontroller = false;
+                _serialCommunicationViewModel.SerialCommunicationMainModel.ResumeMicrocontroller();
             }
-            else if (_printStatus == PrintStatus.PrintSequencePaused)
+            else if (PrintStatus == PrintStatus.PrintSequencePaused)
             {
-                _serialCommunicationViewModel.SerialCommunicationMainModel.ShouldResumePrintSequence = true;
+                _serialCommunicationViewModel.SerialCommunicationMainModel.ResumePrintSequence();
             }
-            
-            PrintStatus = PrintStatus.Printing;
+
+            PrintStatus = (_serialCommunicationOutgoingMessagesModel.ContainsMessages()) ? PrintStatus.Printing : PrintStatus.Manual;
+        }
+
+        /// <summary>
+        /// Delete all entries in outgoing messages and wipe all memory in the microcontroller.
+        /// </summary>
+        private RelayCommand<bool> _abortCommand;
+        public ICommand AbortCommand
+        {
+            get
+            {
+                if (_abortCommand == null)
+                { _abortCommand = new RelayCommand<bool>(ExecuteAbortCommand, CanExecuteAbortCommand); }
+                return _abortCommand;
+            }
+        }
+
+        public bool CanExecuteAbortCommand(bool shouldAbort)
+        {
+            return (_serialCommunicationViewModel.SerialCommunicationMainModel.IsPortOpen) ? true : false;
+        }
+
+        public void ExecuteAbortCommand(bool shouldAbort)
+        {
+            if (shouldAbort == true)
+            {
+                _serialCommunicationViewModel.SerialCommunicationMainModel.SerialAbort();
+            }
+            _abortPrompt = false;
+            OnPropertyChanged("AbortPrompt");
+        }
+
+        /// <summary>
+        /// Switch menu to confirm abort.
+        /// </summary>
+        private RelayCommand<bool> _abortPromptCommand;
+        public ICommand AbortPromptCommand
+        {
+            get
+            {
+                if (_abortPromptCommand == null)
+                { _abortPromptCommand = new RelayCommand<bool>(ExecuteAbortPromptCommand, CanExecuteAbortPromptCommand); }
+                return _abortPromptCommand;
+            }
+        }
+
+        public bool CanExecuteAbortPromptCommand(bool shouldPrompt)
+        {
+            return (_serialCommunicationViewModel.SerialCommunicationMainModel.IsPortOpen) ? true : false;
+        }
+
+        public void ExecuteAbortPromptCommand(bool shouldPrompt)
+        {
+            _abortPrompt = shouldPrompt;
+            OnPropertyChanged("AbortPrompt");
         }
         #endregion
     }

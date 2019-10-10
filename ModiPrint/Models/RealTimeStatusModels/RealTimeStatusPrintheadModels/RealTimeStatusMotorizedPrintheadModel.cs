@@ -33,10 +33,11 @@ namespace ModiPrint.Models.RealTimeStatusModels.RealTimeStatusPrintheadModels
 
         //Current Limit Switch status of the Motorized Printhead.
         private LimitSwitchStatus _limitSwitchStatus = LimitSwitchStatus.NoLimit;
+        private readonly object _limitSwitchLock = new object();
         public LimitSwitchStatus LimitSwitchStatus
         {
-            get { return _limitSwitchStatus; }
-            set { _limitSwitchStatus = value; }
+            get { lock (_limitSwitchLock) { return _limitSwitchStatus; } }
+            set { lock (_limitSwitchLock) { _limitSwitchStatus = value; } }
         }
         #endregion
 

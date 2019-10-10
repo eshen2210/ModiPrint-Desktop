@@ -54,8 +54,6 @@ namespace ModiPrint.ViewModels
 
         private RealTimeStatusSerialInterpreterModel _realTimeStatusSerialInterpreterModel;
 
-        private SerialCommunicationBGWModel _serialCommunicationBGWModel;
-
         private GCodeModel _repRapGCodeModel;
 
         private GCodeModel _modiPrintGCodeModel;
@@ -171,8 +169,7 @@ namespace ModiPrint.ViewModels
             _serialCommunicationOutgoingMessagesModel = new SerialCommunicationOutgoingMessagesModel();
             _serialCommunicationMainModel = new SerialCommunicationMainModel(_serialCommunicationOutgoingMessagesModel, _printerModel, _printModel, _realTimeStatusDataModel, _errorListViewModel);
             _serialMessageDisplayViewModel = new SerialMessageDisplayViewModel();
-            _serialCommunicationBGWModel = new SerialCommunicationBGWModel(_serialCommunicationMainModel);
-            _serialCommunicationViewModel = new SerialCommunicationViewModel(_serialCommunicationMainModel, _serialCommunicationOutgoingMessagesModel, _serialCommunicationBGWModel, _serialMessageDisplayViewModel);
+            _serialCommunicationViewModel = new SerialCommunicationViewModel(_serialCommunicationMainModel, _serialCommunicationOutgoingMessagesModel, _serialMessageDisplayViewModel);
 
             //Printer View Model.
             _printerViewModel = new PrinterViewModel(_printerModel, _serialCommunicationMainModel.SerialCommunicationCommandSetsModel);
@@ -298,7 +295,7 @@ namespace ModiPrint.ViewModels
             }
         }
 
-        public bool CanExecuteSetMenuCommand(string notUsed)
+        public bool CanExecuteSetMenuCommand(string menu)
         {
             return true;
         }

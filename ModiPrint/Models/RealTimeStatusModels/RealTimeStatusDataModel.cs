@@ -12,13 +12,14 @@ using ModiPrint.DataTypes.GlobalValues;
 using ModiPrint.Models.RealTimeStatusModels.RealTimeStatusPrintheadModels;
 using ModiPrint.Models.RealTimeStatusModels.RealTimeStatusAxisModels;
 using ModiPrint.ViewModels;
+using ModiPrint.ViewModels.PrintViewModels;
 
 namespace ModiPrint.Models.RealTimeStatusModels
 {
     //Events that are fired when their respective command has been interpreted and recorded.
-    public delegate void RecordSetAxisExecutedEventHandler(char axisID);
-    public delegate void RecordSetMotorizedPrintheadExecutedEventHandler();
-    public delegate void RecordSetValvePrintheadExecutedEventHandler();
+    public delegate void RecordSetAxisExecutedEventHandler(string axisName);
+    public delegate void RecordSetMotorizedPrintheadExecutedEventHandler(string printheadName);
+    public delegate void RecordSetValvePrintheadExecutedEventHandler(string printheadName);
     public delegate void RecordMoveAxesExecutedEventHandler();
     public delegate void RecordMotorizedPrintWithMovementExecutedEventHandler();
     public delegate void RecordValvePrintWithMovementExecutedEventHandler();
@@ -51,23 +52,27 @@ namespace ModiPrint.Models.RealTimeStatusModels
         #region Fields and Properties
         //Contains data and functions related to the Printer.
         private PrinterModel _printerModel;
+        public PrinterModel PrinterModel
+        {
+            get { return _printerModel; }
+        }
 
         //Tasks that are in the process of execution by the microcontroller.
         //These tasks are removed from the list as task completed messages are received.
         private ObservableCollection<string> _taskQueuedMessagesList = new ObservableCollection<string>();
-        public ObservableCollection<string> TaskQueuedMessagesList
-        {
-            get { return _taskQueuedMessagesList; }
-        }
 
         //Messages that arise out of the normal order of command -> execution (emergency messages, etc.)
         private ObservableCollection<string> _statusMessagesList = new ObservableCollection<string>();
-        public ObservableCollection<string> StatusMessagesList
-        {
-            get { return _statusMessagesList; }
-        }
 
         //Parameters of the Printer.
+
+        //Current state of operations of the Printer.
+        private PrintStatus _printStatus = PrintStatus.Manual;
+        public PrintStatus PrintStatus
+        {
+            get { return _printStatus; }
+            set { _printStatus = value; }
+        }
 
         //Parameters of each Axis.
         private RealTimeStatusAxisModel _xRealTimeStatusAxisModel;
@@ -115,24 +120,24 @@ namespace ModiPrint.Models.RealTimeStatusModels
         #region Events
         //Events that are fired when their respective command has been interpreted and recorded.
         public event RecordSetAxisExecutedEventHandler RecordSetAxisExecuted;
-        private void OnRecordSetAxisExecuted(char axisID)
+        private void OnRecordSetAxisExecuted(string axisName)
         {
             if (RecordSetAxisExecuted != null)
-            { RecordSetAxisExecuted(axisID); }
+            { RecordSetAxisExecuted(axisName); }
         }
 
         public event RecordSetMotorizedPrintheadExecutedEventHandler RecordSetMotorizedPrintheadExecuted;
-        private void OnRecordSetMotorizedPrintheadExecuted()
+        private void OnRecordSetMotorizedPrintheadExecuted(string printheadName)
         {
             if (RecordSetMotorizedPrintheadExecuted != null)
-            { RecordSetMotorizedPrintheadExecuted(); }
+            { RecordSetMotorizedPrintheadExecuted(printheadName); }
         }
 
         public event RecordSetValvePrintheadExecutedEventHandler RecordSetValvePrintheadExecuted;
-        private void OnRecordSetValvePrintheadExecuted()
+        private void OnRecordSetValvePrintheadExecuted(string printheadName)
         {
             if (RecordSetValvePrintheadExecuted != null)
-            { RecordSetValvePrintheadExecuted(); }
+            { RecordSetValvePrintheadExecuted(printheadName); }
         }
 
         public event RecordMoveAxesExecutedEventHandler RecordMoveAxesExecuted;
@@ -227,7 +232,10 @@ namespace ModiPrint.Models.RealTimeStatusModels
         /// <param name="taskQueuedMessage"></param>
         public void RecordTaskQueued(string taskQueuedMessage)
         {
-            TaskQueuedMessagesList.Add(taskQueuedMessage);
+            lock(_taskQueuedMessagesList)
+            {
+                _taskQueuedMessagesList.Add(taskQueuedMessage);
+            }
 
             OnTaskQueuedMessagesUpdated(taskQueuedMessage);
         }
@@ -237,10 +245,60 @@ namespace ModiPrint.Models.RealTimeStatusModels
         /// </summary>
         public void RecordTaskCompleted()
         {
-            string taskQueuedMessage = TaskQueuedMessagesList[0];
-            TaskQueuedMessagesList.RemoveAt(0);
-
+            string taskQueuedMessage = "";
+            lock (_taskQueuedMessagesList)
+            {
+                taskQueuedMessage = _taskQueuedMessagesList[0];
+                _taskQueuedMessagesList.RemoveAt(0);
+            }
             OnTaskQueuedMessagesUpdated(taskQueuedMessage);
+        }
+
+        /// <summary>
+        /// Returns true if the TaskQueuedMessagesList contains messages.
+        /// </summary>
+        /// <returns></returns>
+        public bool TaskQueuedMessagesListContainsMessages()
+        {
+            lock (_taskQueuedMessagesList)
+            {
+                return (_taskQueuedMessagesList.Count > 0) ? true : false;
+            }
+        }
+
+        /// <summary>
+        /// Returns true if there are no entries in the TaskQueuedMessagesList.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsTaskQueuedEmpty()
+        {
+            lock(_taskQueuedMessagesList)
+            {
+                return (_taskQueuedMessagesList.Count == 0) ? true : false;
+            }
+        }
+
+        /// <summary>
+        /// Returns the zero index of the TaskQueuedMessagesList.
+        /// </summary>
+        /// <returns></returns>
+        public string RetrieveNextTaskQueuedMessage()
+        {
+            lock(_taskQueuedMessagesList)
+            {
+                return _taskQueuedMessagesList[0];
+            }
+        }
+
+        /// <summary>
+        /// Remove the zero index of the TaskQueuedMessagesList.
+        /// </summary>
+        public void RemoveNextTaskQueuedMessage()
+        {
+            lock(_taskQueuedMessagesList)
+            {
+                _taskQueuedMessagesList.RemoveAt(0);
+            }
         }
 
         /// <summary>
@@ -249,8 +307,11 @@ namespace ModiPrint.Models.RealTimeStatusModels
         /// <param name="statusMessage"></param>
         public void RecordStatusMessage(string statusMessage)
         {
-            StatusMessagesList.Add(statusMessage);
-
+            lock(_statusMessagesList)
+            {
+                _statusMessagesList.Add(statusMessage);
+            }
+            
             OnStatusMessagesUpdated(statusMessage);
         }
 
@@ -299,7 +360,7 @@ namespace ModiPrint.Models.RealTimeStatusModels
             }
 
             //Notify other classes.
-            OnRecordSetAxisExecuted(axisID);
+            OnRecordSetAxisExecuted(axisName);
         }
 
         /// <summary>
@@ -323,7 +384,7 @@ namespace ModiPrint.Models.RealTimeStatusModels
             _activePrintheadModel = new RealTimeStatusMotorizedPrintheadModel(printheadName, convertedMaxSpeed, convertedAcceleration);
 
             //Notify other classes.
-            OnRecordSetMotorizedPrintheadExecuted();
+            OnRecordSetMotorizedPrintheadExecuted(printheadName);
         }
 
         /// <summary>
@@ -337,7 +398,7 @@ namespace ModiPrint.Models.RealTimeStatusModels
             _activePrintheadModel = new RealTimeStatusValvePrintheadModel(printheadName);
 
             //Notify other classes.
-            OnRecordSetValvePrintheadExecuted();
+            OnRecordSetValvePrintheadExecuted(printheadName);
         }
 
         /// <summary>

@@ -59,7 +59,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
         {
             get
             {
-                return (_realTimeStatusDataModel.TaskQueuedMessagesList.Count == 0) ? true : false;
+                return (_realTimeStatusDataModel.IsTaskQueuedEmpty()) ? true : false;
             }
         }
 
@@ -105,7 +105,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
         /// </summary>
         /// <param name="commandSeries"></param>
         /// <returns></returns>
-        public string[] InterpretCommandSet(string commandSet)
+        public List<string> InterpretCommandSet(string commandSet)
         {
             //The first character of the command set is reserved for the command set serial character.
             if ((commandSet.Length >= 7)
@@ -152,10 +152,10 @@ namespace ModiPrint.Models.SerialCommunicationModels
         /// </summary>
         /// <param name="commandSet"></param>
         /// <returns></returns>
-        private string[] InterpretCenterAxes(string commandSet)
+        private List<string> InterpretCenterAxes(string commandSet)
         {
             //Command set to be returned.
-            string[] returnCommands = new string[1];
+            List<string> returnCommands = new List<string>();
 
             AxisModel xAxisModel = _printerModel.AxisModelList[0];
             AxisModel yAxisModel = _printerModel.AxisModelList[1];
@@ -210,12 +210,12 @@ namespace ModiPrint.Models.SerialCommunicationModels
             }
 
             double unused = 0;
-            returnCommands[0] = GCodeLinesConverter.GCodeLinesListToString(
+            returnCommands.Add(GCodeLinesConverter.GCodeLinesListToString(
                 WriteG00.WriteAxesMovement(
                 xmmPerStep, ymmPerStep, 0, 
                 xNewPosition - xRealTimeStatusAxisModel.Position, yNewPosition - yRealTimeStatusAxisModel.Position, 0,
                 xInvertDirection, yInvertDirection, false,
-                ref unused, ref unused, ref unused));
+                ref unused, ref unused, ref unused)));
 
             return returnCommands;
         }
@@ -225,7 +225,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
         /// </summary>
         /// <param name="commandSet"></param>
         /// <returns></returns>
-        private string[] InterpretSetOrigin(string commandSet)
+        private List<string> InterpretSetOrigin(string commandSet)
         {
             //Remove "*Origin" from the beginning of the string.
             commandSet = commandSet.Substring(6);
@@ -278,7 +278,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
                 _realTimeStatusDataModel.ZRealTimeStatusAxisModel.Position = 0;
             }
 
-            OnCommandSetPositionChanged();
+            OnCommandSetMinMaxPositionChanged();
             OnCommandSetMinMaxPositionChanged();
 
             //No commands to return.
@@ -290,7 +290,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
         /// </summary>
         /// <param name="commandSet"></param>
         /// <returns></returns>
-        private string[] InterpretSetMinMaxPosition(string commandSet)
+        private List<string> InterpretSetMinMaxPosition(string commandSet)
         {
             //Remove "*SetMinMaxPos" from the beginning of the command set.
             commandSet = commandSet.Substring(12);
@@ -321,8 +321,11 @@ namespace ModiPrint.Models.SerialCommunicationModels
                                     motorizedPrintheadTypeModel.MaxPosition = realTimeStatusMotorizedPrintheadModel.Position;
                                     motorizedPrintheadTypeModel.MinPosition += ePositionDifference;
                                     break;
+                                default:
+                                    //Set position value only.
+                                    //Do nothing here.
+                                    break;
                             }
-                            
                         }   
                         break;
                     case 'X':
@@ -344,6 +347,10 @@ namespace ModiPrint.Models.SerialCommunicationModels
                             case 'M':
                                 xAxisModel.MaxPosition = xRealTimeStatusAxisModel.Position;
                                 xAxisModel.MinPosition += xPositionDifference;
+                                break;
+                            default:
+                                //Set position value only.
+                                //Do nothing here.
                                 break;
                         }
                         break;
@@ -367,6 +374,10 @@ namespace ModiPrint.Models.SerialCommunicationModels
                                 yAxisModel.MaxPosition = yRealTimeStatusAxisModel.Position;
                                 yAxisModel.MinPosition += yPositionDifference;
                                 break;
+                            default:
+                                //Set position value only.
+                                //Do nothing here.
+                                break;
                         }
                         break;
                     case 'Z':
@@ -389,12 +400,17 @@ namespace ModiPrint.Models.SerialCommunicationModels
                                 zAxisModel.MaxPosition = zRealTimeStatusAxisModel.Position;
                                 zAxisModel.MinPosition += zPositionDifference;
                                 break;
+                            default:
+                                //Set position value only.
+                                //Do nothing here.
+                                break;
                         }
 
                         break;
                 }
             }
 
+            OnCommandSetPositionChanged();
             OnCommandSetMinMaxPositionChanged();
 
             //No commands to return.
@@ -406,10 +422,10 @@ namespace ModiPrint.Models.SerialCommunicationModels
         /// </summary>
         /// <param name="commandSet"></param>
         /// <returns></returns>
-        private string[] InterpretRetractZ(string commandSet)
+        private List<string> InterpretRetractZ(string commandSet)
         {
             //Command set to be returned.
-            string[] returnCommands = new string[2];
+            List<string> returnCommands = new List<string>();
 
             //Find the retracting Z Axis.
             AxisModel zAxisModel = _printerModel.FindAxis(_realTimeStatusDataModel.ZRealTimeStatusAxisModel.Name);
@@ -426,9 +442,9 @@ namespace ModiPrint.Models.SerialCommunicationModels
         /// </summary>
         /// <param name="zAxisModel"></param>
         /// <returns></returns>
-        private string[] RetractZ(string commandSet, AxisModel zAxisModel)
+        private List<string> RetractZ(string commandSet, AxisModel zAxisModel)
         {
-            string[] returnCommands = new string[2];
+            List<string> returnCommands = new List<string>();
 
             if (zAxisModel != null)
             {
@@ -446,7 +462,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
                         0, 0, retractDistance,
                         false, false, zDirectionInverted,
                         ref unused, ref unused, ref unused));
-                    returnCommands[0] = zRetract;
+                    returnCommands.Add(zRetract);
 
                     //Move away from the Limit Switch to default position.
                     string zMoveAwayFromLimit = GCodeLinesConverter.GCodeLinesListToString(
@@ -455,7 +471,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
                         0, 0, -1 * GlobalValues.LimitBuffer,
                         false, false, zAxisModel.IsDirectionInverted,
                         ref unused, ref unused, ref unused));
-                    returnCommands[1] = zMoveAwayFromLimit;
+                    returnCommands.Add(zMoveAwayFromLimit);
                 }
                 else //If the CommandSet is "RetractZ", then move to default position without hitting the Limit Switch.
                 {
@@ -467,9 +483,8 @@ namespace ModiPrint.Models.SerialCommunicationModels
                         0, 0, retractDistance,
                         false, false, zDirectionInverted,
                         ref unused, ref unused, ref unused));
-                    returnCommands[0] = zRetract;
+                    returnCommands.Add(zRetract);
                 }
-                
 
                 return returnCommands;
             }
@@ -482,7 +497,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
         /// </summary>
         /// <param name="commandSet"></param>
         /// <returns></returns>
-        private string[] InterpretPause(string commandSet)
+        private List<string> InterpretPause(string commandSet)
         {
             //Remove "*Pause" from the beginning of the command set.
             commandSet = commandSet.Substring(6);
@@ -503,9 +518,10 @@ namespace ModiPrint.Models.SerialCommunicationModels
         /// </summary>
         /// <param name="commandSet"></param>
         /// <returns></returns>
-        private string[] InterpretPrintPause(string commandSet)
+        private List<string> InterpretPrintPause(string commandSet)
         {
-            string[] returnCommands = { "?" };
+            List<string> returnCommands = new List<string>();
+            returnCommands.Add(SerialMessageCharacters.SerialPrintPauseCharacter.ToString());
 
             return returnCommands;
         }
@@ -515,7 +531,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
         /// </summary>
         /// <param name="commandSet"></param>
         /// <returns></returns>
-        private string[] InterpretSwitchMaterial(string commandSet)
+        private List<string> InterpretSwitchMaterial(string commandSet)
         {
             //Remove "*SwitchMaterial" from the beginning of the command set.
             commandSet = commandSet.Substring(14);
@@ -538,9 +554,11 @@ namespace ModiPrint.Models.SerialCommunicationModels
             PrintheadModel currentPrintheadModel = _printerModel.FindPrinthead(_realTimeStatusDataModel.ActivePrintheadModel.Name);
             PrintheadModel newPrintheadModel = materialModel.PrintheadModel;
 
-            //References to the XY Axes and new Z Axis.
+            //References to the Z Axis on the current Printhead.
             AxisModel currentZAxisModel = _printerModel.FindAxis(currentPrintheadModel.AttachedZAxisModel.Name);
             int currentZLimitPinID = (currentZAxisModel.AttachedLimitSwitchGPIOPinModel != null) ? currentZAxisModel.AttachedLimitSwitchGPIOPinModel.PinID : GlobalValues.PinIDNull;
+
+            //References to the XY Axes and new Z Axis.
             AxisModel xAxisModel = _printerModel.AxisModelList[0];
             int xLimitPinID = (xAxisModel.AttachedLimitSwitchGPIOPinModel != null) ? xAxisModel.AttachedLimitSwitchGPIOPinModel.PinID : GlobalValues.PinIDNull;
             AxisModel yAxisModel = _printerModel.AxisModelList[1];
@@ -555,7 +573,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
                 //2. Retract the previous Printhead / Z Axis.
                 returnCommands.Add(_writeSetAxisModel.WriteSetAxis('Z', currentZAxisModel.AttachedMotorStepGPIOPinModel.PinID, currentZAxisModel.AttachedMotorDirectionGPIOPinModel.PinID,
                     currentZAxisModel.StepPulseTime, currentZLimitPinID, currentZAxisModel.MaxSpeed, currentZAxisModel.MaxAcceleration, currentZAxisModel.MmPerStep));
-                string[] retractZ = RetractZ("", currentPrintheadModel.AttachedZAxisModel);
+                List<string> retractZ = RetractZ("", currentPrintheadModel.AttachedZAxisModel);
                 foreach (string command in retractZ)
                 {
                     if (!String.IsNullOrWhiteSpace(command))
@@ -576,7 +594,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
                     zAxisModel.StepPulseTime, zLimitPinID, zAxisModel.MaxSpeed, zAxisModel.MaxAcceleration, zAxisModel.MmPerStep));
                 //4.Move to the new Offset at max speeds.
                 double zPosition = _realTimeStatusDataModel.ZRealTimeStatusAxisModel.Position;
-                string[] moveToOffset = WriteMoveToOffset(newPrintheadModel, currentPrintheadModel, zPosition);
+                List<string> moveToOffset = WriteMoveToOffset(newPrintheadModel, currentPrintheadModel, zPosition);
                 foreach (string command in moveToOffset)
                 {
                     if (!String.IsNullOrWhiteSpace(command))
@@ -601,7 +619,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
             string setNewPrinthead = _setWritePrintheadModel.SetWritePrinthead(newPrintheadModel);
             returnCommands.Add(setNewPrinthead);
 
-            return returnCommands.ToArray<string>();
+            return returnCommands;
         }
 
         /// <summary>
@@ -612,10 +630,9 @@ namespace ModiPrint.Models.SerialCommunicationModels
         /// <param name="currentPrinthead"></param>
         /// <param name="zPosition">Relative position of the Z Axis before and after switching.</param>
         /// <returns></returns>
-        private string[] WriteMoveToOffset(PrintheadModel newPrinthead, PrintheadModel currentPrinthead, double zPosition)
+        private List<string> WriteMoveToOffset(PrintheadModel newPrinthead, PrintheadModel currentPrinthead, double zPosition)
         {
-            string[] returnCommands = new string[5];
-            int returnIndex = 0;
+            List<string> returnCommands = new List<string>();
 
             AxisModel xAxisModel = _printerModel.AxisModelList[0];
             AxisModel yAxisModel = _printerModel.AxisModelList[1];
@@ -623,29 +640,34 @@ namespace ModiPrint.Models.SerialCommunicationModels
 
             double xMove = newPrinthead.XOffset - currentPrinthead.XOffset;
             double yMove = newPrinthead.YOffset - currentPrinthead.YOffset;
-            double zMove = -1 * (newPrinthead.AttachedZAxisModel.MaxPosition - GlobalValues.LimitBuffer) + zPosition;
+            double zMove = 0;
+            if (newPrinthead.AttachedZAxisModel.Name != _realTimeStatusDataModel.ZRealTimeStatusAxisModel.Name)
+            {
+                //If a new Z actuator is requried.
+                zMove = -1 * (newPrinthead.AttachedZAxisModel.MaxPosition - GlobalValues.LimitBuffer) + zPosition;
+            }
 
             //Move to the X and Y offsets first to prevent bumping of print container walls.
             double unused = 0;
             if ((xMove != 0) || (yMove != 0))
             {
                 //Maximize movement speeds before moving to offset.
-                returnCommands[returnIndex++] = _writeSetAxisModel.WriteSetAxis(_printerModel.AxisModelList[0]) + "\r\n";
-                returnCommands[returnIndex++] = _writeSetAxisModel.WriteSetAxis(_printerModel.AxisModelList[1]) + "\r\n";
-                returnCommands[returnIndex++] = GCodeLinesConverter.GCodeLinesListToString(
+                returnCommands.Add(_writeSetAxisModel.WriteSetAxis(_printerModel.AxisModelList[0]));
+                returnCommands.Add(_writeSetAxisModel.WriteSetAxis(_printerModel.AxisModelList[1]));
+                returnCommands.Add(GCodeLinesConverter.GCodeLinesListToString(
                     WriteG00.WriteAxesMovement(xAxisModel.MmPerStep, yAxisModel.MmPerStep, 0,
                     xMove, yMove, 0, xAxisModel.IsDirectionInverted, yAxisModel.IsDirectionInverted, false,
-                    ref unused, ref unused, ref unused)) + "\r\n";
+                    ref unused, ref unused, ref unused)));
             }
 
             //Move the Z offset after the X and Y positions are set.
             if (zMove != 0)
             {
-                returnCommands[returnIndex++] = _writeSetAxisModel.WriteSetAxis(newPrinthead.AttachedZAxisModel) + "\r\n";
-                returnCommands[returnIndex++] = GCodeLinesConverter.GCodeLinesListToString(
+                returnCommands.Add(_writeSetAxisModel.WriteSetAxis(newPrinthead.AttachedZAxisModel));
+                returnCommands.Add(GCodeLinesConverter.GCodeLinesListToString(
                     WriteG00.WriteAxesMovement(0, 0, zAxisModel.MmPerStep,
                     0, 0, zMove, false, false, zAxisModel.IsDirectionInverted,
-                    ref unused, ref unused, ref unused)) + "\r\n";
+                    ref unused, ref unused, ref unused)));
             }
 
             return returnCommands;
