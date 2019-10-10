@@ -306,4 +306,6 @@ F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\bin\Debug\zh-Hant\System.Windows.Interactivity.resources.dll
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\CalibrationViews\FindLimitSettings.g.cs
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\CalibrationViews\FindLimitSettings.baml
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\ModiPrint.csprojResolveAssemblyReference.cache
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\ModiPrint.csprojAssemblyReference.cache
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\ModiPrint.csproj.CoreCompileInputs.cache
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\ModiPrint.csproj.CopyComplete

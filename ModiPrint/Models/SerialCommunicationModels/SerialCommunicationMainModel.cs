@@ -318,6 +318,9 @@ namespace ModiPrint.Models.SerialCommunicationModels
         public void SerialAbort()
         {
             _serialCommunicationOutgoingMessagesModel.ClearProspectiveOutgoingMessages();
+            _realTimeStatusDataModel.Abort();
+
+            _shouldSend = true;
 
             //Send a message to the microcontroller to resume all hardware operations.
             _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(SerialMessageCharacters.SerialMovementBufferClearCharacter.ToString());

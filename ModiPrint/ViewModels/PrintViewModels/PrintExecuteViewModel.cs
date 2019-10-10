@@ -321,6 +321,8 @@ namespace ModiPrint.ViewModels.PrintViewModels
             }
             _abortPrompt = false;
             OnPropertyChanged("AbortPrompt");
+
+            PrintStatus = PrintStatus.Manual;
         }
 
         /// <summary>

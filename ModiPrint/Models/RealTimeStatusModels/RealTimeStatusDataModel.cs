@@ -720,6 +720,28 @@ namespace ModiPrint.Models.RealTimeStatusModels
             //Notify other classes.
             OnRecordLimitExecuted();
         }
+
+        /// <summary>
+        /// Called when an abort is executed.
+        /// Clears various values.
+        /// </summary>
+        /// <returns></returns>
+        public void Abort()
+        {
+            //Wipe the task queued messages list.
+            lock (_taskQueuedMessagesList)
+            {
+                _taskQueuedMessagesList.Clear();
+            }
+
+            //Valve printheads would be shut off.
+            if (_activePrintheadType == PrintheadType.Valve)
+            {
+                RealTimeStatusValvePrintheadModel valvePrinthead = (RealTimeStatusValvePrintheadModel)_activePrintheadModel;
+                valvePrinthead.IsValveOn = false;
+            }
+        }
+
         #endregion
     }
 }
