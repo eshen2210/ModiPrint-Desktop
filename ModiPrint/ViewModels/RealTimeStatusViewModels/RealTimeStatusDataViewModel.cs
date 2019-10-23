@@ -4,10 +4,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ModiPrint.Models.PrinterModels.AxisModels;
 using ModiPrint.Models.RealTimeStatusModels;
 using ModiPrint.Models.RealTimeStatusModels.RealTimeStatusPrintheadModels;
 using ModiPrint.Models.SerialCommunicationModels;
 using ModiPrint.Models.PrinterModels.PrintheadModels.PrintheadTypeModels;
+using ModiPrint.ViewModels.PrinterViewModels;
+using ModiPrint.ViewModels.PrinterViewModels.AxisViewModels;
+using ModiPrint.ViewModels.PrinterViewModels.PrintheadViewModels;
 using ModiPrint.ViewModels.RealTimeStatusViewModels.RealTimeStatusPrintheadViewModels;
 using ModiPrint.ViewModels.RealTimeStatusViewModels.RealTimeStatusAxisViewModels;
 
@@ -22,6 +26,7 @@ namespace ModiPrint.ViewModels.RealTimeStatusViewModels
         {
             get { return _realTimeStatusDataModel; }
         }
+        private PrinterViewModel _printerViewModel;
 
         //Fires events that updates the Position property of RealTimeStatusDataModel equipment.
         private SerialCommunicationCommandSetsModel _serialCommunicationCommandSetsModel;
@@ -67,17 +72,14 @@ namespace ModiPrint.ViewModels.RealTimeStatusViewModels
         #endregion
 
         #region Constructor
-        public RealTimeStatusDataViewModel(RealTimeStatusDataModel RealTimeStatusDataModel, SerialCommunicationCommandSetsModel SerialCommunicationCommandSetsModel, ErrorListViewModel ErrorListViewModel)
+        public RealTimeStatusDataViewModel(RealTimeStatusDataModel RealTimeStatusDataModel, PrinterViewModel PrinterViewModel, SerialCommunicationCommandSetsModel SerialCommunicationCommandSetsModel, ErrorListViewModel ErrorListViewModel)
         {
             _realTimeStatusDataModel = RealTimeStatusDataModel;
+            _printerViewModel = PrinterViewModel;
             _serialCommunicationCommandSetsModel = SerialCommunicationCommandSetsModel;
             _errorListViewModel = ErrorListViewModel;
 
-            _xRealTimeStatusAxisViewModel = new RealTimeStatusAxisViewModel(_realTimeStatusDataModel.XRealTimeStatusAxisModel);
-            _yRealTimeStatusAxisViewModel = new RealTimeStatusAxisViewModel(_realTimeStatusDataModel.YRealTimeStatusAxisModel);
-            _zRealTimeStatusAxisViewModel = new RealTimeStatusAxisViewModel(_realTimeStatusDataModel.ZRealTimeStatusAxisModel);
-
-            UpdateSetPrinthead("unused");
+            Initialize();
 
             //Subscribe to events.
             _realTimeStatusDataModel.RecordSetAxisExecuted += new RecordSetAxisExecutedEventHandler(UpdateRecordSetAxis);
@@ -94,18 +96,56 @@ namespace ModiPrint.ViewModels.RealTimeStatusViewModels
 
             _realTimeStatusDataModel.RecordLimitExecuted += new RecordLimitExecutedEventHandler(UpdatePositions);
 
+            _realTimeStatusDataModel.RealTimeStatusDataAborted += new RealTimeStatusDataAbortedEventHandler(Abort);
+
             _serialCommunicationCommandSetsModel.CommandSetPositionChanged += new CommandSetPositionChangedEventHandler(UpdatePositions);
         }
         #endregion
 
         #region Methods
         /// <summary>
+        /// Set initial data for all Axes and Printheads.
+        /// </summary>
+        private void Initialize()
+        {
+            _xRealTimeStatusAxisViewModel = new RealTimeStatusAxisViewModel(_realTimeStatusDataModel.XRealTimeStatusAxisModel);
+            _yRealTimeStatusAxisViewModel = new RealTimeStatusAxisViewModel(_realTimeStatusDataModel.YRealTimeStatusAxisModel);
+            _zRealTimeStatusAxisViewModel = new RealTimeStatusAxisViewModel(_realTimeStatusDataModel.ZRealTimeStatusAxisModel);
+            OnPropertyChanged("XRealTimeStatusAxisViewModel");
+            OnPropertyChanged("YRealTimeStatusAxisViewModel");
+            OnPropertyChanged("ZRealTimeStatusAxisViewModel");
+
+            foreach (AxisViewModel axisViewModel in _printerViewModel.AxisViewModelList)
+            {
+                axisViewModel.AxisStatus = AxisStatus.Idle;
+            }
+
+            foreach (PrintheadViewModel printheadViewModel in _printerViewModel.PrintheadViewModelList)
+            {
+                printheadViewModel.PrintheadStatus = PrintheadStatus.Idle;
+            }
+
+            UpdateSetPrinthead("unused");
+        }
+
+        /// <summary>
+        /// Reset all data to blank.
+        /// </summary>
+        private void Abort()
+        {
+            Initialize();
+
+            
+        }
+
+        /// <summary>
         /// Calls the OnPropertyChanged event and updates properties related to the Set Axis command.
         /// </summary>
         private void UpdateRecordSetAxis(string axisName)
         {
-            char axisID;
-            axisID = _realTimeStatusDataModel.PrinterModel.FindAxis(axisName).AxisID;
+            char axisID = '0';
+            AxisModel axisModel = _realTimeStatusDataModel.PrinterModel.FindAxis(axisName);
+            if (axisModel != null) { axisID = axisModel.AxisID; }
 
             switch (axisID)
             {

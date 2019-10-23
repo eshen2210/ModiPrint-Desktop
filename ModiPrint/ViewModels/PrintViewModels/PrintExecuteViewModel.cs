@@ -11,9 +11,11 @@ using ModiPrint.Models.GCodeModels;
 using ModiPrint.Models.SerialCommunicationModels;
 using ModiPrint.Models.RealTimeStatusModels;
 using ModiPrint.Models.PrinterModels.PrintheadModels.PrintheadTypeModels;
+using ModiPrint.Models.ManualControlModels;
 using ModiPrint.ViewModels.PrintViewModels;
 using ModiPrint.ViewModels.GCodeManagerViewModels;
 using ModiPrint.ViewModels.SerialCommunicationViewModels;
+using ModiPrint.ViewModels.ManualControlViewModels;
 
 namespace ModiPrint.ViewModels.PrintViewModels
 {
@@ -23,7 +25,8 @@ namespace ModiPrint.ViewModels.PrintViewModels
     /// </summary>
     public enum PrintStatus
     {
-        Manual, //Idle or executing manual/calibration commands.
+        Manual, //Idle or executing manual commands.
+        Calibration, //Executing calibration sequence.
         Printing, //In the process of printing.
         MicrocontrollerPaused, //In the process of printing but the microcontroller protocol is on pause. No actions can be taken except unpausing.
         PrintSequencePaused //In the process of printing but this program's protocol is on pause. Manual actions may be taken before resuming.
@@ -41,6 +44,7 @@ namespace ModiPrint.ViewModels.PrintViewModels
         private GCodeManagerViewModel _gCodeManagerViewModel;
         private SerialCommunicationViewModel _serialCommunicationViewModel;
         private RealTimeStatusDataModel _realTimeStatusDataModel;
+        private CalibrationViewModel _calibrationViewModel;
 
         //Contains function for outputting and receiving messages from the serial communicator.
         private SerialCommunicationOutgoingMessagesModel _serialCommunicationOutgoingMessagesModel;
@@ -52,11 +56,15 @@ namespace ModiPrint.ViewModels.PrintViewModels
             get { return _realTimeStatusDataModel.PrintStatus; }
             set
             {
+                _previousPrintStatus = PrintStatus;
                 _realTimeStatusDataModel.PrintStatus = value;
                 OnPropertyChanged("PrintStatus");
                 OnPropertyChanged("IsReadyToPrint");
             }
         }
+
+        //Previous state of operation of the Printer.
+        private PrintStatus _previousPrintStatus = PrintStatus.Manual;
 
         //Are various aspects of this program ready to execute a Print?
         public bool IsReadyToPrint
@@ -101,12 +109,15 @@ namespace ModiPrint.ViewModels.PrintViewModels
         #endregion
 
         #region Constructor
-        public PrintExecuteViewModel(GCodeModel ModiPrintGCodeModel, GCodeManagerViewModel GCodeManagerViewModel, RealTimeStatusDataModel RealTimeStatusDataModel,
-            SerialCommunicationViewModel SerialCommunicationViewModel, SerialCommunicationOutgoingMessagesModel SerialCommunicationOutgoingMessagesModel, SerialMessageDisplayViewModel SerialMessageDisplayViewModel)
+        public PrintExecuteViewModel(GCodeModel ModiPrintGCodeModel, GCodeManagerViewModel GCodeManagerViewModel, 
+            RealTimeStatusDataModel RealTimeStatusDataModel, CalibrationViewModel CalibrationViewModel,
+            SerialCommunicationViewModel SerialCommunicationViewModel, SerialCommunicationOutgoingMessagesModel SerialCommunicationOutgoingMessagesModel, 
+            SerialMessageDisplayViewModel SerialMessageDisplayViewModel)
         {
             _modiPrintGCodeModel = ModiPrintGCodeModel;
             _gCodeManagerViewModel = GCodeManagerViewModel;
             _realTimeStatusDataModel = RealTimeStatusDataModel;
+            _calibrationViewModel = CalibrationViewModel;
             _serialCommunicationViewModel = SerialCommunicationViewModel;
             _serialCommunicationOutgoingMessagesModel = SerialCommunicationOutgoingMessagesModel;
             _serialMessageDisplayViewModel = SerialMessageDisplayViewModel;
@@ -115,9 +126,13 @@ namespace ModiPrint.ViewModels.PrintViewModels
             _serialCommunicationViewModel.SerialCommunicationMainModel.SerialConnectionChanged += new SerialConnectionChangedEventHandler(UpdateSerialConnection);
             _serialCommunicationViewModel.SerialCommunicationMainModel.SerialCommunicationCompleted += new SerialCommunicationCompletedEventHandler(UpdatePrintFinished);
             _serialCommunicationViewModel.SerialCommunicationMainModel.SerialCommunicationPrintSequencePaused += new SerialCommunicationPrintSequencePausedEventHandler(UpdatePrintSequencePaused);
+            _serialCommunicationViewModel.SerialCommunicationMainModel.SerialCommunicationMicrocontrollerResumed += new SerialCommunicationMicrocontrollerResumedEventHandler(UpdateMicrocontrollerResumed);
+
             _realTimeStatusDataModel.RecordSetMotorizedPrintheadExecuted += new RecordSetMotorizedPrintheadExecutedEventHandler(UpdateActivePrintheadType);
             _realTimeStatusDataModel.RecordSetValvePrintheadExecuted += new RecordSetValvePrintheadExecutedEventHandler(UpdateActivePrintheadType);
             _realTimeStatusDataModel.RecordLimitExecuted += new RecordLimitExecutedEventHandler(UpdateLimitHit);
+
+            _calibrationViewModel.CalibrationModel.CalibrationBegun += new CalibrationBegunEventHandler(UpdateCalibrationBegun);
         }
         #endregion
 
@@ -202,10 +217,29 @@ namespace ModiPrint.ViewModels.PrintViewModels
                 if (_resumeCommand != null)
                 { _resumeCommand.RaiseCanExecuteChanged(); }
             }
-            else if (PrintStatus == PrintStatus.Manual)
+            else if ((PrintStatus == PrintStatus.Calibration)
+                  || (PrintStatus == PrintStatus.Manual))
             {
                 _serialCommunicationViewModel.SerialCommunicationMainModel.ResumeMicrocontroller();
             }
+        }
+
+        /// <summary>
+        /// Linked to the SerialCommunicationsMicrocontrollerResumedEventHandler.
+        /// Fires when a microcontroller resumed message is sent.
+        /// </summary>
+        private void UpdateMicrocontrollerResumed(object sender)
+        {
+            PrintStatus = _previousPrintStatus;
+        }
+
+        /// <summary>
+        /// Lined to the CalibrationBegunEventHandler.
+        /// Fires when a calibration sequence has begun.
+        /// </summary>
+        private void UpdateCalibrationBegun()
+        {
+            PrintStatus = PrintStatus.Calibration;
         }
         #endregion
 

@@ -17,6 +17,9 @@ using ModiPrint.ViewModels;
 
 namespace ModiPrint.Models.ManualControlModels
 {
+    //Fires when a calibration sequence has begun.
+    public delegate void CalibrationBegunEventHandler();
+    
     /// <summary>
     /// Contains functions that automatically calibrate the Printer's position and range.
     /// </summary>
@@ -45,6 +48,16 @@ namespace ModiPrint.Models.ManualControlModels
 
             ParametersModel parametersModel = new ParametersModel(_printerModel, null);
             _writeSetAxisModel = new WriteSetAxisModel(parametersModel);
+        }
+        #endregion
+
+        #region Events
+        //Fires when a calibration sequence has begun.
+        public CalibrationBegunEventHandler CalibrationBegun;
+        private void OnCalibrationBegun()
+        {
+            if (CalibrationBegun != null)
+            { CalibrationBegun(); }
         }
         #endregion
 
@@ -126,6 +139,8 @@ namespace ModiPrint.Models.ManualControlModels
                 yAxis.IsDirectionInverted, false, false,
                 ref unused, ref unused, ref unused));
             _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(yMoveAwayFromLimit);
+
+            OnCalibrationBegun();
         }
 
         /// <summary>
@@ -146,6 +161,8 @@ namespace ModiPrint.Models.ManualControlModels
             //Center the X and Y actuators.
             _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(SerialMessageCharacters.SerialCommandSetCharacter + "Center X" + xDistanceFromCenter + " Y" + yDistanceFromCenter);
             _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(SerialMessageCharacters.SerialCommandSetCharacter + "OriginXY");
+
+            OnCalibrationBegun();
         }
 
         /// <summary>
@@ -175,6 +192,8 @@ namespace ModiPrint.Models.ManualControlModels
             //Retracts the Z Axis up to a short distance away from the Limit Switch (does not hit the Limit Switch).
             string retractZ = SerialMessageCharacters.SerialCommandSetCharacter + "RetractZLimit";
             _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(retractZ);
+
+            OnCalibrationBegun();
         }
 
         /// <summary>

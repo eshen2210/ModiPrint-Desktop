@@ -17,14 +17,18 @@ namespace ModiPrint.ViewModels.ManualControlViewModels
     {
         #region Fields and Properties
         //Contains functions that automatically calibrate the Printer's position and range.
-        CalibrationModel _calibrationModel;
-        ManualControlViewModel _manualControlViewModel;
+        private CalibrationModel _calibrationModel;
+        public CalibrationModel CalibrationModel
+        {
+            get { return _calibrationModel; }
+        }
+        private ManualControlViewModel _manualControlViewModel;
 
         //Displays information on the Printer's parameters during operations.
-        RealTimeStatusDataViewModel _realTimeStatusDataViewModel;
+        private RealTimeStatusDataViewModel _realTimeStatusDataViewModel;
 
         //Contains Printer parameters.
-        PrinterViewModel _printerViewModel;
+        private PrinterViewModel _printerViewModel;
 
         //Parameters for setting the movement speeds of hitting all limit switches.
         //In mm/s.

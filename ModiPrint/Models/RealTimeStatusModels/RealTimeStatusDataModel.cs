@@ -30,6 +30,9 @@ namespace ModiPrint.Models.RealTimeStatusModels
     //Events that are fired when their respective statuses have been interpreted and recorded.
     public delegate void RecordLimitExecutedEventHandler();
 
+    //Events that are fired when the print sequence is aborted.
+    public delegate void RealTimeStatusDataAbortedEventHandler();
+
     //Event that is fired when the respective notification lists are updated.
     public delegate void TaskQueuedMessagesUpdatedEventHandler(string taskQueuedMessage);
     public delegate void StatusMessagesUpdatedEventHandler(string statusMessage);
@@ -189,6 +192,13 @@ namespace ModiPrint.Models.RealTimeStatusModels
             { RecordLimitExecuted(); }
         }
 
+        public event RealTimeStatusDataAbortedEventHandler RealTimeStatusDataAborted;
+        private void OnRealTimeStatusDataAborted()
+        {
+            if (RealTimeStatusDataAborted != null)
+            { RealTimeStatusDataAborted(); }
+        }
+
         public event TaskQueuedMessagesUpdatedEventHandler TaskQueuedMessagesUpdated;
         private void OnTaskQueuedMessagesUpdated(string taskQueuedMessage)
         {
@@ -216,6 +226,16 @@ namespace ModiPrint.Models.RealTimeStatusModels
         {
             _printerModel = PrinterModel;
 
+            InitializeRealTimeStatusDataModel();
+        }
+        #endregion
+
+        #region Methods        
+        /// <summary>
+        /// Set initial values for all data.
+        /// </summary>
+        private void InitializeRealTimeStatusDataModel()
+        {
             _xRealTimeStatusAxisModel = new RealTimeStatusAxisModel("Unset", 0, 0, 0);
             _yRealTimeStatusAxisModel = new RealTimeStatusAxisModel("Unset", 0, 0, 0);
             _zRealTimeStatusAxisModel = new RealTimeStatusAxisModel("Unset", 0, 0, 0);
@@ -223,9 +243,7 @@ namespace ModiPrint.Models.RealTimeStatusModels
             _activePrintheadType = PrintheadType.Unset;
             _activePrintheadModel = new RealTimeStatusUnsetPrintheadModel("Unset");
         }
-        #endregion
 
-        #region Methods        
         /// <summary>
         /// Adds another entry to the Task Queued Messages list.
         /// </summary>
@@ -734,12 +752,10 @@ namespace ModiPrint.Models.RealTimeStatusModels
                 _taskQueuedMessagesList.Clear();
             }
 
-            //Valve printheads would be shut off.
-            if (_activePrintheadType == PrintheadType.Valve)
-            {
-                RealTimeStatusValvePrintheadModel valvePrinthead = (RealTimeStatusValvePrintheadModel)_activePrintheadModel;
-                valvePrinthead.IsValveOn = false;
-            }
+            //Reset data.
+            InitializeRealTimeStatusDataModel();
+
+            OnRealTimeStatusDataAborted();
         }
 
         #endregion

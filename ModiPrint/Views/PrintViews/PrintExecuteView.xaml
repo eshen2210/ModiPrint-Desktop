@@ -56,6 +56,24 @@
                                             <Setter Property="Visibility" Value="Visible"/>
                                         </MultiDataTrigger.Setters>
                                     </MultiDataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.PrintSequencePaused}"/>
+                                            <Condition Binding="{Binding AbortPrompt}" Value="false"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <MultiDataTrigger.Setters>
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </MultiDataTrigger.Setters>
+                                    </MultiDataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.MicrocontrollerPaused}"/>
+                                            <Condition Binding="{Binding AbortPrompt}" Value="false"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <MultiDataTrigger.Setters>
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </MultiDataTrigger.Setters>
+                                    </MultiDataTrigger>
                                     <Trigger Property="IsMouseOver" Value="true">
                                         <Setter TargetName="Image" Property="Source"
                                                 Value="/Resources/ImageButtons/AbortMouseOver.png"/>
@@ -167,6 +185,9 @@
                                     <vControl:OpaqueClickableImage x:Name="Image" Source="/Resources/ImageButtons/Print.png"/>
                                     <ControlTemplate.Triggers>
                                         <DataTrigger Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.Manual}">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding PrintStats}" Value="{x:Static vmPrint:PrintStatus.Calibration}">
                                             <Setter Property="Visibility" Value="Visible"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding IsReadyToPrint}" Value="false">
@@ -305,11 +326,18 @@
 
                         <!--Printer Manual-->
                         <DataTemplate x:Key="PrinterManualTemplate">
-                            <TextBlock Text=""
+                            <TextBlock Text="Idle"
                                        FontSize="{DynamicResource HeaderControlFontSize}"
                                        Style="{DynamicResource ThematicTextBlock}"/>
                         </DataTemplate>
 
+                        <!--Printer Calibrating-->
+                        <DataTemplate x:Key="PrinterCalibratingTemplate">
+                            <TextBlock Text="Calibrating"
+                                       FontSize="{DynamicResource HeaderControlFontSize}"
+                                       Style="{DynamicResource ThematicTextBlock}"/>
+                        </DataTemplate>
+                        
                         <!--Printer Printing-->
                         <DataTemplate x:Key="PrinterPrintingTemplate">
                             <TextBlock Text="Printing"
@@ -354,6 +382,11 @@
                                     <!--Printer Manual-->
                                     <DataTrigger Binding="{Binding PrintStatus}"  Value="{x:Static vmPrint:PrintStatus.Manual}">
                                         <Setter Property="ContentTemplate" Value="{StaticResource PrinterManualTemplate}"/>
+                                    </DataTrigger>
+                                    
+                                    <!--Printer Calibration-->
+                                    <DataTrigger Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.Calibration}">
+                                        <Setter Property="ContentTemplate" Value="{StaticResource PrinterCalibratingTemplate}"/>
                                     </DataTrigger>
 
                                     <!--Printer Paused-->

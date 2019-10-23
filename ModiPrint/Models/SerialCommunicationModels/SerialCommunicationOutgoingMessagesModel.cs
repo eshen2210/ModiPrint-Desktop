@@ -19,7 +19,9 @@ namespace ModiPrint.Models.SerialCommunicationModels
         Unset, //Should never be the case
         Normal, //Send the command as is to the microcontroller.
         CommandSet, //Command set that needs to be interpreted into normal commands.
-        PausePrintSequence //Pause the print sequence. No message is sent through the microcontroller.
+        PausePrintSequence, //Pause the print sequence. No message is sent through the microcontroller.
+        ResumeMicrocontroller, //Resume print sequence. No message is sent through the microcontroller.
+        PauseMicrocontroller, //Pause print sequence.
     }
 
     /// <summary>
@@ -56,7 +58,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
         /// <param name="prospectiveOutgoingMessage"></param>
         public void AppendProspectiveOutgoingMessage(string prospectiveOutgoingMessage)
         {
-            lock(_prospectiveOutgoingMessageList)
+            lock (_prospectiveOutgoingMessageList)
             {
                 if (!String.IsNullOrWhiteSpace(prospectiveOutgoingMessage))
                 { _prospectiveOutgoingMessageList.Add(prospectiveOutgoingMessage); }
@@ -70,7 +72,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
         /// <param name="prospectiveOutgoingMessages"></param>
         public void AppendProspectiveOutgoingMessage(List<string> prospectiveOutgoingMessages)
         {
-            lock(_prospectiveOutgoingMessageList)
+            lock (_prospectiveOutgoingMessageList)
             {
                 if ((prospectiveOutgoingMessages != null)
                  && (prospectiveOutgoingMessages.Count > 0))
@@ -87,7 +89,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
         /// <param name="prospectiveOutgoingMessage"></param>
         public void QueueNextProspectiveOutgoingMessage(string prospectiveOutgoingMessage)
         {
-            lock(_prospectiveOutgoingMessageList)
+            lock (_prospectiveOutgoingMessageList)
             {
                 if (!String.IsNullOrWhiteSpace(prospectiveOutgoingMessage))
                 { _prospectiveOutgoingMessageList.Insert(0, prospectiveOutgoingMessage); }
@@ -101,7 +103,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
         /// <param name="prospectiveOutgoingMessageList"></param>
         public void QueueNextProspectiveOutgoingMessage(List<string> prospectiveOutgoingMessages)
         {
-            lock(_prospectiveOutgoingMessageList)
+            lock (_prospectiveOutgoingMessageList)
             {
                 if ((prospectiveOutgoingMessages != null)
                  && (prospectiveOutgoingMessages.Count > 0))
@@ -124,7 +126,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
         /// <returns></returns>
         public string RetrieveNextProspectiveOutgoingMessage()
         {
-            lock(_prospectiveOutgoingMessageList)
+            lock (_prospectiveOutgoingMessageList)
             {
                 string prospectiveOutgoingMessage = "";
 
@@ -141,7 +143,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
         /// <returns></returns>
         public bool ContainsMessages()
         {
-            lock(_prospectiveOutgoingMessageList)
+            lock (_prospectiveOutgoingMessageList)
             {
                 return (_prospectiveOutgoingMessageList.Count == 0) ? false : true;
             }
@@ -166,6 +168,14 @@ namespace ModiPrint.Models.SerialCommunicationModels
                     {
                         return MessageType.PausePrintSequence;
                     }
+                    else if (_prospectiveOutgoingMessageList[0][0] == SerialMessageCharacters.SerialResumeHardwareCharacter)
+                    {
+                        return MessageType.ResumeMicrocontroller;
+                    }
+                    else if (_prospectiveOutgoingMessageList[0][0] == SerialMessageCharacters.SerialPauseHardwareCharacter)
+                    {
+                        return MessageType.PauseMicrocontroller;
+                    }
                     else
                     {
                         return MessageType.Normal;
@@ -178,33 +188,43 @@ namespace ModiPrint.Models.SerialCommunicationModels
         }
 
         /// <summary>
-        /// Returns true if the next message signifies print pause.
+        /// Removes the index zero of the ProspectiveOutgoingMessagesList.
         /// </summary>
-        /// <returns></returns>
-        public bool IsNextMessagePausePrint()
+        public void RemoveNextMessage()
         {
-            lock(_prospectiveOutgoingMessageList)
+            lock (_prospectiveOutgoingMessageList)
             {
-                if ((_prospectiveOutgoingMessageList.Count > 0)
-                 && (_prospectiveOutgoingMessageList[0][0] == SerialMessageCharacters.SerialPrintPauseCharacter))
+                _prospectiveOutgoingMessageList.RemoveAt(0);
+            }
+        }
+
+        /// <summary>
+        /// Remove the next messages that are pause print sequence characters.
+        /// </summary>
+        public void RemoveNextPausePrints()
+        {
+            lock (_prospectiveOutgoingMessageList)
+            {
+                //Remove the pause message.
+                while (NextMessageType() == MessageType.PausePrintSequence)
                 {
-                    return true;
-                }
-                else
-                {
-                    return false;
+                    RemoveNextMessage();
                 }
             }
         }
 
         /// <summary>
-        /// Removes the index zero of the ProspectiveOutgoingMessagesList.
+        /// Remove the next messages that are pause microcontroller characters.
         /// </summary>
-        public void RemoveNextMessage()
+        public void RemoveNextPauseMicrocontroller()
         {
-            lock(_prospectiveOutgoingMessageList)
+            lock (_prospectiveOutgoingMessageList)
             {
-                _prospectiveOutgoingMessageList.RemoveAt(0);
+                //Remove the pause message.
+                while (NextMessageType() == MessageType.PauseMicrocontroller)
+                {
+                    RemoveNextMessage();
+                }
             }
         }
 
@@ -213,7 +233,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
         /// </summary>
         public void ClearProspectiveOutgoingMessages()
         {
-            lock(_prospectiveOutgoingMessageList)
+            lock (_prospectiveOutgoingMessageList)
             {
                 _prospectiveOutgoingMessageList.Clear();
             }

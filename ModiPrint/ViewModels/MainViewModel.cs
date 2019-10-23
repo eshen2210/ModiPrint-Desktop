@@ -179,7 +179,7 @@ namespace ModiPrint.ViewModels
 
             //Real Time Status.
             _realTimeStatusSerialInterpreterModel = new RealTimeStatusSerialInterpreterModel(_serialCommunicationMainModel, _printerModel, _printerViewModel, _realTimeStatusDataModel, _errorListViewModel);
-            _realTimeStatusDataViewModel = new RealTimeStatusDataViewModel(_realTimeStatusDataModel, _serialCommunicationMainModel.SerialCommunicationCommandSetsModel, _errorListViewModel);
+            _realTimeStatusDataViewModel = new RealTimeStatusDataViewModel(_realTimeStatusDataModel, _printerViewModel, _serialCommunicationMainModel.SerialCommunicationCommandSetsModel, _errorListViewModel);
 
             //Manual Commmands and Calibration.
             _manualControlModel = new ManualControlModel(_printerModel, _serialCommunicationOutgoingMessagesModel, _realTimeStatusDataModel);
@@ -195,7 +195,7 @@ namespace ModiPrint.ViewModels
             _gcodeManagerViewModel = new GCodeManagerViewModel(_repRapGCodeModel, _modiPrintGCodeModel, _gCodeFileManagerModel, _gCodeConverterBGWModel);
 
             //Printing.
-            _printExecuteViewModel = new PrintExecuteViewModel(_modiPrintGCodeModel, _gcodeManagerViewModel, _realTimeStatusDataModel, _serialCommunicationViewModel, _serialCommunicationOutgoingMessagesModel, _serialMessageDisplayViewModel);
+            _printExecuteViewModel = new PrintExecuteViewModel(_modiPrintGCodeModel, _gcodeManagerViewModel, _realTimeStatusDataModel, _calibrationViewModel, _serialCommunicationViewModel, _serialCommunicationOutgoingMessagesModel, _serialMessageDisplayViewModel);
 
             //Settings.
             _saveLoadViewModel = new SaveLoadViewModel(_gcodeManagerViewModel, _printerViewModel, _printViewModel, _errorListViewModel);
