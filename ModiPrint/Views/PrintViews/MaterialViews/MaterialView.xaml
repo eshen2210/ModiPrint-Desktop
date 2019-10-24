@@ -140,14 +140,14 @@
                         </StackPanel>
                         <!--#endregion-->
 
-                        <!--#region Toggle PauseBeforeActivating/Deactivating-->
+                        <!--#region Toggle PauseAfterActivating/Deactivating-->
                         <StackPanel Orientation="Horizontal"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Left"
                                     Height="{DynamicResource StandardControlHeight}">
 
                             <TextBlock Width="{DynamicResource NarrowControlWidth}"/>
-                            <TextBlock Text="Pause Before Activating    "
+                            <TextBlock Text="Pause After Activating      "
                                        Style="{DynamicResource ThematicTextBlock}"/>
                             <Grid>
                                 <Grid.Resources>
@@ -156,13 +156,13 @@
                                             <ResourceDictionary Source="/Views/GlobalResources.xaml"/>
                                         </ResourceDictionary.MergedDictionaries>
 
-                                        <Style x:Key="ThematicPauseBeforeActivatingTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ThematicTextBlock}">
+                                        <Style x:Key="ThematicPauseAfterActivatingTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ThematicTextBlock}">
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding ElementName=tgbtnPauseBeforeActivating, Path=IsChecked}" Value="False">
+                                                <DataTrigger Binding="{Binding ElementName=tgbtnPauseAfterActivating, Path=IsChecked}" Value="False">
                                                     <Setter Property="Text" Value="False"/>
                                                     <Setter Property="HorizontalAlignment" Value="Right"/>
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding ElementName=tgbtnPauseBeforeActivating, Path=IsChecked}" Value="True">
+                                                <DataTrigger Binding="{Binding ElementName=tgbtnPauseAfterActivating, Path=IsChecked}" Value="True">
                                                     <Setter Property="Text" Value="True"/>
                                                     <Setter Property="HorizontalAlignment" Value="Left"/>
                                                 </DataTrigger>
@@ -172,21 +172,21 @@
                                     </ResourceDictionary>
                                 </Grid.Resources>
 
-                                <ToggleButton Name="tgbtnPauseBeforeActivating"
-                                              IsChecked="{Binding Path=PauseBeforeActivating}"
+                                <ToggleButton Name="tgbtnPauseAfterActivating"
+                                              IsChecked="{Binding Path=PauseAfterActivating}"
                                               Style="{DynamicResource ThematicToggleButton}"
                                               Width="{DynamicResource StandardToggleButtonWidth}">
                                     <ToggleButton.ToolTip>
                                         <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                                            Pause a print sequence before switching to this material.
+                                            Pause a print sequence after switching to this material.
                                             <LineBreak/>
                                             This allows you to manually execute commands under the Control menu before the print sequence continues.
                                             <LineBreak/>
-                                            This was mainly made to unclog printheads before switching printheads.
+                                            This was mainly implemented to unclog printheads after switching printheads.
                                         </TextBlock>
                                     </ToggleButton.ToolTip>
                                 </ToggleButton>
-                                <TextBlock Style="{StaticResource ThematicPauseBeforeActivatingTextBlock}"
+                                <TextBlock Style="{StaticResource ThematicPauseAfterActivatingTextBlock}"
                                            IsHitTestVisible="False"
                                            Width="{DynamicResource NarrowControlWidth}"/>
                             </Grid>
@@ -235,7 +235,7 @@
                                             <LineBreak/>
                                             This allows you to manually execute commands under the Control menu before the print sequence continues.
                                             <LineBreak/>
-                                            This was mainly made to unclog printheads before switching printheads.
+                                            This was mainly implemented to unclog printheads before switching printheads.
                                         </TextBlock>
                                     </ToggleButton.ToolTip>
                                 </ToggleButton>

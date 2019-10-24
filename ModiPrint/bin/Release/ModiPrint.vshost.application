@@ -7,14 +7,14 @@
     <framework targetVersion="4.5.2" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="ModiPrint.exe.manifest" size="7594">
+    <dependentAssembly dependencyType="install" codebase="ModiPrint.exe.manifest" size="18767">
       <assemblyIdentity name="ModiPrint.exe" version="1.0.0.0" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>DmMyRsYr6bDvR8USoId5GXJq3qlA1hlnvDFWfXxXxbQ=</dsig:DigestValue>
+        <dsig:DigestValue>S6+a0prx11ht14d4YKaYaX8UtXQRkivka/RB0YFoQog=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

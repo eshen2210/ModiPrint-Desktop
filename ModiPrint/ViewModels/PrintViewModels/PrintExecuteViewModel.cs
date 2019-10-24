@@ -291,8 +291,8 @@ namespace ModiPrint.ViewModels.PrintViewModels
 
         public void ExecutePauseCommand(object notUsed)
         {
-            _serialCommunicationViewModel.SerialCommunicationMainModel.PauseMicrocontroller();
-            PrintStatus = PrintStatus.MicrocontrollerPaused;
+            _serialCommunicationViewModel.SerialCommunicationMainModel.PausePrintSequence();
+            PrintStatus = PrintStatus.PrintSequencePaused;
         }
 
         /// <summary>

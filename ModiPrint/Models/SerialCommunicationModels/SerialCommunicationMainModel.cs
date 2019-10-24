@@ -234,7 +234,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
 
                             goto MethodStart;
                         case MessageType.PausePrintSequence:
-                            PausePrintSequence();
+                            OnSerialCommunicationPrintSequencePaused();
                             break;
                         case MessageType.PauseMicrocontroller:
                             SendMessage(_serialCommunicationOutgoingMessagesModel.RetrieveNextProspectiveOutgoingMessage());
@@ -270,6 +270,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
         /// <returns></returns>
         public void PausePrintSequence()
         {
+            _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(SerialMessageCharacters.SerialPrintPauseCharacter.ToString());
             OnSerialCommunicationPrintSequencePaused();
         }
 

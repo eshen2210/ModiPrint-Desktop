@@ -118,9 +118,8 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessTCommandMod
                     _parametersModel.ResetDropletPrintParameters(null, matchingMaterial);
                 }
 
-                //Pause the print sequence before switching to the next Material if applicable.
-                if (((currentMaterial.Name != "Unset") && (currentMaterial.PauseBeforeDeactivating == true))
-                 || (matchingMaterial.PauseBeforeActivating == true))
+                //If applicable, pause the print sequence before switching to the next Material.
+                if ((currentMaterial.Name != "Unset") && (currentMaterial.PauseBeforeDeactivating == true))
                 {
                     ConvertedGCodeLine printPause = new ConvertedGCodeLine(SerialMessageCharacters.SerialPrintPauseCharacter.ToString());
                     convertedGCodeLinesList.Add(printPause);
@@ -133,6 +132,13 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessTCommandMod
                 //This Command Set will convert to the commands for retracting the Z Axis, switching Printheads, moving Offsets, and setting new movement speeds.
                 string convertedGCodeLine = SerialMessageCharacters.SerialCommandSetCharacter + "SwitchMaterial " + '"' + matchingMaterial.Name + '"';
                 convertedGCodeLinesList.Add(new ConvertedGCodeLine(convertedGCodeLine));
+
+                //If applicable pause the print sequence here.
+                if (matchingMaterial.PauseAfterActivating == true)
+                {
+                    ConvertedGCodeLine printPause = new ConvertedGCodeLine(SerialMessageCharacters.SerialPrintPauseCharacter.ToString());
+                    convertedGCodeLinesList.Add(printPause);
+                }
             }
             catch when ((currentMaterial.Name == "Unset") || (matchingMaterial == null) || (currentMaterial == null)) //Catch unset Material.
             {

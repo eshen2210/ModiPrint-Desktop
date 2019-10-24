@@ -144,13 +144,13 @@ namespace ModiPrint.Models.PrintModels.MaterialModels
             set { _junctionDeviation = value; }
         }
 
-        //Pause a print sequence before switching to or switching from this Material.
-        //Manual actions will still fire during this pause.
-        private bool _pauseBeforeActivating = false;
-        public bool PauseBeforeActivating
+        //Pause a print sequence after switching to or before switching from this Material.
+        //Manual actions may still be fire during this pause.
+        private bool _pauseAfterActivating = false;
+        public bool PauseAfterActivating
         {
-            get { return _pauseBeforeActivating; }
-            set { _pauseBeforeActivating = value; }
+            get { return _pauseAfterActivating; }
+            set { _pauseAfterActivating = value; }
         }
 
         private bool _pauseBeforeDeactivating = false;

@@ -153,6 +153,4 @@ F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Release\Views\PrintViews\GCodeManagerViews\GCodeManagerView.baml
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Release\Views\StatusAndControlViews\CalibrationViews\FindLimitSettings.baml
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Release\Views\UnsetMainWindow.baml
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Release\ModiPrint.csprojAssemblyReference.cache
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Release\ModiPrint.csproj.CoreCompileInputs.cache
-F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Release\ModiPrint.csproj.CopyComplete
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Release\ModiPrint.csprojResolveAssemblyReference.cache

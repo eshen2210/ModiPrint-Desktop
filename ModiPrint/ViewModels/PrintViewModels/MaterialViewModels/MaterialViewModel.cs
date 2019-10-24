@@ -149,10 +149,10 @@ namespace ModiPrint.ViewModels.PrintViewModels.MaterialViewModels
 
         //Pause a print sequence before switching to or switching from this Material.
         //Manual actions will still fire during this pause.
-        public bool PauseBeforeActivating
+        public bool PauseAfterActivating
         {
-            get { return _materialModel.PauseBeforeActivating; }
-            set { _materialModel.PauseBeforeActivating = value; }
+            get { return _materialModel.PauseAfterActivating; }
+            set { _materialModel.PauseAfterActivating = value; }
         }
 
         public bool PauseBeforeDeactivating
