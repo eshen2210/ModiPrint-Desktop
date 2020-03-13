@@ -38,7 +38,7 @@
                                    Width="{DynamicResource NarrowControlWidth}"/>
                         <TextBox Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=5}, 
                                                 Path= DataContext.CalibrationViewModel.XDistanceFromCenter, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                                UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
                                  Style="{DynamicResource ThematicTextBox}"
                                  Width="{DynamicResource StandardControlWidth}">
                             <TextBox.InputBindings>
@@ -69,7 +69,7 @@
                                    Width="{DynamicResource NarrowControlWidth}"/>
                         <TextBox Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=5}, 
                                                 Path= DataContext.CalibrationViewModel.YDistanceFromCenter, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                                UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
                                  Style="{DynamicResource ThematicTextBox}"
                                  Width="{DynamicResource StandardControlWidth}">
                             <TextBox.InputBindings>

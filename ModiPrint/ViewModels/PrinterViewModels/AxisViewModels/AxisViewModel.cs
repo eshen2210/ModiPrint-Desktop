@@ -155,6 +155,20 @@ namespace ModiPrint.ViewModels.PrinterViewModels.AxisViewModels
             {
                 _axisModel.MmPerStep = value;
                 OnPropertyChanged("MmPerStep");
+                OnPropertyChanged("UmPerStep");
+            }
+        }
+
+        //Distance per step of the Axis.
+        //In micrometers per step.
+        public double UmPerStep
+        {
+            get { return _axisModel.MmPerStep * 1000; }
+            set
+            {
+                _axisModel.MmPerStep = value / 1000;
+                OnPropertyChanged("MmPerStep");
+                OnPropertyChanged("UmPerStep");
             }
         }
 

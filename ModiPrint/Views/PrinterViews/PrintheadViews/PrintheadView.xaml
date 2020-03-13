@@ -142,7 +142,7 @@
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource StandardControlWidth}"/>
                                 <TextBox Text="{Binding Path=XOffset, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
                                          Style="{DynamicResource ThematicTextBox}"
                                          Width="{DynamicResource WideControlWidth}">
                                     <TextBox.ToolTip>
@@ -170,7 +170,7 @@
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource StandardControlWidth}"/>
                                 <TextBox Text="{Binding Path=YOffset, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
                                          Style="{DynamicResource ThematicTextBox}"
                                          Width="{DynamicResource WideControlWidth}">
                                     <TextBox.ToolTip>
@@ -198,7 +198,7 @@
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource StandardControlWidth}"/>
                                 <TextBox Text="{Binding Path=AttachedZAxisViewModel.MaxPosition, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
                                          Style="{DynamicResource ThematicTextBox}"
                                          Width="{DynamicResource WideControlWidth}">
                                     <TextBox.ToolTip>

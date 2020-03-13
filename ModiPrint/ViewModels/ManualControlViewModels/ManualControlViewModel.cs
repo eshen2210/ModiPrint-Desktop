@@ -255,6 +255,15 @@ namespace ModiPrint.ViewModels.ManualControlViewModels
             set { _valveOpenTime = (value >= 0) ? value : _valveOpenTime; }
         }
 
+        //Used to set the open time parameter for any open valve command.
+        //In units of ms.
+        private int _valveOpenTimeMs = 0;
+        public int ValveOpenTimeMs
+        {
+            get { return _valveOpenTime / 1000; }
+            set { ValveOpenTime = (value * 1000); }
+        }
+
         //Parameters for droplet printing.
 
         //Distance between each droplet.
@@ -583,6 +592,7 @@ namespace ModiPrint.ViewModels.ManualControlViewModels
 
             _valveOpenTime = 0;
             OnPropertyChanged("ValveOpenTime");
+            OnPropertyChanged("ValveOpenTimeMs");
 
             _menu = "Base";
             OnPropertyChanged("Menu");
@@ -621,6 +631,7 @@ namespace ModiPrint.ViewModels.ManualControlViewModels
             _valveOpenTime = 0;
             OnPropertyChanged("InterpolateDistance");
             OnPropertyChanged("ValveOpenTime");
+            OnPropertyChanged("ValveOpenTimeMs");
 
             _menu = "Base";
             OnPropertyChanged("Menu");

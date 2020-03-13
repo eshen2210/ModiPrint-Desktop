@@ -42,10 +42,7 @@
     <SolidColorBrush x:Key="PrimaryColor">Teal</SolidColorBrush>
     <SolidColorBrush x:Key="SecondaryColor">Turquoise</SolidColorBrush>
     <SolidColorBrush x:Key="TertiaryColor">Gold</SolidColorBrush>
-    
-    <!--TextBox Delay-->
-    <System:Int32 x:Key="TextBoxDelay">350</System:Int32>
-    
+
     <!--ToolTipService Values-->
     <System:Int32 x:Key="ToolTipServiceShowDuration">120000</System:Int32>
     

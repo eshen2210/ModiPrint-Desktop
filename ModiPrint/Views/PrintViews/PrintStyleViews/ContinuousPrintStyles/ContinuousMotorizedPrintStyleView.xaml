@@ -27,7 +27,7 @@
                            Style="{DynamicResource ThematicTextBlock}"
                            Width="{DynamicResource ExtraWideControlWidth}"/>
                 <TextBox Text="{Binding Path=MotorizedDispensePerMmMovement, Mode=TwoWay, 
-                                        UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
                          Style="{DynamicResource ThematicTextBox}"
                          Width="{DynamicResource StandardControlWidth}">
                     <TextBox.ToolTip>
@@ -54,7 +54,7 @@
                            Style="{DynamicResource ThematicTextBlock}"
                            Width="{DynamicResource ExtraWideControlWidth}"/>
                 <TextBox Text="{Binding Path=MotorizedDispenseRetractionDistance, Mode=TwoWay, 
-                                        UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
                          Style="{DynamicResource ThematicTextBox}"
                          Width="{DynamicResource StandardControlWidth}">
                     <TextBox.ToolTip>

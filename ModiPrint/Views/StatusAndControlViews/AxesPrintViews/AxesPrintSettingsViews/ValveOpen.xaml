@@ -35,8 +35,8 @@
                         <TextBlock Text="Open Duration"
                                    Style="{DynamicResource ThematicTextBlock}"
                                    Width="{DynamicResource StandardControlWidth}"/>
-                        <TextBox Text="{Binding Path=ValveOpenTime, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                        <TextBox Text="{Binding Path=ValveOpenTimeMs, Mode=TwoWay, 
+                                                UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
                                  Style="{DynamicResource ThematicTextBox}"
                                  Width="{DynamicResource StandardControlWidth}">
                             <TextBox.InputBindings>
@@ -52,7 +52,7 @@
                                     </TextBlock>
                                 </TextBox.ToolTip>
                         </TextBox>
-                        <TextBlock Text="us"
+                        <TextBlock Text="ms"
                                    Style="{DynamicResource ThematicTextBlock}"
                                    Width="{DynamicResource NarrowControlWidth}"/>
                     </StackPanel>

@@ -65,7 +65,7 @@
                         Style="{DynamicResource ThematicTextBlock}"
                         Width="{DynamicResource WideControlWidth}"/>
             <TextBox Text="{Binding Path=PercentPerMm, Mode=TwoWay, StringFormat={}{0}%,
-                                    UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                    UpdateSourceTrigger=PropertyChanged}"
                      Style="{DynamicResource ThematicTextBox}"
                      Width="{DynamicResource StandardControlWidth}">
                 <TextBox.ToolTip>
@@ -109,7 +109,7 @@
                        Style="{DynamicResource ThematicTextBlock}"
                        Width="15"/>
             <TextBox Text="{Binding Path=X1, Mode=TwoWay, 
-                                    UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                    UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
                      Style="{DynamicResource ThematicTextBox}"
                      Width="80">
                 <TextBox.ToolTip>
@@ -120,7 +120,7 @@
                        Style="{DynamicResource ThematicTextBlock}"
                        Width="15"/>
             <TextBox Text="{Binding Path=Y1, Mode=TwoWay, 
-                                    UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                    UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
                      Style="{DynamicResource ThematicTextBox}"
                      Width="80">
                 <TextBox.ToolTip>
@@ -131,7 +131,7 @@
                        Style="{DynamicResource ThematicTextBlock}"
                        Width="15"/>
             <TextBox Text="{Binding Path=Z1, Mode=TwoWay, 
-                                    UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                    UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
                      Style="{DynamicResource ThematicTextBox}"
                      Width="80">
                 <TextBox.ToolTip>
@@ -173,7 +173,7 @@
                        Style="{DynamicResource ThematicTextBlock}"
                        Width="15"/>
             <TextBox Text="{Binding Path=X2, Mode=TwoWay, 
-                                    UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                    UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
                      Style="{DynamicResource ThematicTextBox}"
                      Width="80">
                 <TextBox.ToolTip>
@@ -184,7 +184,7 @@
                        Style="{DynamicResource ThematicTextBlock}"
                        Width="15"/>
             <TextBox Text="{Binding Path=Y2, Mode=TwoWay, 
-                                    UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                    UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
                      Style="{DynamicResource ThematicTextBox}"
                      Width="80">
                 <TextBox.ToolTip>
@@ -195,7 +195,7 @@
                        Style="{DynamicResource ThematicTextBlock}"
                        Width="15"/>
             <TextBox Text="{Binding Path=Z2, Mode=TwoWay, 
-                                    UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                    UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
                      Style="{DynamicResource ThematicTextBox}"
                      Width="80">
                 <TextBox.ToolTip>
@@ -241,7 +241,7 @@
                        Style="{DynamicResource ThematicTextBlock}"
                        Width="15"/>
             <TextBox Text="{Binding Path=X3, Mode=TwoWay, 
-                                    UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                    UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
                      Style="{DynamicResource ThematicTextBox}"
                      Width="80">
                 <TextBox.ToolTip>
@@ -252,7 +252,7 @@
                        Style="{DynamicResource ThematicTextBlock}"
                        Width="15"/>
             <TextBox Text="{Binding Path=Y3, Mode=TwoWay, 
-                                    UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                    UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
                      Style="{DynamicResource ThematicTextBox}"
                      Width="80">
                 <TextBox.ToolTip>
@@ -263,7 +263,7 @@
                        Style="{DynamicResource ThematicTextBlock}"
                        Width="15"/>
             <TextBox Text="{Binding Path=Z3, Mode=TwoWay, 
-                                    UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                    UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
                      Style="{DynamicResource ThematicTextBox}"
                      Width="80">
                 <TextBox.ToolTip>

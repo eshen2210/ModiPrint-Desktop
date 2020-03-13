@@ -38,7 +38,7 @@
                                Style="{DynamicResource ThematicTextBlock}"
                                Width="{DynamicResource WideControlWidth}"/>
                     <TextBox Text="{Binding Path=EMoveAxisNegativeDistance, Mode=TwoWay, 
-                                            UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                            UpdateSourceTrigger=PropertyChanged, StringFormat=N5}"
                              Style="{DynamicResource ThematicTextBox}"
                              Width="{DynamicResource StandardControlWidth}">
                         <TextBox.InputBindings>

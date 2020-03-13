@@ -31,17 +31,24 @@ namespace ModiPrint.Models.GCodeConverterModels
         /// </remarks>
         public static string[][] GCodeTo2DArr(string gCodeStr)
         {
-            //First dimenstion.
-            //Delimits string by line breaks.
-            string[] gCode1DArr = gCodeStr.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+            if (!String.IsNullOrWhiteSpace(gCodeStr))
+            {
+                //First dimenstion.
+                //Delimits string by line breaks.
+                string[] gCode1DArr = gCodeStr.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
 
-            //Second dimenstion.
-            //Delimits each array of the first dimension by whitespaces.
-            string[][] gCode2DArr = new string[gCode1DArr.Length][];
-            for (int line = 0; line < gCode1DArr.Length; line++)
-            { gCode2DArr[line] = gCode1DArr[line].Split(new string[] { }, StringSplitOptions.None); }
+                //Second dimenstion.
+                //Delimits each array of the first dimension by whitespaces.
+                string[][] gCode2DArr = new string[gCode1DArr.Length][];
+                for (int line = 0; line < gCode1DArr.Length; line++)
+                { gCode2DArr[line] = gCode1DArr[line].Split(new string[] { }, StringSplitOptions.None); }
 
-            return gCode2DArr;
+                return gCode2DArr;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         /// <summary>

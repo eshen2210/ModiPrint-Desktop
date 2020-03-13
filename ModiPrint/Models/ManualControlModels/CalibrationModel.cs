@@ -65,7 +65,7 @@ namespace ModiPrint.Models.ManualControlModels
         /// <summary>
         /// Sends outgoing commands that retracts all Z Axes and moves X and Y Axes to the limit switches.
         /// </summary>
-        public void CalibrateXYAndZMax(double xCalibrationSpeed, double yCalibrationSpeed, double zCalibrationSpeed, string materialName)
+        public void CalibrateXYAndZMax(double xCalibrationSpeed, double yCalibrationSpeed, double zCalibrationSpeed)
         {
             //Retract Z Axes.
             RetractAllZ(zCalibrationSpeed);

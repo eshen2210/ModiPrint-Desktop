@@ -37,7 +37,7 @@
                                    Width="{DynamicResource StandardControlWidth}"/>
                         <TextBox Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=5}, 
                                                 Path= DataContext.CalibrationViewModel.XCalibrationSpeed, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                                UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"
                                  Style="{DynamicResource ThematicTextBox}"
                                  Width="{DynamicResource StandardControlWidth}">
                             <TextBox.InputBindings>
@@ -72,7 +72,7 @@
                                    Width="{DynamicResource StandardControlWidth}"/>
                         <TextBox Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=5}, 
                                                 Path= DataContext.CalibrationViewModel.YCalibrationSpeed, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                                UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"
                                  Style="{DynamicResource ThematicTextBox}"
                                  Width="{DynamicResource StandardControlWidth}">
                             <TextBox.InputBindings>
@@ -107,7 +107,7 @@
                                    Width="{DynamicResource StandardControlWidth}"/>
                         <TextBox Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=5}, 
                                                 Path= DataContext.CalibrationViewModel.ZCalibrationSpeed, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                                UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
                                  Style="{DynamicResource ThematicTextBox}"
                                  Width="{DynamicResource StandardControlWidth}">
                             <TextBox.InputBindings>

@@ -94,7 +94,7 @@
                                    Style="{DynamicResource ThematicTextBlock}"
                                    Width="{DynamicResource WideControlWidth}"/>
                         <TextBox Text="{Binding Path=MaxSpeed, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                                UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"
                                  Style="{DynamicResource ThematicTextBox}"
                                  Width="{DynamicResource StandardControlWidth}">
                             <TextBox.InputBindings>
@@ -125,7 +125,7 @@
                                    Style="{DynamicResource ThematicTextBlock}"
                                    Width="{DynamicResource WideControlWidth}"/>
                         <TextBox Text="{Binding Path=Acceleration, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                                UpdateSourceTrigger=PropertyChanged}"
                                    Style="{DynamicResource ThematicTextBox}"
                                    Width="{DynamicResource StandardControlWidth}">
                             <TextBox.InputBindings>

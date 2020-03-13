@@ -120,6 +120,20 @@ namespace ModiPrint.ViewModels.PrinterViewModels.PrintheadViewModels.PrintheadTy
             {
                 _motorizedPrintheadTypeModel.MmPerStep = value;
                 OnPropertyChanged("MmPerStep");
+                OnPropertyChanged("UmPerStep");
+            }
+        }
+
+        //Distance per step of the motor of this Printhead.
+        //In micrometers per step.
+        public double UmPerStep
+        {
+            get { return _motorizedPrintheadTypeModel.MmPerStep * 1000; }
+            set
+            {
+                _motorizedPrintheadTypeModel.MmPerStep = value / 1000;
+                OnPropertyChanged("MmPerStep");
+                OnPropertyChanged("UmPerStep");
             }
         }
 

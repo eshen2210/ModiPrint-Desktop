@@ -41,7 +41,7 @@
                                    Style="{DynamicResource ThematicTextBlock}"
                                    Width="{DynamicResource WideControlWidth}"/>
                         <TextBox Text="{Binding Path=XMoveAxisNegativeDistance, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                                UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
                                  Style="{DynamicResource XYZControlTextBox}"
                                  Width="{DynamicResource StandardControlWidth}">
                             <TextBox.ToolTip>

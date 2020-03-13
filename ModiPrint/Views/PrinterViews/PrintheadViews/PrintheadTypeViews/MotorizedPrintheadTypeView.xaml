@@ -28,7 +28,7 @@
                            Width="{DynamicResource NarrowControlWidth}"
                            Style="{DynamicResource ThematicControlImage}"/>
                     <TextBlock Text="Step Pin"
-                           Width="{DynamicResource StandardControlWidth}"
+                           Width="{DynamicResource WideControlWidth}"
                            Style="{DynamicResource ThematicTextBlock}"/>
                 </StackPanel>
                 
@@ -84,7 +84,7 @@
                            Width="{DynamicResource NarrowControlWidth}"
                            Style="{DynamicResource ThematicControlImage}"/>
                     <TextBlock Text="Direction Pin"
-                               Width="{DynamicResource StandardControlWidth}"
+                               Width="{DynamicResource WideControlWidth}"
                                Style="{DynamicResource ThematicTextBlock}"/>
                 </StackPanel>
                 
@@ -140,7 +140,7 @@
                            Width="{DynamicResource NarrowControlWidth}"
                            Style="{DynamicResource ThematicControlImage}"/>
                     <TextBlock Text="Limit Switch Pin"
-                               Width="{DynamicResource StandardControlWidth}"
+                               Width="{DynamicResource WideControlWidth}"
                                Style="{DynamicResource ThematicTextBlock}"/>
                 </StackPanel>
                 
@@ -194,10 +194,10 @@
                        Style="{DynamicResource ThematicControlImage}"
                        Width="{DynamicResource NarrowControlWidth}"/>
                 <TextBlock Text="Max Speed"
-                           Width="{DynamicResource StandardControlWidth}"
+                           Width="{DynamicResource WideControlWidth}"
                            Style="{DynamicResource ThematicTextBlock}"/>
                 <TextBox Text="{Binding Path=MaxSpeed, Mode=TwoWay, 
-                                        UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"
                          Width="{DynamicResource WideControlWidth}"
                          Style="{DynamicResource ThematicTextBox}"/>
                 <TextBlock Text="mm/s"
@@ -228,10 +228,10 @@
                        Style="{DynamicResource ThematicControlImage}"
                        Width="{DynamicResource NarrowControlWidth}"/>
                 <TextBlock Text="Max Acceleration"
-                           Width="{DynamicResource StandardControlWidth}"
+                           Width="{DynamicResource WideControlWidth}"
                            Style="{DynamicResource ThematicTextBlock}"/>
                 <TextBox Text="{Binding Path=MaxAcceleration, Mode=TwoWay, 
-                                        UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                        UpdateSourceTrigger=PropertyChanged}"
                          Width="{DynamicResource WideControlWidth}"
                          Style="{DynamicResource ThematicTextBox}"/>
                 <TextBlock Text="mm/s²"
@@ -261,13 +261,13 @@
                        Style="{DynamicResource ThematicControlImage}"
                        Width="{DynamicResource NarrowControlWidth}"/>
                 <TextBlock Text="Distance per Step"
-                           Width="{DynamicResource StandardControlWidth}"
+                           Width="{DynamicResource WideControlWidth}"
                            Style="{DynamicResource ThematicTextBlock}"/>
-                <TextBox Text="{Binding Path=MmPerStep, Mode=TwoWay, 
-                                        UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                <TextBox Text="{Binding Path=UmPerStep, Mode=TwoWay, 
+                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"
                          Width="{DynamicResource WideControlWidth}"
                          Style="{DynamicResource ThematicTextBox}"/>
-                <TextBlock Text="mm"
+                <TextBlock Text="um"
                            Width="{DynamicResource NarrowControlWidth}"
                            Style="{DynamicResource ThematicTextBlock}"/>
                 <StackPanel.ToolTip>
@@ -291,10 +291,10 @@
                        Width="{DynamicResource NarrowControlWidth}"
                        Style="{DynamicResource ThematicControlImage}"/>
                 <TextBlock Text="Step Pulse Time"
-                           Width="{DynamicResource StandardControlWidth}"
+                           Width="{DynamicResource WideControlWidth}"
                            Style="{DynamicResource ThematicTextBlock}"/>
                 <TextBox Text="{Binding Path=StepPulseTime, Mode=TwoWay, 
-                                        UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"
                          Width="{DynamicResource WideControlWidth}"
                          Style="{DynamicResource ThematicTextBox}"/>
                 <TextBlock Text="us"
@@ -341,7 +341,7 @@
                        Width="{DynamicResource NarrowControlWidth}"/>
                 <TextBlock Text="Invert Direction"
                            Style="{DynamicResource ThematicTextBlock}"
-                           Width="{DynamicResource StandardControlWidth}"/>
+                           Width="{DynamicResource WideControlWidth}"/>
                 <Grid>
                     <ToggleButton Name="tgbtnInvertDirection"
                                   IsChecked="{Binding Path=IsDirectionInverted}"
@@ -371,10 +371,10 @@
                        Style="{DynamicResource ThematicControlImage}"
                        Width="{DynamicResource NarrowControlWidth}"/>
                 <TextBlock Text="Max Position"
-                           Width="{DynamicResource StandardControlWidth}"
+                           Width="{DynamicResource WideControlWidth}"
                            Style="{DynamicResource ThematicTextBlock}"/>
                 <TextBox Text="{Binding Path=MaxPosition, Mode=TwoWay, 
-                                        UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
                          Width="{DynamicResource WideControlWidth}"
                          Style="{DynamicResource ThematicTextBox}"/>
                 <TextBlock Text="mm"
@@ -396,10 +396,10 @@
                        Width="{DynamicResource NarrowControlWidth}"
                        Style="{DynamicResource ThematicControlImage}"/>
                 <TextBlock Text="Min Position"
-                           Width="{DynamicResource StandardControlWidth}"
+                           Width="{DynamicResource WideControlWidth}"
                            Style="{DynamicResource ThematicTextBlock}"/>
                 <TextBox Text="{Binding Path=MinPosition, Mode=TwoWay, 
-                                        UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
                          Width="{DynamicResource WideControlWidth}"
                          Style="{DynamicResource ThematicTextBox}"/>
                 <TextBlock Text="mm"
