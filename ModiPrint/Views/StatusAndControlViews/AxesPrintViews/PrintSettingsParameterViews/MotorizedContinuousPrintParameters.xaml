@@ -18,7 +18,7 @@
                        Style="{DynamicResource ThematicTextBlock}"
                        Width="{DynamicResource WideControlWidth}"/>
             <TextBox Text="{Binding Path=EMoveAxisPositiveDistance, Mode=TwoWay, 
-                                    UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                                    UpdateSourceTrigger=PropertyChanged, Delay=300}"
                      Style="{DynamicResource ThematicTextBox}"
                      Width="{DynamicResource StandardControlWidth}">
                 <TextBox.ToolTip>

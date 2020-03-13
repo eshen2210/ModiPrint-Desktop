@@ -108,37 +108,6 @@
                 </Button>
             </Border>
 
-            <!--Disconnect-->
-            <Border Grid.Column="2" HorizontalAlignment="Right"
-                    Style="{StaticResource DisconnectionButtonBorder}">
-                <Button Command="{Binding SerialDisconnectCommand}"
-                        Style="{DynamicResource ThematicButton}"
-                        Height="{DynamicResource StandardImageButtonHeight}">
-                    <Button.Template>
-                        <ControlTemplate>
-                            <StackPanel Orientation="Horizontal"
-                                        Background="Transparent">
-                                <Image Source="/Resources/Buttons/Disconnect.png"
-                                       Height="{DynamicResource StandardImageButtonHeight}"
-                                       Style="{DynamicResource ThematicControlImage}"
-                                       Margin="0, 0, 0, 0"/>
-                                <TextBlock Text="Disconnect"
-                                           VerticalAlignment="Center"
-                                           Style="{DynamicResource ThematicTextBlock}"/>
-                            </StackPanel>
-                        </ControlTemplate>
-                    </Button.Template>
-                    <Button.ToolTip>
-                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                            Disconnect this program from whatever device it is connected to.
-                            <LineBreak/>
-                            If there is no connection established, this button will have a yellow border around it.
-                        </TextBlock>
-                    </Button.ToolTip>
-                </Button>
-            </Border>
-            <!--#endregion-->
-
             <!--#region SerialPort Manual Messaging-->
             <Grid Grid.Column="3">
                 <Grid.ColumnDefinitions>

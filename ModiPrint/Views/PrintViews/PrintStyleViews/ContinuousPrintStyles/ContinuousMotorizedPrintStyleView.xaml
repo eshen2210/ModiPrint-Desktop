@@ -15,8 +15,61 @@
     <GroupBox Header="Continuous Motorized Print Parameters"
               Style="{DynamicResource ThematicGroupBox}">
         <StackPanel Orientation="Vertical">
-            <TextBlock Text="No Parameters to Set"
-                   Style="{DynamicResource ThematicTextBlock}"/>
+
+            <!--Dispense Distance Per Mm-->
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Center"
+                        Height="{DynamicResource StandardControlHeight}">
+                <Image Source="/Resources/General/Position.png"
+                       Style="{DynamicResource ThematicControlImage}"
+                       Width="{DynamicResource NarrowControlWidth}"/>
+                <TextBlock Text="Dispense Distance Per mm Movement"
+                           Style="{DynamicResource ThematicTextBlock}"
+                           Width="{DynamicResource ExtraWideControlWidth}"/>
+                <TextBox Text="{Binding Path=MotorizedDispensePerMmMovement, Mode=TwoWay, 
+                                        UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                         Style="{DynamicResource ThematicTextBox}"
+                         Width="{DynamicResource StandardControlWidth}">
+                    <TextBox.ToolTip>
+                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                            Specifies the distance (in mm) of Printhead motor movement for each mm movement of the XYZ stage.
+                            In theory, the printed filament's geometry follows this formula:
+                            Filament Cross-Sectional Area = Dispense Distance Per mm Movement * Resevoir Cross-Sectional Area
+                        </TextBlock>
+                    </TextBox.ToolTip>
+                </TextBox>
+                <TextBlock Text="mm"
+                           Style="{DynamicResource ThematicTextBlock}"
+                           Width="{DynamicResource NarrowControlWidth}"/>
+            </StackPanel>
+
+            <!--Dispense Distance Per Mm-->
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Center"
+                        Height="{DynamicResource StandardControlHeight}">
+                <Image Source="/Resources/General/Retract.png"
+                       Style="{DynamicResource ThematicControlImage}"
+                       Width="{DynamicResource NarrowControlWidth}"/>
+                <TextBlock Text="Retraction Distance"
+                           Style="{DynamicResource ThematicTextBlock}"
+                           Width="{DynamicResource ExtraWideControlWidth}"/>
+                <TextBox Text="{Binding Path=MotorizedDispenseRetractionDistance, Mode=TwoWay, 
+                                        UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                         Style="{DynamicResource ThematicTextBox}"
+                         Width="{DynamicResource StandardControlWidth}">
+                    <TextBox.ToolTip>
+                        <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                            Specifies the distance (in mm) of Printhead motor movement during retraction.
+                            Retraction occurs after continous printing stops, e.g. when switching to a non-print command after executing a print command.
+                            This parameter should be set to an empirically determined minimal value that stops excess material from dispensing after printing.
+                        </TextBlock>
+                    </TextBox.ToolTip>
+                </TextBox>
+                <TextBlock Text="mm"
+                           Style="{DynamicResource ThematicTextBlock}"
+                           Width="{DynamicResource NarrowControlWidth}"/>
+            </StackPanel>
+
         </StackPanel>
     </GroupBox>
 </UserControl>

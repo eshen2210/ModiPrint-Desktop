@@ -65,7 +65,8 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
                   && (convertedGCodeLinesList[i].GCode.Substring(1, 14) == "SwitchMaterial"))
                 {
                     materialIndecesList.Add(i);
-                    string materialName = convertedGCodeLinesList[i].GCode.Substring(17, convertedGCodeLinesList[i].GCode.Length - 18);
+                    int materialNameStartIndex = convertedGCodeLinesList[i].GCode.IndexOf('"') + 1;
+                    string materialName = convertedGCodeLinesList[i].GCode.Substring(materialNameStartIndex, convertedGCodeLinesList[i].GCode.Length - (materialNameStartIndex + 1));
                     materialModelsList.Add(_printModel.FindMaterialByName(materialName));
                 }
             }
@@ -471,7 +472,7 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
             //Since there are three functions going through the entire list, the denominator is total continuous movements times 3.
             _progressBarTick++;
             int percentCompleted = (_progressBarTick * 100) / (continuousMovementsList.Count * 3);
-            _parametersModel.ReportProgress("Calculating Cornering Speeds", percentCompleted);
+            _parametersModel.ReportProgress("Calculating Cornering Speeds " + percentCompleted + "%");
         }
         #endregion
     }

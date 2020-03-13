@@ -71,16 +71,59 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessTCommandMod
             //Also appends the converted GCode line with commands that compensate for the new Printhead's offsets.
             try  
             {
+                //If the current Material is using a Motorized Printhead, retract it before switching Printheads.
+                if (((currentMaterial.Name != "Unset") //If this is not the first Material
+                  && (currentMaterial.PrintheadModel.PrintheadType == PrintheadType.Motorized)
+                  && (currentMaterial.PrintheadModel.Name != matchingMaterial.PrintheadModel.Name) //Do not execute retraction-related actions if no Printhead change occurs
+                  && (_parametersModel.IsRetracted == false)))
+                {
+                    MotorizedPrintheadTypeModel motorizedPrintheadTypeModel = (MotorizedPrintheadTypeModel)currentMaterial.PrintheadModel.PrintheadTypeModel;
+                    ContinuousPrintStyleModel continuousPrintheadStyleModel = (ContinuousPrintStyleModel)currentMaterial.PrintStyleModel;
+                    int eModiPrintCoordIndex = _parametersModel.FindEModiPrintCoordIndex(currentMaterial.PrintheadModel);
+                    convertedGCodeLinesList = WriteG00.WriteMotorizedPrintWithoutMovement(-1 * continuousPrintheadStyleModel.MotorizedDispenseRetractionDistance, motorizedPrintheadTypeModel.MmPerStep,
+                        motorizedPrintheadTypeModel.IsDirectionInverted, ref _parametersModel.ERepRapCoord.DeltaCoordRemainder, _parametersModel.EModiPrintCoordList[eModiPrintCoordIndex]);
+                    _parametersModel.IsRetracted = true;
+                }
+
                 //If a new Motorized Printhead is being set...
                 //Finds the EModiPrintCoord corresponding to the given Printhead and sets the Minimum and Maximum Position values of the EModiPrintCoord.
                 if (matchingMaterial.PrintheadModel.PrintheadType == PrintheadType.Motorized)
                 {
                     int eModiPrintCoordIndex = _parametersModel.FindEModiPrintCoordIndex(matchingMaterial.PrintheadModel);
                     MotorizedPrintheadTypeModel motorizedPrintheadTypeModel = (MotorizedPrintheadTypeModel)matchingMaterial.PrintheadModel.PrintheadTypeModel;
+                    ContinuousPrintStyleModel continuousPrintheadStyleModel = (ContinuousPrintStyleModel)matchingMaterial.PrintStyleModel;
 
-                    //These new Min and Max Positions
+                    //Sets new Min and Max Positions.
                     _parametersModel.EModiPrintCoordList[eModiPrintCoordIndex].MinPosition = motorizedPrintheadTypeModel.MinPosition;
                     _parametersModel.EModiPrintCoordList[eModiPrintCoordIndex].MaxPosition = motorizedPrintheadTypeModel.MaxPosition;
+
+                    //Sets the starting position of the new Motorized Printhead.
+                    //The starting position is the retracted state.
+                    //If this is the first Material, then retraction needs to occur to reach the starting retracted state.
+                    if (currentMaterial.Name == "Unset") //If this is the first Material.
+                    {
+                        //Retraction needs to occur to reach the starting retracted state.
+                        List<ConvertedGCodeLine> retractE = WriteG00.WriteMotorizedPrintWithoutMovement(-1 * continuousPrintheadStyleModel.MotorizedDispenseRetractionDistance, motorizedPrintheadTypeModel.MmPerStep,
+                            motorizedPrintheadTypeModel.IsDirectionInverted, ref _parametersModel.ERepRapCoord.DeltaCoordRemainder, _parametersModel.EModiPrintCoordList[eModiPrintCoordIndex]);
+                        if (retractE != null)
+                        {
+                            convertedGCodeLinesList.AddRange(retractE);
+                        }
+
+                        _parametersModel.ERepRapCoord.SetInitialCoord(continuousPrintheadStyleModel.MotorizedDispenseRetractionDistance);
+                        _parametersModel.IsRetracted = true;
+                    }
+
+                    //If this is a new Motorized Printhead, then it is by default, retracted.
+                    if (currentMaterial.PrintheadModel.Name != matchingMaterial.PrintheadModel.Name)
+                    {
+                        _parametersModel.ERepRapCoord.SetInitialCoord(continuousPrintheadStyleModel.MotorizedDispenseRetractionDistance);
+                        _parametersModel.IsRetracted = true;
+                    }
+                }
+                else
+                {
+                    _parametersModel.IsRetracted = false;
                 }
 
                 //Set new Min and Max Positions for the X and Y Axes.
@@ -118,29 +161,31 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessTCommandMod
                     _parametersModel.ResetDropletPrintParameters(null, matchingMaterial);
                 }
 
-                //If applicable, pause the print sequence before switching to the next Material.
-                if ((currentMaterial.Name != "Unset") && (currentMaterial.PauseBeforeDeactivating == true))
-                {
-                    ConvertedGCodeLine printPause = new ConvertedGCodeLine(SerialMessageCharacters.SerialPrintPauseCharacter.ToString());
-                    convertedGCodeLinesList.Add(printPause);
-                }
-
                 //Set the new Material.
                 currentMaterial = matchingMaterial;
 
                 //Command Set for switching Materials.
                 //This Command Set will convert to the commands for retracting the Z Axis, switching Printheads, moving Offsets, and setting new movement speeds.
-                string convertedGCodeLine = SerialMessageCharacters.SerialCommandSetCharacter + "SwitchMaterial " + '"' + matchingMaterial.Name + '"';
-                convertedGCodeLinesList.Add(new ConvertedGCodeLine(convertedGCodeLine));
+                string convertedGCodeLine = SerialMessageCharacters.SerialCommandSetCharacter + "SwitchMaterial ";
 
-                //If applicable pause the print sequence here.
+                //If applicable, pause the print sequence before switching to the next Material.
+                if ((currentMaterial.Name != "Unset") && (currentMaterial.PauseBeforeDeactivating == true))
+                {
+                    convertedGCodeLine += "D";
+                }
+
+                //If applicable pause the print sequence after switching printheads.
                 if (matchingMaterial.PauseAfterActivating == true)
                 {
-                    ConvertedGCodeLine printPause = new ConvertedGCodeLine(SerialMessageCharacters.SerialPrintPauseCharacter.ToString());
-                    convertedGCodeLinesList.Add(printPause);
+                    convertedGCodeLine += "A";
                 }
+
+                if (convertedGCodeLine[convertedGCodeLine.Length - 1] != ' ')
+                { convertedGCodeLine += " "; }
+                convertedGCodeLine += '"' + matchingMaterial.Name + '"';
+                convertedGCodeLinesList.Add(new ConvertedGCodeLine(convertedGCodeLine));
             }
-            catch when ((currentMaterial.Name == "Unset") || (matchingMaterial == null) || (currentMaterial == null)) //Catch unset Material.
+            catch when ((matchingMaterial == null) || (currentMaterial == null)) //Catch unset Material.
             {
                 //Catching and error reporting should have happened earlier.
                 _parametersModel.ErrorReporterViewModel.ReportError("GCode Converter: Print Unset", "Material Unset");

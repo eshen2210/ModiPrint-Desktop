@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:ModiPrint"
              StartupUri="Views/MainWindowView.xaml">
     <Application.Resources>
-         
+
     </Application.Resources>
 </Application>

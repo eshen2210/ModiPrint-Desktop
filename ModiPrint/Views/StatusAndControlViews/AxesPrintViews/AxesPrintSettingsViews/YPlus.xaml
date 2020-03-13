@@ -37,12 +37,14 @@
                                    Style="{DynamicResource ThematicTextBlock}"
                                    Width="{DynamicResource WideControlWidth}"/>
                         <TextBox Text="{Binding Path=YMoveAxisPositiveDistance, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged, Delay=250}"
-                                 Style="{DynamicResource ThematicTextBox}"
+                                                UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                 Style="{DynamicResource XYZControlTextBox}"
                                  Width="{DynamicResource StandardControlWidth}">
                             <TextBox.ToolTip>
                                 <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
                                     Distance to be traversed by the actuator.
+                                    <LineBreak/>
+                                    Press Enter to execute or press the execute button to execute the command.
                                 </TextBlock>
                             </TextBox.ToolTip>
                         </TextBox>

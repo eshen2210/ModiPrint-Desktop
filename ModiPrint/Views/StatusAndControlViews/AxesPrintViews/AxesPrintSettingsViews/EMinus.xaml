@@ -4,8 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ModiPrint.Views.StatusAndControlViews.AxesPrintViews.AxesPrintSettingsViews"
+             xmlns:cf="clr-namespace:ModiPrint.Utilities.ControlFunctions"
+             xmlns:mPrintheadType="clr-namespace:ModiPrint.Models.PrinterModels.PrintheadModels.PrintheadTypeModels"
              mc:Ignorable="d">
-    
+
     <Grid HorizontalAlignment="Center">
 
         <StackPanel Orientation="Vertical">
@@ -18,7 +20,7 @@
                        Height="{DynamicResource TallControlHeight}"
                        Margin="5, 5, 5, 5"/>
 
-                <TextBlock Text="Retract Motorized Printhead"
+                <TextBlock Text="Dispense Motorized Printhead"
                            Style="{DynamicResource ThematicHeaderTextBlock}"/>
             </StackPanel>
 
@@ -34,14 +36,19 @@
                            Width="{DynamicResource NarrowControlWidth}"/>
                     <TextBlock Text="Move E"
                                Style="{DynamicResource ThematicTextBlock}"
-                               Width="{DynamicResource NarrowControlWidth}"/>
+                               Width="{DynamicResource WideControlWidth}"/>
                     <TextBox Text="{Binding Path=EMoveAxisNegativeDistance, Mode=TwoWay, 
-                                            UpdateSourceTrigger=PropertyChanged, Delay=250}"
-                               Style="{DynamicResource ThematicTextBox}"
-                               Width="{DynamicResource StandardControlWidth}">
+                                            UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                             Style="{DynamicResource ThematicTextBox}"
+                             Width="{DynamicResource StandardControlWidth}">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding ManualMotorPrintWithoutMovementCommand}"/>
+                        </TextBox.InputBindings>
                         <TextBox.ToolTip>
                             <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                                Distance to be traversed by the actuator.
+                                Specifies the dispense distance for the motorized printhead.
+                                <LineBreak/>
+                                Press Enter to or press the Execute button to execute the command.
                             </TextBlock>
                         </TextBox.ToolTip>
                     </TextBox>
@@ -79,7 +86,7 @@
                     </Button.Template>
                     <Button.ToolTip>
                         <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                            Retract the motorized printhead by the specified distance.
+                            Dispense the motorized printhead by the specified distance.
                         </TextBlock>
                     </Button.ToolTip>
                 </Button>

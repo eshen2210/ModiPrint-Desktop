@@ -18,14 +18,16 @@
                        Style="{DynamicResource ThematicTextBlock}"
                        Width="{DynamicResource WideControlWidth}"/>
             <TextBox Text="{Binding Path=ValveOpenTime, Mode=TwoWay, 
-                                    UpdateSourceTrigger=PropertyChanged, Delay=250}"
-                     Style="{DynamicResource ThematicTextBox}"
+                                    UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                     Style="{DynamicResource XYZControlTextBox}"
                      Width="{DynamicResource StandardControlWidth}">
                 <TextBox.ToolTip>
                     <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
                         Each droplet will be dispensed via opening the valve printhead for this duration of time.
                         <LineBreak/>
-                        If you are using the VHS series of microdispensing solenoid valves, then the minimum open time value is ~100 us.`
+                        If you are using the VHS series of microdispensing solenoid valves, then the minimum open time value is ~100 us.
+                        <LineBreak/>
+                        Press Enter to execute or press the execute button to execute the command.
                     </TextBlock>
                 </TextBox.ToolTip>
             </TextBox>
@@ -45,12 +47,14 @@
                        Style="{DynamicResource ThematicTextBlock}"
                        Width="{DynamicResource WideControlWidth}"/>
             <TextBox Text="{Binding Path=InterpolateDistance, Mode=TwoWay, 
-                                    UpdateSourceTrigger=PropertyChanged, Delay=250}"
-                     Style="{DynamicResource ThematicTextBox}"
+                                    UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                     Style="{DynamicResource XYZControlTextBox}"
                      Width="{DynamicResource StandardControlWidth}">
                 <TextBox.ToolTip>
                     <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
                         Pitch distance between each droplet.
+                        <LineBreak/>
+                        Press Enter to execute or press the execute button to execute the command.
                     </TextBlock>
                 </TextBox.ToolTip>
             </TextBox>

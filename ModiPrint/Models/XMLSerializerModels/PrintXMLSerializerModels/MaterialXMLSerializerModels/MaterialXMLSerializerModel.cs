@@ -59,6 +59,12 @@ namespace ModiPrint.Models.XMLSerializerModels.PrintXMLSerializerModels.Material
             if (printStyleXMLSerializerModel != null)
             { printStyleXMLSerializerModel.SerializePrintStyle(xmlWriter, materialViewModel.PrintStyleViewModel); }
 
+            //Pause After Activating.
+            xmlWriter.WriteElementString("PauseAfterActivating", materialViewModel.PauseAfterActivating.ToString());
+
+            //Pause Before Deactivating.
+            xmlWriter.WriteElementString("PauseBeforeDeactivating", materialViewModel.PauseBeforeDeactivating.ToString());
+
             //Junction Deviation.
             xmlWriter.WriteElementString("JunctionDeviation", materialViewModel.JunctionDeviation.ToString());
 

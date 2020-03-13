@@ -562,7 +562,7 @@ namespace ModiPrint.ViewModels.ManualControlViewModels
         /// Sends a valve print without movement command through the serial port.
         /// </summary>
         private RelayCommand<object> _manualValvePrintWithoutMovementCommand;
-        public ICommand ManualValvePrintWithOutMovementCommand
+        public ICommand ManualValvePrintWithoutMovementCommand
         {
             get
             {

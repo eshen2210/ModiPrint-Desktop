@@ -86,28 +86,36 @@
                     <StackPanel Orientation="Vertical">
 
                         <!--#region RepRap ID-->
-                        <StackPanel Orientation="Horizontal"
-                                    Height="{DynamicResource StandardControlHeight}">
-                            <Image Source="/Resources/General/TextFile.png"
-                                   Style="{DynamicResource ThematicControlImage}"
-                                   Width="{DynamicResource NarrowControlWidth}"/>
-                            <TextBlock Text="G-code ID" 
-                                       Width="{DynamicResource StandardControlWidth}"
-                                       Style="{DynamicResource ThematicTextBlock}"/>
-                            <TextBox Text="{Binding Path=RepRapID, Mode=TwoWay, 
-                                                    UpdateSourceTrigger=PropertyChanged, Delay=250}" 
-                                     Width="{DynamicResource WideControlWidth}"
-                                     Style="{DynamicResource ThematicTextBox}">
-                                <TextBox.ToolTip>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Horizontal"
+                                        Height="{DynamicResource StandardControlHeight}">
+                                <Image Source="/Resources/General/TextFile.png"
+                                       Style="{DynamicResource ThematicControlImage}"
+                                       Width="{DynamicResource NarrowControlWidth}"/>
+                                <TextBlock Text="G-code ID" 
+                                           Width="{DynamicResource StandardControlWidth}"
+                                           Style="{DynamicResource ThematicTextBlock}"/>
+                            </StackPanel>
+                            <ComboBox ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                                            AncestorLevel=2,
+                                                            AncestorType={x:Type UserControl}}, 
+                                                            Path=DataContext.GCodeManagerViewModel.RepRapIDList}"
+                                          SelectedValuePath="{Binding RepRapID}"
+                                      Height="{DynamicResource StandardControlHeight}"    
+                                      Width="{DynamicResource WideControlWidth}"
+                                          Style="{DynamicResource ThematicComboBox}">
+                                <ComboBox.ToolTip>
                                     <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
                                         The RepRap T command that's associated with this material.
                                         <LineBreak/>
                                         These identifiers come in the form of T0, T1, T2...etc.
                                         <LineBreak/>
-                                        Upon reading T# in a GCode line, the printer will switch to this Material and its parameters to execute the upcoming toolpaths.
+                                        Upon reading this T# in a g-code line, the printer will switch to this Material and its parameters to execute the upcoming toolpaths.
+                                        <LineBreak/>
+                                        If this list is not populated, then uploade a .gcode file first.
                                     </TextBlock>
-                                </TextBox.ToolTip>
-                            </TextBox>
+                                </ComboBox.ToolTip>
+                            </ComboBox>
                         </StackPanel>
                         <!--#endregion-->
 
@@ -255,16 +263,16 @@
                                 <Image Source="/Resources/General/JunctionDeviation.png" 
                                        Style="{DynamicResource ThematicControlImage}"
                                        Width="{DynamicResource NarrowControlWidth}"/>
-                                <TextBlock Text="Junction Deviation"
+                                <TextBlock Text="Junction Dev."
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource StandardControlWidth}"/>
                                 <TextBox Text="{Binding Path=JunctionDeviation, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                                                        UpdateSourceTrigger=PropertyChanged, Delay=300}"
                                          Style="{DynamicResource ThematicTextBox}"
                                          Width="{DynamicResource WideControlWidth}">
                                     <TextBox.ToolTip>
                                         <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                                            Determines the centripetal acceleration of the XYZ stage allowing actuators to skip the initial stages of acceleration.
+                                            Junction deviation determines the centripetal acceleration of the XYZ stage allowing actuators to skip the initial stages of acceleration.
                                             <LineBreak/>
                                             Must be set to a value between 0 and 1. Where 0 has each line segment start at zero velocity.
                                             <LineBreak/>
@@ -294,7 +302,7 @@
                                                Width="{DynamicResource StandardControlWidth}"
                                                Style="{DynamicResource ThematicTextBlock}"/>
                                     <TextBox Text="{Binding Path=XYPrintSpeed, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                                                        UpdateSourceTrigger=PropertyChanged, Delay=300}"
                                              Width="{DynamicResource WideControlWidth}" 
                                              Style="{DynamicResource ThematicTextBox}">
                                         <TextBox.ToolTip>
@@ -321,7 +329,7 @@
                                                Width="{DynamicResource StandardControlWidth}" 
                                                Style="{DynamicResource ThematicTextBlock}"/>
                                     <TextBox Text="{Binding Path=XYPrintAcceleration, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                                                        UpdateSourceTrigger=PropertyChanged, Delay=300}"
                                              Width="{DynamicResource WideControlWidth}"
                                              Style="{DynamicResource ThematicTextBox}">
                                         <TextBox.ToolTip>
@@ -348,7 +356,7 @@
                                                Width="{DynamicResource StandardControlWidth}"
                                                Style="{DynamicResource ThematicTextBlock}"/>
                                     <TextBox Text="{Binding Path=ZPrintSpeed, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                                                        UpdateSourceTrigger=PropertyChanged, Delay=300}"
                                              Width="{DynamicResource WideControlWidth}" 
                                              Style="{DynamicResource ThematicTextBox}">
                                         <TextBox.ToolTip>
@@ -375,7 +383,7 @@
                                                Width="{DynamicResource StandardControlWidth}" 
                                                Style="{DynamicResource ThematicTextBlock}"/>
                                     <TextBox Text="{Binding Path=ZPrintAcceleration, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                                                        UpdateSourceTrigger=PropertyChanged, Delay=300}"
                                              Width="{DynamicResource WideControlWidth}"
                                              Style="{DynamicResource ThematicTextBox}">
                                         <TextBox.ToolTip>

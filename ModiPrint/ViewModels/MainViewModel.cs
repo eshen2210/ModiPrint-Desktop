@@ -54,13 +54,11 @@ namespace ModiPrint.ViewModels
 
         private RealTimeStatusSerialInterpreterModel _realTimeStatusSerialInterpreterModel;
 
-        private GCodeModel _repRapGCodeModel;
-
-        private GCodeModel _modiPrintGCodeModel;
+        private GCodeModel _uploadedGCodeModel;
 
         private GCodeFileManagerModel _gCodeFileManagerModel;
 
-        private GCodeConverterBGWModel _gCodeConverterBGWModel;
+        private GCodeConverterModel _gCodeConverterModel;
 
         private PrinterModel _printerModel;
 
@@ -188,14 +186,13 @@ namespace ModiPrint.ViewModels
             _calibrationViewModel = new CalibrationViewModel(_calibrationModel, _manualControlViewModel, _realTimeStatusDataViewModel, _printerViewModel);
 
             //GCode.
-            _repRapGCodeModel = new GCodeModel();
-            _modiPrintGCodeModel = new GCodeModel();
-            _gCodeFileManagerModel = new GCodeFileManagerModel(_repRapGCodeModel, _modiPrintGCodeModel, _errorListViewModel);
-            _gCodeConverterBGWModel = new GCodeConverterBGWModel(_printerModel, _printModel, _realTimeStatusDataModel, _errorListViewModel);
-            _gcodeManagerViewModel = new GCodeManagerViewModel(_repRapGCodeModel, _modiPrintGCodeModel, _gCodeFileManagerModel, _gCodeConverterBGWModel);
+            _uploadedGCodeModel = new GCodeModel();
+            _gCodeFileManagerModel = new GCodeFileManagerModel(_uploadedGCodeModel, _errorListViewModel);
+            _gCodeConverterModel = new GCodeConverterModel(_printerModel, _printModel, _realTimeStatusDataModel, _errorListViewModel);
+            _gcodeManagerViewModel = new GCodeManagerViewModel(_gCodeFileManagerModel, _gCodeConverterModel);
 
             //Printing.
-            _printExecuteViewModel = new PrintExecuteViewModel(_modiPrintGCodeModel, _gcodeManagerViewModel, _realTimeStatusDataModel, _calibrationViewModel, _serialCommunicationViewModel, _serialCommunicationOutgoingMessagesModel, _serialMessageDisplayViewModel);
+            _printExecuteViewModel = new PrintExecuteViewModel(_gcodeManagerViewModel, _realTimeStatusDataModel, _calibrationViewModel, _serialCommunicationViewModel, _serialCommunicationOutgoingMessagesModel, _serialMessageDisplayViewModel);
 
             //Settings.
             _saveLoadViewModel = new SaveLoadViewModel(_gcodeManagerViewModel, _printerViewModel, _printViewModel, _errorListViewModel);

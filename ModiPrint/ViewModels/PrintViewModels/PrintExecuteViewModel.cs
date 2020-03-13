@@ -40,7 +40,7 @@ namespace ModiPrint.ViewModels.PrintViewModels
         #region Fields and Properties
         //Contains information about the state of the Printer, Print, and Serial Communication settings.
         //This information will be used to determine if the Printer is ready to print.
-        private GCodeModel _modiPrintGCodeModel;
+        private GCodeModel _uploadedGCodeModel;
         private GCodeManagerViewModel _gCodeManagerViewModel;
         private SerialCommunicationViewModel _serialCommunicationViewModel;
         private RealTimeStatusDataModel _realTimeStatusDataModel;
@@ -71,7 +71,7 @@ namespace ModiPrint.ViewModels.PrintViewModels
         {
             get
             {
-                if ((IsModiPrintGCodeReadyToPrint == true)
+                if ((IsGCodeReadyToPrint == true)
                  && (IsSerialCommunicationReadyToPrint == true)
                  && (IsActivePrintheadReadyToPrint)
                  && (PrintStatus == PrintStatus.Manual))
@@ -92,9 +92,9 @@ namespace ModiPrint.ViewModels.PrintViewModels
             get { return _abortPrompt; }
         }
 
-        public bool IsModiPrintGCodeReadyToPrint
+        public bool IsGCodeReadyToPrint
         {
-            get { return !String.IsNullOrWhiteSpace(_gCodeManagerViewModel.ModiPrintGCode); }
+            get { return !String.IsNullOrWhiteSpace(_gCodeManagerViewModel.UploadedGCodeModel.GCodeStr); }
         }
 
         public bool IsSerialCommunicationReadyToPrint
@@ -109,12 +109,11 @@ namespace ModiPrint.ViewModels.PrintViewModels
         #endregion
 
         #region Constructor
-        public PrintExecuteViewModel(GCodeModel ModiPrintGCodeModel, GCodeManagerViewModel GCodeManagerViewModel, 
+        public PrintExecuteViewModel(GCodeManagerViewModel GCodeManagerViewModel, 
             RealTimeStatusDataModel RealTimeStatusDataModel, CalibrationViewModel CalibrationViewModel,
             SerialCommunicationViewModel SerialCommunicationViewModel, SerialCommunicationOutgoingMessagesModel SerialCommunicationOutgoingMessagesModel, 
             SerialMessageDisplayViewModel SerialMessageDisplayViewModel)
         {
-            _modiPrintGCodeModel = ModiPrintGCodeModel;
             _gCodeManagerViewModel = GCodeManagerViewModel;
             _realTimeStatusDataModel = RealTimeStatusDataModel;
             _calibrationViewModel = CalibrationViewModel;
@@ -122,7 +121,8 @@ namespace ModiPrint.ViewModels.PrintViewModels
             _serialCommunicationOutgoingMessagesModel = SerialCommunicationOutgoingMessagesModel;
             _serialMessageDisplayViewModel = SerialMessageDisplayViewModel;
 
-            _gCodeManagerViewModel.ModiPrintGCodeChanged += new ModiPrintGCodeChangedEventHandler(UpdateModiPrintGCode);
+            _gCodeManagerViewModel.GCodeFileUploaded += new GCodeFileUploadedEventHandler(UpdateUploadedGCode);
+
             _serialCommunicationViewModel.SerialCommunicationMainModel.SerialConnectionChanged += new SerialConnectionChangedEventHandler(UpdateSerialConnection);
             _serialCommunicationViewModel.SerialCommunicationMainModel.SerialCommunicationCompleted += new SerialCommunicationCompletedEventHandler(UpdatePrintFinished);
             _serialCommunicationViewModel.SerialCommunicationMainModel.SerialCommunicationPrintSequencePaused += new SerialCommunicationPrintSequencePausedEventHandler(UpdatePrintSequencePaused);
@@ -138,24 +138,26 @@ namespace ModiPrint.ViewModels.PrintViewModels
 
         #region Methods
         /// <summary>
-        /// Queues each line of GCode for printing.
+        /// Queues each line of g-code for printing.
         /// </summary>
         public void Print()
         {
             //Queue each line of GCode for printing.
-            string[] modiPrintGCodeArr = _modiPrintGCodeModel.GCodeStrToArr();
+            string modiPrintGCodeStr = _gCodeManagerViewModel.GetModiPrintGCode();
+            string[] modiPrintGCodeArr = modiPrintGCodeStr.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
             List<string> modiPrintGCodeList = modiPrintGCodeArr.ToList<string>();
             _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(modiPrintGCodeList);
         }
 
         /// <summary>
         /// Linked to ModiPrintGCodeChangedEventHandler.
-        /// Fires when ModiPrint GCode is converted or loaded.
+        /// Fires when ModiPrint g-code is converted or loaded.
         /// </summary>
         /// <param name="sender"></param>
-        private void UpdateModiPrintGCode(object sender)
+        private void UpdateUploadedGCode(object sender)
         {
-            OnPropertyChanged("IsModiPrintGCodeReadyToPrint");
+            OnPropertyChanged("IsGCodeReadyToPrint");
+            OnPropertyChanged("IsReadyToPrint");
         }
 
         /// <summary>
@@ -166,6 +168,7 @@ namespace ModiPrint.ViewModels.PrintViewModels
         private void UpdateSerialConnection(object sender)
         {
             OnPropertyChanged("IsSerialCommunicationReadyToPrint");
+            OnPropertyChanged("IsReadyToPrint");
         }
 
         /// <summary>
@@ -175,6 +178,7 @@ namespace ModiPrint.ViewModels.PrintViewModels
         private void UpdateActivePrintheadType(string printheadName)
         {
             OnPropertyChanged("IsActivePrintheadReadyToPrint");
+            OnPropertyChanged("IsReadyToPrint");
         }
 
         /// <summary>
@@ -357,6 +361,10 @@ namespace ModiPrint.ViewModels.PrintViewModels
             OnPropertyChanged("AbortPrompt");
 
             PrintStatus = PrintStatus.Manual;
+
+            OnPropertyChanged("IsModiPrintGCodeReadyToPrint");
+            OnPropertyChanged("IsSerialCommunicationReadyToPrint");
+            OnPropertyChanged("IsActivePrintheadReadyToPrint");
         }
 
         /// <summary>

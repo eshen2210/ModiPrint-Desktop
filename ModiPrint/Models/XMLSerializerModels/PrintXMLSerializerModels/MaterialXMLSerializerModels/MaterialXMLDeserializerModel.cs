@@ -74,6 +74,14 @@ namespace ModiPrint.Models.XMLSerializerModels.PrintXMLSerializerModels.Material
                             printStyleXMLDeserializerModel = new DropletPrintStyleXMLDeserializerModel(base._errorListViewModel);
                             printStyleXMLDeserializerModel.DeserializePrintStyle(xmlReader, materialViewModel.PrintStyleViewModel);
                             break;
+                        case "PauseAfterActivating":
+                            string pauseAfterActivatingContent = xmlReader.ReadElementContentAsString();
+                            materialViewModel.PauseAfterActivating = (pauseAfterActivatingContent == "True") ? true : false; 
+                            break;
+                        case "PauseBeforeDeactivating":
+                            string pauseBeforeDeactivatingContent = xmlReader.ReadElementContentAsString();
+                            materialViewModel.PauseBeforeDeactivating = (pauseBeforeDeactivatingContent == "True") ? true : false;
+                            break;
                         case "JunctionDeviation":
                             materialViewModel.JunctionDeviation = xmlReader.ReadElementContentAsDouble();
                             break;

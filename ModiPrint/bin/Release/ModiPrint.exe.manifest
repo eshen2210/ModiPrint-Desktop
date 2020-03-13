@@ -162,14 +162,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ModiPrint.exe" size="5518336">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ModiPrint.exe" size="5522944">
       <assemblyIdentity name="ModiPrint" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>Nr1F65bQy9d0CPWoLBwFYnTz8ia6cyXS8i8RyRm7pLw=</dsig:DigestValue>
+        <dsig:DigestValue>n1AJJLQ2/M32WOiuPpH32i10Hw8xs29X8th5I8FAP7g=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

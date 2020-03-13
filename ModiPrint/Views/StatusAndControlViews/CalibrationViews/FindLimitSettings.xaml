@@ -37,16 +37,22 @@
                                    Width="{DynamicResource StandardControlWidth}"/>
                         <TextBox Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=5}, 
                                                 Path= DataContext.CalibrationViewModel.XCalibrationSpeed, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                                                UpdateSourceTrigger=PropertyChanged, Delay=300}"
                                  Style="{DynamicResource ThematicTextBox}"
                                  Width="{DynamicResource StandardControlWidth}">
+                            <TextBox.InputBindings>
+                                <KeyBinding Key="Enter" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=5}, 
+                                                                          Path=DataContext.CalibrationViewModel.CalibrateXYAndZMaxCommand}"/>
+                            </TextBox.InputBindings>
                             <TextBox.ToolTip>
                                 <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                                    The speed of the X Actuator as it performs calibration.
+                                    The speed of the X Actuator as it finds its limits.
                                     <LineBreak/>
                                     Since the actuator will be hitting limit switches, it is recommended that this value be low.
                                     <LineBreak/>
-                                    The recommended setting for ModiPrint hardware is 5 mm/s.
+                                    The recommended setting for ModiPrint hardware is 10 mm/s.
+                                    <LineBreak/>
+                                    Press Enter to or press the Execute button to execute the command.
                                 </TextBlock>
                             </TextBox.ToolTip>
                         </TextBox>
@@ -66,16 +72,22 @@
                                    Width="{DynamicResource StandardControlWidth}"/>
                         <TextBox Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=5}, 
                                                 Path= DataContext.CalibrationViewModel.YCalibrationSpeed, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                                                UpdateSourceTrigger=PropertyChanged, Delay=300}"
                                  Style="{DynamicResource ThematicTextBox}"
                                  Width="{DynamicResource StandardControlWidth}">
+                            <TextBox.InputBindings>
+                                <KeyBinding Key="Enter" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=5}, 
+                                                                          Path=DataContext.CalibrationViewModel.CalibrateXYAndZMaxCommand}"/>
+                            </TextBox.InputBindings>
                             <TextBox.ToolTip>
                                 <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
                                     The speed of the Y Actuator as it performs calibration.
                                     <LineBreak/>
                                     Since the actuator will be hitting limit switches, it is recommended that this value be low.
                                     <LineBreak/>
-                                    The recommended setting for ModiPrint hardware is 5 mm/s.
+                                    The recommended setting for ModiPrint hardware is 10 mm/s.
+                                    <LineBreak/>
+                                    Press Enter to or press the Execute button to execute the command.
                                 </TextBlock>
                             </TextBox.ToolTip>
                         </TextBox>
@@ -95,9 +107,13 @@
                                    Width="{DynamicResource StandardControlWidth}"/>
                         <TextBox Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=5}, 
                                                 Path= DataContext.CalibrationViewModel.ZCalibrationSpeed, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                                                UpdateSourceTrigger=PropertyChanged, Delay=300}"
                                  Style="{DynamicResource ThematicTextBox}"
                                  Width="{DynamicResource StandardControlWidth}">
+                            <TextBox.InputBindings>
+                                <KeyBinding Key="Enter" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=5}, 
+                                                                          Path=DataContext.CalibrationViewModel.CalibrateXYAndZMaxCommand}"/>
+                            </TextBox.InputBindings>
                             <TextBox.ToolTip>
                                 <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
                                     The speed of the Z Actuator as it performs calibration.
@@ -105,6 +121,8 @@
                                     Since the actuator will be hitting limit switches, it is recommended that this value be low.
                                     <LineBreak/>
                                     The recommended setting for ModiPrint hardware is 10 mm/s.
+                                    <LineBreak/>
+                                    Press Enter to or press the Execute button to execute the command.
                                 </TextBlock>
                             </TextBox.ToolTip>
                         </TextBox>
@@ -121,7 +139,7 @@
                     Style="{DynamicResource ThematicButtonBorder}"
                     Margin="0, 0, 0, 0">
                 <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=5}, 
-                                          Path= DataContext.CalibrationViewModel.CalibrateXYAndZMaxCommand}"
+                                          Path=DataContext.CalibrationViewModel.CalibrateXYAndZMaxCommand}"
                         HorizontalAlignment="Left" VerticalAlignment="Bottom"
                         Style="{DynamicResource ThematicButton}"
                         Height="{DynamicResource StandardImageButtonHeight}">

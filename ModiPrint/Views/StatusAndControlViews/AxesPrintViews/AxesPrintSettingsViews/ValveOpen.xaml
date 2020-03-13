@@ -36,14 +36,21 @@
                                    Style="{DynamicResource ThematicTextBlock}"
                                    Width="{DynamicResource StandardControlWidth}"/>
                         <TextBox Text="{Binding Path=ValveOpenTime, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged, Delay=250}"
-                                   Style="{DynamicResource ThematicTextBox}"
-                                   Width="{DynamicResource StandardControlWidth}">
-                            <TextBox.ToolTip>
-                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                                    Amount of time that the valve will remain open.
-                                </TextBlock>
-                            </TextBox.ToolTip>
+                                                UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                 Style="{DynamicResource ThematicTextBox}"
+                                 Width="{DynamicResource StandardControlWidth}">
+                            <TextBox.InputBindings>
+                                <KeyBinding Key="Enter" Command="{Binding ManualValvePrintWithoutMovementCommand}"/>
+                            </TextBox.InputBindings>
+                                <TextBox.ToolTip>
+                                    <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
+                                        Amount of time that the valve will remain open.
+                                        <LineBreak/>
+                                        Set open duration to zero to open the valve until you specify closure.
+                                        <LineBreak/>
+                                        Press Enter to or press the Execute button to execute the command.
+                                    </TextBlock>
+                                </TextBox.ToolTip>
                         </TextBox>
                         <TextBlock Text="us"
                                    Style="{DynamicResource ThematicTextBlock}"
@@ -64,7 +71,7 @@
                     HorizontalAlignment="Right" VerticalAlignment="Center"
                     Style="{DynamicResource ThematicButtonBorder}"
                     Margin="10, 10, 10, 10">
-                <Button Command="{Binding ManualValvePrintWithOutMovementCommand}"
+                <Button Command="{Binding ManualValvePrintWithoutMovementCommand}"
                         HorizontalAlignment="Right" VerticalAlignment="Bottom"
                         Style="{DynamicResource ThematicButton}"
                         Height="{DynamicResource StandardImageButtonHeight}">

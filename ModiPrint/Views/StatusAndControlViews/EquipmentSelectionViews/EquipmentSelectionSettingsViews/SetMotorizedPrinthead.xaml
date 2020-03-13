@@ -36,11 +36,11 @@
                                 Height="{DynamicResource StandardControlHeight}">
 
                         <Grid Width="{DynamicResource NarrowControlWidth}"
-                                Margin="5, 5, 5, 5"/>
+                              Margin="5, 5, 5, 5"/>
 
                         <TextBlock Text="Maximize Speeds"
                                     Style="{DynamicResource ThematicTextBlock}"
-                                    Width="{DynamicResource StandardControlWidth}"/>
+                                    Width="{DynamicResource WideControlWidth}"/>
 
                         <Grid>
                             <Grid.Resources>
@@ -92,14 +92,19 @@
                                Width="{DynamicResource NarrowControlWidth}"/>
                         <TextBlock Text="MaxSpeed"
                                    Style="{DynamicResource ThematicTextBlock}"
-                                   Width="{DynamicResource StandardControlWidth}"/>
+                                   Width="{DynamicResource WideControlWidth}"/>
                         <TextBox Text="{Binding Path=MaxSpeed, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                                                UpdateSourceTrigger=PropertyChanged, Delay=300}"
                                  Style="{DynamicResource ThematicTextBox}"
                                  Width="{DynamicResource StandardControlWidth}">
+                            <TextBox.InputBindings>
+                                <KeyBinding Key="Enter" Command="{Binding ManualSetMotorizedPrintheadCommand}"/>
+                            </TextBox.InputBindings>
                             <TextBox.ToolTip>
                                 <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
                                     The printhead will accelerate to this speed for all following commands.
+                                    <LineBreak/>
+                                    Press Enter to or press the Execute button to execute the command.
                                 </TextBlock>
                             </TextBox.ToolTip>
                         </TextBox>
@@ -118,20 +123,25 @@
                                Width="{DynamicResource NarrowControlWidth}"/>
                         <TextBlock Text="Acceleration"
                                    Style="{DynamicResource ThematicTextBlock}"
-                                   Width="{DynamicResource StandardControlWidth}"/>
+                                   Width="{DynamicResource WideControlWidth}"/>
                         <TextBox Text="{Binding Path=Acceleration, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                                                UpdateSourceTrigger=PropertyChanged, Delay=300}"
                                    Style="{DynamicResource ThematicTextBox}"
-                                   Width="{DynamicResource StandardControlWidth}"/>
-                        <TextBlock Text="mm/s²"
-                                   Style="{DynamicResource ThematicTextBlock}"
-                                   Width="{DynamicResource NarrowControlWidth}">
-                            <TextBlock.ToolTip>
+                                   Width="{DynamicResource StandardControlWidth}">
+                            <TextBox.InputBindings>
+                                <KeyBinding Key="Enter" Command="{Binding ManualSetMotorizedPrintheadCommand}"/>
+                            </TextBox.InputBindings>
+                            <TextBox.ToolTip>
                                 <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
                                     The printhead will use this acceleration value for all following commands.
+                                    <LineBreak/>
+                                    Press Enter to or press the Execute button to execute the command.
                                 </TextBlock>
-                            </TextBlock.ToolTip>
-                        </TextBlock>
+                            </TextBox.ToolTip>
+                        </TextBox>
+                        <TextBlock Text="mm/s²"
+                                   Style="{DynamicResource ThematicTextBlock}"
+                                   Width="{DynamicResource NarrowControlWidth}"/>
                     </StackPanel>
                 </StackPanel>
             </GroupBox>

@@ -38,7 +38,7 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
         /// <summary>
         /// Processes the command for Axis movement and Printing.
         /// </summary>
-        public List<ConvertedGCodeLine> ProcessG00Command(string[] repRapGCodeLine, MaterialModel currentMaterial, bool isPrinting)
+        public List<ConvertedGCodeLine> ProcessG00Command(string[] repRapGCodeLine, MaterialModel currentMaterial)
         {
             //The return GCode.
             List<ConvertedGCodeLine> convertedGCodeLinesList = null;
@@ -51,14 +51,47 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
               || (_parametersModel.ZCoord.Changed == true)))
             {
                 //Does this RepRap line indicate printing?
-                _parametersModel.IsPrinting = ((isPrinting) || (_parametersModel.ERepRapCoord.PositiveChanged == true)) ? true : false; //To Do: Test is E retraction causes IsPrinting to be false.
+                _parametersModel.IsPrinting = ((repRapGCodeLine[0] == "GX") || (_parametersModel.ERepRapCoord.PositiveChanged == true)) ? true : false; //To Do: Test is E retraction causes IsPrinting to be false.
 
                 try
                 {
                     int eModiPrintCoordIndex = _parametersModel.FindEModiPrintCoordIndex(currentMaterial.PrintheadModel);
-                    convertedGCodeLinesList = SetWriteG00Command(
+
+                    //Check if a Motorized Printhead needs to retract or unretract.
+                    if ((currentMaterial.PrintheadModel.PrintheadType == PrintheadType.Motorized) && (currentMaterial.PrintStyle == PrintStyle.Continuous))
+                    {
+                        //If a Motorized Printhead is in use, then retraction potentially needs to occur before the execution of the next command.
+                        if ((_parametersModel.IsPrinting == false) & (_parametersModel.IsRetracted == false))
+                        {
+                            MotorizedPrintheadTypeModel motorizedPrintheadTypeModel = (MotorizedPrintheadTypeModel)currentMaterial.PrintheadModel.PrintheadTypeModel;
+                            ContinuousPrintStyleModel continuousPrintheadStyleModel = (ContinuousPrintStyleModel)currentMaterial.PrintStyleModel;
+                            convertedGCodeLinesList = WriteG00.WriteMotorizedPrintWithoutMovement(-1 * continuousPrintheadStyleModel.MotorizedDispenseRetractionDistance, motorizedPrintheadTypeModel.MmPerStep,
+                                motorizedPrintheadTypeModel.IsDirectionInverted, ref _parametersModel.ERepRapCoord.DeltaCoordRemainder, _parametersModel.EModiPrintCoordList[eModiPrintCoordIndex]);
+                            _parametersModel.IsRetracted = true;
+                        }
+                        //If a Motorized Printhead needs to print, then reversing the retraction potentially needs to occur before the execution of the next print command.
+                        else if ((_parametersModel.IsPrinting == true) && (_parametersModel.IsRetracted))
+                        {
+                            MotorizedPrintheadTypeModel motorizedPrintheadTypeModel = (MotorizedPrintheadTypeModel)currentMaterial.PrintheadModel.PrintheadTypeModel;
+                            ContinuousPrintStyleModel continuousPrintheadStyleModel = (ContinuousPrintStyleModel)currentMaterial.PrintStyleModel;
+                            convertedGCodeLinesList = WriteG00.WriteMotorizedPrintWithoutMovement(continuousPrintheadStyleModel.MotorizedDispenseRetractionDistance, motorizedPrintheadTypeModel.MmPerStep,
+                                motorizedPrintheadTypeModel.IsDirectionInverted, ref _parametersModel.ERepRapCoord.DeltaCoordRemainder, _parametersModel.EModiPrintCoordList[eModiPrintCoordIndex]);
+                            _parametersModel.IsRetracted = false;
+                        }
+                    }
+                     
+                    //Write the movement or print command.
+                    List<ConvertedGCodeLine> gCommand = SetWriteG00Command(
                         currentMaterial, _printerModel, 
                         _parametersModel.ERepRapCoord, _parametersModel.XCoord, _parametersModel.YCoord, _parametersModel.ZCoord, _parametersModel.EModiPrintCoordList[eModiPrintCoordIndex]);
+                    if (convertedGCodeLinesList == null)
+                    {
+                        convertedGCodeLinesList = gCommand;
+                    }
+                    else
+                    {
+                        convertedGCodeLinesList.AddRange(gCommand);
+                    }
                 }
                 catch when (currentMaterial == null) //Material unset.
                 {
@@ -174,7 +207,7 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
                                     ContinuousPrintStyleModel continousPrintStyleModel = (ContinuousPrintStyleModel)currentMaterial.PrintStyleModel;
                                     convertedGCodeLinesList = WriteG00.WriteMotorizedContinuousPrint(
                                         motorizedPrintheadTypeModel.MmPerStep, printerModel.AxisModelList[0].MmPerStep, printerModel.AxisModelList[1].MmPerStep, currentMaterial.PrintheadModel.AttachedZAxisModel.MmPerStep,
-                                        eRepRapCoord.DeltaCoord, xCoord.DeltaCoord, yCoord.DeltaCoord, zCoord.DeltaCoord,
+                                        continousPrintStyleModel.MotorizedDispensePerMmMovement, xCoord.DeltaCoord, yCoord.DeltaCoord, zCoord.DeltaCoord,
                                         motorizedPrintheadTypeModel.IsDirectionInverted, printerModel.AxisModelList[0].IsDirectionInverted, printerModel.AxisModelList[1].IsDirectionInverted, currentMaterial.PrintheadModel.AttachedZAxisModel.IsDirectionInverted,
                                         ref eRepRapCoord.DeltaCoordRemainder, ref xCoord.DeltaCoordRemainder, ref yCoord.DeltaCoordRemainder, ref zCoord.DeltaCoordRemainder,
                                         currentEModiPrintCoord);

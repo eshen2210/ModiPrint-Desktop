@@ -127,6 +127,15 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
         }
 
         /// <summary>
+        /// Sets the absolute current and previous coordinate information.
+        /// </summary>
+        /// <param name="initialCoordInput"></param>
+        public void SetInitialCoord(double initialCoordInput)
+        {
+            _currentCoord = _previousCoord = initialCoordInput;
+        }
+
+        /// <summary>
         /// Sets new a new absolute value for the coordinate.
         /// Meant to be called and used with the RepRap G92 command.
         /// </summary>

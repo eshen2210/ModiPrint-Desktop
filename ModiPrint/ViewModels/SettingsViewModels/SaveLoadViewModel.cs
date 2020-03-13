@@ -58,7 +58,7 @@ namespace ModiPrint.ViewModels.SettingsViewModels
         /// <summary>
         /// Save Print-related elements to XML.
         /// </summary>
-        private void SaveModiPrintPrintSettings()
+        private void SaveModiPrintSettings()
         {
             try
             {
@@ -82,7 +82,7 @@ namespace ModiPrint.ViewModels.SettingsViewModels
         /// <summary>
         /// Load Print-related elements from XML.
         /// </summary>
-        private void LoadModiPrintPrintSettings()
+        private void LoadModiPrintSettings()
         {
             try
             {
@@ -102,7 +102,7 @@ namespace ModiPrint.ViewModels.SettingsViewModels
             }
             catch
             {
-                _errorListViewModel.AddError("GCode File Manager", "Unable to Upload GCode File");
+                _errorListViewModel.AddError("GCode File Manager", "Unable to load XML file");
             }
         }
         #endregion
@@ -129,7 +129,7 @@ namespace ModiPrint.ViewModels.SettingsViewModels
 
         public void ExecuteSaveModiPrintXMLFileCommand(object notUsed)
         {
-            SaveModiPrintPrintSettings();
+            SaveModiPrintSettings();
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace ModiPrint.ViewModels.SettingsViewModels
 
         public void ExecuteLoadModiPrintXMLFileCommand(object notUsed)
         {
-            LoadModiPrintPrintSettings();
+            LoadModiPrintSettings();
         }
 
         #endregion

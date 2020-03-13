@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using ModiPrint.Models.PrinterModels;
 using ModiPrint.Models.PrinterModels.PrintheadModels;
+using ModiPrint.Models.PrinterModels.PrintheadModels.PrintheadTypeModels;
 using ModiPrint.Models.PrintModels.MaterialModels;
 using ModiPrint.Models.PrintModels.PrintStyleModels;
 using ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models;
-using ModiPrint.Models.GCodeConverterModels.ReportingModels;
 using ModiPrint.ViewModels;
 
 namespace ModiPrint.Models.GCodeConverterModels
@@ -74,6 +74,14 @@ namespace ModiPrint.Models.GCodeConverterModels
             set { _isPrinting = value; }
         }
 
+        //Is the Motorized Printhead currently retracted?
+        private bool _isRetracted;
+        public bool IsRetracted
+        {
+            get { return _isRetracted; }
+            set { _isRetracted = value; }
+        }
+
         //True = absolute coordinate system for Axis movement interpretation where the origin (0, 0, 0, 0) is set to the position at the start of this Print.
         //False = relative coordinate system for Axis movement interpretation.
         private bool _absCoordAxis = true;
@@ -109,12 +117,11 @@ namespace ModiPrint.Models.GCodeConverterModels
 
         //Activates whenever the GCode Converter has processed more lines of code.
         public event GCodeConverterLineConvertedEventHandler LineConverted;
-        private void OnLineConverted(LineConvertedEventArgs lineConvertedEventArgs)
+        private void OnLineConverted(string progress)
         {
             if (LineConverted != null)
-            { LineConverted(this, lineConvertedEventArgs); }
+            { LineConverted(this, progress); }
         }
-        private LineConvertedEventArgs _lineConvertedEventArgs;
         #endregion
 
         #region Constructor
@@ -134,7 +141,9 @@ namespace ModiPrint.Models.GCodeConverterModels
             //It's easier to just create an E coordinate for every printhead though.
             //The index of the E coordinate list equals the index of the Printer's Printheads list.
             foreach (PrintheadModel printheadModel in _printerModel.PrintheadModelList)
-            { _eModiPrintCoordList.Add(new CoordinateModel(CoordinateType.E, true, this, 0, 0, 0)); }
+            {
+                _eModiPrintCoordList.Add(new CoordinateModel(CoordinateType.E, true, this, 0, 0, 0));
+            }
 
             _errorReporterViewModel = new ErrorReporterViewModel(ErrorListViewModel);
         }
@@ -233,14 +242,10 @@ namespace ModiPrint.Models.GCodeConverterModels
         /// <summary>
         /// Triggers the LineConverted event which displays information to the GUI.
         /// </summary>
-        /// <param name="taskName"></param>
-        /// <param name="percentCompleted"></param>
-        public void ReportProgress(string taskName, int percentCompleted)
+        /// <param name="progress"></param>
+        public void ReportProgress(string progress)
         {
-            _lineConvertedEventArgs = new LineConvertedEventArgs(taskName, percentCompleted);
-
-            Application.Current.Dispatcher.Invoke(() =>
-            OnLineConverted(_lineConvertedEventArgs));
+            OnLineConverted(progress);
         }
         #endregion
     }

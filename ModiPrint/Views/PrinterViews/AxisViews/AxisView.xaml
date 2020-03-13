@@ -194,7 +194,7 @@
                                 <Image Source="/Resources/General/LimitSwitch.png"
                                        Style="{DynamicResource ThematicControlImage}"
                                        Width="{DynamicResource NarrowControlWidth}"/>
-                                <TextBlock Text="limit switch Pin"
+                                <TextBlock Text="Limit Switch Pin"
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource StandardControlWidth}"/>
                             </StackPanel>
@@ -254,7 +254,7 @@
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource StandardControlWidth}"/>
                                 <TextBox Text="{Binding Path=MaxSpeed, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                                                        UpdateSourceTrigger=PropertyChanged, Delay=300}"
                                          Style="{DynamicResource ThematicTextBox}"
                                          Width="{DynamicResource WideControlWidth}">
                                     <TextBox.ToolTip>
@@ -290,7 +290,7 @@
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource StandardControlWidth}"/>
                                 <TextBox Text="{Binding Path=MaxAcceleration, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                                                        UpdateSourceTrigger=PropertyChanged, Delay=300}"
                                          Style="{DynamicResource ThematicTextBox}"
                                          Width="{DynamicResource WideControlWidth}">
                                     <TextBox.ToolTip>
@@ -325,8 +325,8 @@
                                 <TextBlock Text="Distance per Step"
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource StandardControlWidth}"/>
-                                <TextBox Text="{Binding Path=MmPerStep, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                                <TextBox Text="{Binding Path=MmPerStep, Mode=TwoWay,
+                                                        UpdateSourceTrigger=PropertyChanged, Delay=300}"
                                          Style="{DynamicResource ThematicTextBox}"
                                          Width="{DynamicResource WideControlWidth}"/>
                                 <TextBlock Text="mm"
@@ -355,7 +355,7 @@
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource StandardControlWidth}"/>
                                 <TextBox Text="{Binding Path=StepPulseTime, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                                                        UpdateSourceTrigger=PropertyChanged, Delay=300}"
                                          Style="{DynamicResource ThematicTextBox}"
                                          Width="{DynamicResource WideControlWidth}"/>
                                 <TextBlock Text="us"
@@ -433,7 +433,7 @@
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource StandardControlWidth}"/>
                                 <TextBox Text="{Binding Path=MaxPosition, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                                                        UpdateSourceTrigger=PropertyChanged, Delay=300}"
                                          Style="{DynamicResource ThematicTextBox}"
                                          Width="{DynamicResource WideControlWidth}"/>
                                 <TextBlock Text="mm From Origin"
@@ -460,7 +460,7 @@
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource StandardControlWidth}"/>
                                 <TextBox Text="{Binding Path=MinPosition, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                                                        UpdateSourceTrigger=PropertyChanged, Delay=300}"
                                          Style="{DynamicResource ThematicTextBox}"
                                          Width="{DynamicResource WideControlWidth}"/>
                                 <TextBlock Text="mm From Origin"

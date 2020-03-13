@@ -45,6 +45,12 @@ namespace ModiPrint.Models.XMLSerializerModels.PrintXMLSerializerModels.PrintSty
 
                     switch (xmlReader.Name)
                     {
+                        case "MotorizedDispensePerMmMovement":
+                            continuousPrintStyleViewModel.MotorizedDispensePerMmMovement = xmlReader.ReadElementContentAsDouble();
+                            break;
+                        case "MotorizedDispenseRetractionDistance":
+                            continuousPrintStyleViewModel.MotorizedDispenseRetractionDistance = xmlReader.ReadElementContentAsDouble();
+                            break;
                         default:
                             base.ReportErrorUnrecognizedElement(xmlReader);
                             break;

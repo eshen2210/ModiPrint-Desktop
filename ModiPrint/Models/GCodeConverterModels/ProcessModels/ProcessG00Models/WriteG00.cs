@@ -63,13 +63,13 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
         }
 
         /// <summary>
-        /// Returns a string of converted GCode for Motorized Printhead printing with continuous Axis movement.
+        /// Returns a string of converted g-code for Motorized Printhead printing with continuous Axis movement.
         /// </summary>
         /// <param name="emmPerStep"></param>
         /// <param name="xmmPerStep"></param>
         /// <param name="ymmPerStep"></param>
         /// <param name="zmmPerStep"></param>
-        /// <param name="eDistance"></param>
+        /// <param name="eDistancePerMmMovement"></param>
         /// <param name="xDistance"></param>
         /// <param name="yDistance"></param>
         /// <param name="zDistance"></param>
@@ -85,7 +85,7 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
         /// <returns></returns>
         public static List<ConvertedGCodeLine> WriteMotorizedContinuousPrint(
             double emmPerStep, double xmmPerStep, double ymmPerStep, double zmmPerStep,
-            double eDistance, double xDistance, double yDistance, double zDistance,
+            double eDistancePerMmMovement, double xDistance, double yDistance, double zDistance,
             bool eInvertDirection, bool xInvertDirection, bool yInvertDirection, bool zInvertDirection,
             ref double eRemainder, ref double xRemainder, ref double yRemainder, ref double zRemainder,
             CoordinateModel eModiPrintCoord)
@@ -93,19 +93,24 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
             //The return GCode.
             List<ConvertedGCodeLine> convertedGCodeLinesList = new List<ConvertedGCodeLine>();
 
-            if (((eDistance) != 0) || ((xDistance) != 0) || ((yDistance) != 0) || ((zDistance) != 0))
+            if (((eDistancePerMmMovement) != 0) || ((xDistance) != 0) || ((yDistance) != 0) || ((zDistance) != 0))
             {
                 string convertedGCodeLine = "";
                 convertedGCodeLine += SerialCommands.MotorPrintWithMovement;
+
+                //Calculate the distance that the Printhead's motor will move.
+                double movementDistance = Math.Sqrt(xDistance * xDistance + yDistance * yDistance + zDistance * zDistance);
+                double eDistance = eDistancePerMmMovement * movementDistance;
 
                 //Output commands that will be sent through the serial port.
                 convertedGCodeLine += G00Calculator.WriteSteps('X', xDistance, xmmPerStep, xInvertDirection, ref xRemainder);
                 convertedGCodeLine += G00Calculator.WriteSteps('Y', yDistance, ymmPerStep, yInvertDirection, ref yRemainder);
                 convertedGCodeLine += G00Calculator.WriteSteps('Z', zDistance, zmmPerStep, zInvertDirection, ref zRemainder);
                 convertedGCodeLine += G00Calculator.WriteSteps('E', eDistance, emmPerStep, eInvertDirection, ref eRemainder);
+
+                //EModiPrintCoord can be passed into this method as a null object if this step is not required.
                 if (eModiPrintCoord != null)
                 {
-                    //Can be passed into this method as a null object if this step is not required.
                     eModiPrintCoord.SetCoord(eDistance, false);
                 }
 
@@ -117,7 +122,7 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
         }
 
         /// <summary>
-        /// Returns a string of converted GCode for Motorized Printhead printing with stop-and-go interpolated movement.
+        /// Returns a string of converted g-code for Motorized Printhead printing with stop-and-go interpolated movement.
         /// </summary>
         /// <param name="emmPerStep"></param>
         /// <param name="xmmPerStep"></param>
@@ -180,12 +185,12 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
                     {
                         double ePrint = dropletModel.GradientModel.PrintParameterAtDistance(eDistance,
                             xPrevious + printDistancesList[i][0], yPrevious + printDistancesList[i][1], zPrevious + printDistancesList[i][2]);
-                        List<ConvertedGCodeLine> appendList = WriteMotorizedPrintWithoutMovement(ePrint, emmPerStep, eInvertDirection, ref eRemainder);
+                        List<ConvertedGCodeLine> appendList = WriteMotorizedPrintWithoutMovement(ePrint, emmPerStep, eInvertDirection, ref eRemainder, null);
                         if (appendList != null) { convertedGCodeLinesList.AddRange(appendList); }
                     }
                     else //No gradient.
                     {
-                        List<ConvertedGCodeLine> appendList = WriteMotorizedPrintWithoutMovement(eDistance, emmPerStep, eInvertDirection, ref eRemainder);
+                        List<ConvertedGCodeLine> appendList = WriteMotorizedPrintWithoutMovement(eDistance, emmPerStep, eInvertDirection, ref eRemainder, null);
                         if (appendList != null) { convertedGCodeLinesList.AddRange(appendList); }
                     }
                 }
@@ -197,27 +202,38 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
         }
 
         /// <summary>
-        /// Returns a converted GCode line for a motorized print without movement.
+        /// Returns a converted g-code line for a motorized print without movement.
         /// </summary>
         /// <param name="eDistance"></param>
         /// <param name="emmPerStep"></param>
         /// <param name="invertDirection"></param>
         /// <param name="eRemainder"></param>
         /// <returns></returns>
-        public static List<ConvertedGCodeLine> WriteMotorizedPrintWithoutMovement(double eDistance, double emmPerStep, bool invertDirection, ref double eRemainder)
+        public static List<ConvertedGCodeLine> WriteMotorizedPrintWithoutMovement(double eDistance, double emmPerStep, bool invertDirection, ref double eRemainder, CoordinateModel eModiPrintCoord)
         {
             //The return GCode.
             List<ConvertedGCodeLine> convertedGCodeLinesList = new List<ConvertedGCodeLine>();
 
-            string printLine = SerialCommands.MotorPrintWithoutMovement;
-            printLine += G00Calculator.WriteSteps('E', eDistance, emmPerStep, invertDirection, ref eRemainder);
+            if (eDistance != 0)
+            {
+                string printLine = SerialCommands.MotorPrintWithoutMovement;
+                printLine += G00Calculator.WriteSteps('E', eDistance, emmPerStep, invertDirection, ref eRemainder);
 
-            convertedGCodeLinesList.Add(new ConvertedGCodeLine(printLine));
-            return convertedGCodeLinesList;
+                //EModiPrintCoord can be passed into this method as a null object if this step is not required.
+                if (eModiPrintCoord != null)
+                {
+                    eModiPrintCoord.SetCoord(eDistance, false);
+                }
+
+                convertedGCodeLinesList.Add(new ConvertedGCodeLine(printLine));
+                return convertedGCodeLinesList;
+            }
+
+            return null;
         }
 
         /// <summary>
-        /// Returns a string of converted GCode for Valve Printhead printing with continuous Axis movement.
+        /// Returns a string of converted g-code for Valve Printhead printing with continuous Axis movement.
         /// </summary>
         /// <param name="xmmPerStep"></param>
         /// <param name="ymmPerStep"></param>
@@ -262,7 +278,7 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
         }
 
         /// <summary>
-        /// Returns a string of converted GCode for Valve Printhead printing with stop-and-go interpolated movement.
+        /// Returns a string of converted g-code for Valve Printhead printing with stop-and-go interpolated movement.
         /// </summary>
         /// <param name="xmmPerStep"></param>
         /// <param name="ymmPerStep"></param>
@@ -340,7 +356,7 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
         }
 
         /// <summary>
-        /// Returns a converted GCode line for a valve print without movement command.
+        /// Returns a converted g-code line for a valve print without movement command.
         /// </summary>
         /// <returns></returns>
         public static List<ConvertedGCodeLine> WriteValvePrintWithoutMovement(int valveOpenTime)
@@ -358,7 +374,7 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
         }
 
         /// <summary>
-        /// Returns a converted GCode line for a valve close command.
+        /// Returns a converted g-code line for a valve close command.
         /// </summary>
         /// <returns></returns>
         public static List<ConvertedGCodeLine> WriteValveClose()

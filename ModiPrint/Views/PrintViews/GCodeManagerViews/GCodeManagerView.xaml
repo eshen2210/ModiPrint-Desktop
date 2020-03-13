@@ -63,52 +63,20 @@
                         </Button>
                     </Border>
 
-                    <!--GCode File Name-->
-                    <TextBlock Text="{Binding GCodeFileName}"
-                               HorizontalAlignment="Center"
-                               Height="{DynamicResource StandardControlHeight}" Width="{DynamicResource ExtraWideControlWidth}"
-                               Style="{DynamicResource ThematicTextBlock}"/>
+                    <!--GCode File Name & Status-->
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="{Binding GCodeFileName}"
+                                   HorizontalAlignment="Center"
+                                   Height="30" Width="500"
+                                   Style="{DynamicResource ThematicTextBlock}"/>
 
-                    <!--Convert GCode-->
-                    <Border Style="{DynamicResource ThematicButtonBorder}"
-                            HorizontalAlignment="Left">
-                        <Button Command="{Binding ConvertGCodeCommand}"
-                                Style="{DynamicResource ThematicButton}"
-                                Height="{DynamicResource StandardImageButtonHeight}">
-                            <Button.Template>
-                                <ControlTemplate>
-                                    <StackPanel Orientation="Horizontal"
-                                                Background="Transparent">
-                                        <Image Source="/Resources/Buttons/ConvertFile.png"
-                                               Height="{DynamicResource StandardImageButtonHeight}"
-                                               Style="{DynamicResource ThematicControlImage}"
-                                               Margin="0, 0, 0, 0"/>
-                                        <StackPanel Orientation="Vertical"
-                                                    VerticalAlignment="Center"
-                                                    Margin="5, 5, 5, 5">
-                                            <TextBlock Text="Convert"
-                                                       Style="{DynamicResource ThematicTextBlock}"
-                                                       Margin="0, 0, 0, 0"/>
-                                            <TextBlock Text="G-code"
-                                                       Style="{DynamicResource ThematicTextBlock}"
-                                                       Margin="0, 0, 0, 0"/>
-                                        </StackPanel>
-                                    </StackPanel>
-                                </ControlTemplate>
-                            </Button.Template>
-                            <Button.ToolTip>
-                                <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                                    If a .gcode file is uploaded, translate the file into a .mdpt file with ModiPrint-specific commands.
-                                    <LineBreak/>
-                                    If a .mdpt file is uplaoded, use the uploaded file as is during printing.
-                                    <LineBreak/>
-                                    Will not function if a .gcode file has not uploaded.
-                                </TextBlock>
-                            </Button.ToolTip>
-                        </Button>
-                    </Border>
+                        <TextBlock Text="{Binding GCodeConverterStatus}"
+                                   HorizontalAlignment="Center"
+                                   Height="30" Width="500"
+                                   Style="{DynamicResource ThematicTextBlock}"/>
+                    </StackPanel>
 
-                    <!--Saves/Writes the ModiPrint GCode into a .mdpt file-->
+                    <!--Saves/Writes the ModiPrint g-code into a .mdpt file-->
                     <Border Style="{DynamicResource ThematicButtonBorder}"
                             HorizontalAlignment="Right">
                         <Button Command="{Binding SaveModiPrintGCodeFileCommand}"
@@ -146,29 +114,8 @@
                     </Border>
 
                 </StackPanel>
-
-                <!--Progress Bar-->
-                <Grid>
-                    <Border HorizontalAlignment="Stretch" Style="{DynamicResource ThematicBorder}">
-                        <ProgressBar Value="{Binding PercentCompleted, Mode=OneWay}"
-                                     Minimum="0" 
-                                     Maximum="100"
-                                     Height="{DynamicResource StandardControlHeight}"
-                                     Foreground="{DynamicResource PrimaryColor}"
-                                     Background="{DynamicResource StandardBackground}"
-                                     BorderThickness="0"
-                                     Margin="0, 0, 0, 0"/>
-                    </Border>
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
-                               Text="{Binding TaskName}"
-                               Style="{DynamicResource ThematicTextBlock}">
-                    </TextBlock>
-                    <!--To Do: More feedback after converting GCode-->
-                </Grid>
-
             </StackPanel>
         </Grid>
-    
         <!--#endregion-->
 
     </Grid>

@@ -536,6 +536,16 @@ namespace ModiPrint.Models.SerialCommunicationModels
             //Remove "*SwitchMaterial" from the beginning of the command set.
             commandSet = commandSet.Substring(14);
 
+            //Potentially pause before deactivating the current printhead.
+            bool pauseBeforeDeactivating = false;
+            if (commandSet.Contains('D'))
+            { pauseBeforeDeactivating = true; }
+
+            //Potentially pause after activating the next printhead.
+            bool pauseBeforeActivating = false;
+            if (commandSet.Contains('A'))
+            { pauseBeforeActivating = true; }
+
             //Set of commands to be returned at the end of this method.
             List<string> returnCommands = new List<string>();
 
@@ -582,6 +592,10 @@ namespace ModiPrint.Models.SerialCommunicationModels
                     }
                 }
 
+                //Pause before deactivating.
+                if (pauseBeforeDeactivating == true)
+                { returnCommands.Add(SerialMessageCharacters.SerialPrintPauseCharacter.ToString()); }
+
                 //3. Set new XYZ to max speeds and move to the new Offset.
                 //Set associated X Axis at max speeds.                
                 returnCommands.Add(_writeSetAxisModel.WriteSetAxis('X', xAxisModel.AttachedMotorStepGPIOPinModel.PinID, xAxisModel.AttachedMotorDirectionGPIOPinModel.PinID,
@@ -594,7 +608,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
                     zAxisModel.StepPulseTime, zLimitPinID, zAxisModel.MaxSpeed, zAxisModel.MaxAcceleration, zAxisModel.MmPerStep));
                 //4.Move to the new Offset at max speeds.
                 double zPosition = _realTimeStatusDataModel.ZRealTimeStatusAxisModel.Position;
-                List<string> moveToOffset = WriteMoveToOffset(newPrintheadModel, currentPrintheadModel, zPosition);
+                List<string> moveToOffset = WriteMoveToOffset(newPrintheadModel, currentPrintheadModel, zPosition, pauseBeforeActivating);
                 foreach (string command in moveToOffset)
                 {
                     if (!String.IsNullOrWhiteSpace(command))
@@ -629,8 +643,9 @@ namespace ModiPrint.Models.SerialCommunicationModels
         /// <param name="newPrinthead"></param>
         /// <param name="currentPrinthead"></param>
         /// <param name="zPosition">Relative position of the Z Axis before and after switching.</param>
+        /// <param name="pauseBeforeActivating">Pauses the print sequence before lowering the Z actuator.</param>
         /// <returns></returns>
-        private List<string> WriteMoveToOffset(PrintheadModel newPrinthead, PrintheadModel currentPrinthead, double zPosition)
+        private List<string> WriteMoveToOffset(PrintheadModel newPrinthead, PrintheadModel currentPrinthead, double zPosition, bool pauseBeforeActivating)
         {
             List<string> returnCommands = new List<string>();
 
@@ -659,6 +674,10 @@ namespace ModiPrint.Models.SerialCommunicationModels
                     xMove, yMove, 0, xAxisModel.IsDirectionInverted, yAxisModel.IsDirectionInverted, false,
                     ref unused, ref unused, ref unused)));
             }
+
+            //Pause before activating.
+            if (pauseBeforeActivating == true)
+            { returnCommands.Add(SerialMessageCharacters.SerialPrintPauseCharacter.ToString()); }
 
             //Move the Z offset after the X and Y positions are set.
             if (zMove != 0)

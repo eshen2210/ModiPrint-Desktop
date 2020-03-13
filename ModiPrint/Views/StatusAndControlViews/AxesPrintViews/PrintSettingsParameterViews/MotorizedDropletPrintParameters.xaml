@@ -18,12 +18,14 @@
                        Style="{DynamicResource ThematicTextBlock}"
                        Width="{DynamicResource WideControlWidth}"/>
             <TextBox Text="{Binding Path=InterpolateDistance, Mode=TwoWay, 
-                                    UpdateSourceTrigger=PropertyChanged, Delay=250}"
-                     Style="{DynamicResource ThematicTextBox}"
+                                    UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                     Style="{DynamicResource XYZControlTextBox}"
                      Width="{DynamicResource StandardControlWidth}">
                 <TextBox.ToolTip>
                     <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
                         Pitch distance between each droplet.
+                        <LineBreak/>
+                        Press Enter to execute or press the execute button to execute the command.
                     </TextBlock>
                 </TextBox.ToolTip>
             </TextBox>
@@ -43,14 +45,16 @@
                        Style="{DynamicResource ThematicTextBlock}"
                        Width="{DynamicResource WideControlWidth}"/>
             <TextBox Text="{Binding Path=EMoveAxisPositiveDistance, Mode=TwoWay, 
-                                    UpdateSourceTrigger=PropertyChanged, Delay=250}"
-                     Style="{DynamicResource ThematicTextBox}"
+                                    UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                     Style="{DynamicResource XYZControlTextBox}"
                      Width="{DynamicResource StandardControlWidth}">
                 <TextBox.ToolTip>
                     <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
                         Distance that the motorized printhead will move to dispense the droplet.
                         <LineBreak/>
                         In theory, Droplet Volume = Dispense Distance * Resevoir Crosssectional Area.
+                        <LineBreak/>
+                        Press Enter to execute or press the execute button to execute the command.
                     </TextBlock>
                 </TextBox.ToolTip>
             </TextBox>

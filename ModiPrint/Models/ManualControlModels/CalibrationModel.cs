@@ -65,7 +65,7 @@ namespace ModiPrint.Models.ManualControlModels
         /// <summary>
         /// Sends outgoing commands that retracts all Z Axes and moves X and Y Axes to the limit switches.
         /// </summary>
-        public void CalibrateXYAndZMax(double xCalibrationSpeed, double yCalibrationSpeed, double zCalibrationSpeed)
+        public void CalibrateXYAndZMax(double xCalibrationSpeed, double yCalibrationSpeed, double zCalibrationSpeed, string materialName)
         {
             //Retract Z Axes.
             RetractAllZ(zCalibrationSpeed);
@@ -139,6 +139,13 @@ namespace ModiPrint.Models.ManualControlModels
                 yAxis.IsDirectionInverted, false, false,
                 ref unused, ref unused, ref unused));
             _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(yMoveAwayFromLimit);
+
+            //At the end, switch the Z actuator to the Printhead used at the beginning of the print.
+            AxisModel zAxisFinalModel = _printerModel.FindAxis(_realTimeStatusDataModel.ZRealTimeStatusAxisModel.Name);
+            int zFinalLimitPinID = (zAxisFinalModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : zAxisFinalModel.AttachedLimitSwitchGPIOPinModel.PinID;
+            string switchZFinal = _writeSetAxisModel.WriteSetAxis(zAxisFinalModel.AxisID, zAxisFinalModel.AttachedMotorStepGPIOPinModel.PinID, zAxisFinalModel.AttachedMotorDirectionGPIOPinModel.PinID, 
+                    zAxisFinalModel.StepPulseTime, zFinalLimitPinID, zCalibrationSpeed, zAxisFinalModel.MaxAcceleration, zAxisFinalModel.MmPerStep);
+            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(switchZFinal);
 
             OnCalibrationBegun();
         }

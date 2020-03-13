@@ -116,7 +116,7 @@ namespace ModiPrint.Models.ManualControlModels
 
             double unused = 0;
             string printString = GCodeLinesConverter.GCodeLinesListToString(
-                WriteG00.WriteMotorizedPrintWithoutMovement(eDistance, emmPerStep, motorizedPrintheadTypeModel.IsDirectionInverted, ref unused));
+                WriteG00.WriteMotorizedPrintWithoutMovement(eDistance, emmPerStep, motorizedPrintheadTypeModel.IsDirectionInverted, ref unused, null));
 
             _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(printString);
         }

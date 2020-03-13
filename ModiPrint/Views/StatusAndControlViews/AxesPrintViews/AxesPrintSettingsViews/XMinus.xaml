@@ -10,6 +10,7 @@
              mc:Ignorable="d">
 
     <Grid HorizontalAlignment="Center">
+       
         <StackPanel Orientation="Vertical">
 
             <!--Menu Icon-->
@@ -40,12 +41,14 @@
                                    Style="{DynamicResource ThematicTextBlock}"
                                    Width="{DynamicResource WideControlWidth}"/>
                         <TextBox Text="{Binding Path=XMoveAxisNegativeDistance, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged, Delay=250}"
-                                 Style="{DynamicResource ThematicTextBox}"
+                                                UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                 Style="{DynamicResource XYZControlTextBox}"
                                  Width="{DynamicResource StandardControlWidth}">
                             <TextBox.ToolTip>
                                 <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
-                                    Distance to be traversed by the actuator.
+                                    Specifies the distance to be traversed by the X actuator.
+                                    <LineBreak/>
+                                    Press Enter to execute or press the execute button to execute the command.
                                 </TextBlock>
                             </TextBox.ToolTip>
                         </TextBox>

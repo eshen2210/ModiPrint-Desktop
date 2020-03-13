@@ -116,8 +116,8 @@ namespace ModiPrint.Models.PrinterModels.PrintheadModels.PrintheadTypeModels
         //If true, multiply all position values of this Axis by -1 during operation.
         //Coventionally, stepper motors turn clockwise in the positive direction.
         //Motorized Printhead actuators in this system are mounted with the motors mounted on top facing down.
-        //Inverting the direction of the Motorized Printhead motors will cause the actuators to move upwards during positive direction operations.
-        private bool _isDirectionInverted = true;
+        //With this value as false, Motorized Printhead motors will cause the actuators to move downwards (printing) during positive direction operations.
+        private bool _isDirectionInverted = false;
         public bool IsDirectionInverted
         {
             get { return _isDirectionInverted; }

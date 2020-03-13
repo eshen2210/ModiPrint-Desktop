@@ -38,12 +38,18 @@
                                    Width="{DynamicResource NarrowControlWidth}"/>
                         <TextBox Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=5}, 
                                                 Path= DataContext.CalibrationViewModel.XDistanceFromCenter, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                                                UpdateSourceTrigger=PropertyChanged, Delay=300}"
                                  Style="{DynamicResource ThematicTextBox}"
                                  Width="{DynamicResource StandardControlWidth}">
+                            <TextBox.InputBindings>
+                                <KeyBinding Key="Enter" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=5}, 
+                                                                          Path=DataContext.CalibrationViewModel.CalibrateXYOriginCommand}"/>
+                            </TextBox.InputBindings>
                             <TextBox.ToolTip>
                                 <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
                                     X position relative to the center of the XYZ stage that the stage will move to and set as the X zero position.
+                                    <LineBreak/>
+                                    Press Enter to or press the Execute button to execute the command.
                                 </TextBlock>
                             </TextBox.ToolTip>
                         </TextBox>
@@ -63,12 +69,18 @@
                                    Width="{DynamicResource NarrowControlWidth}"/>
                         <TextBox Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=5}, 
                                                 Path= DataContext.CalibrationViewModel.YDistanceFromCenter, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                                                UpdateSourceTrigger=PropertyChanged, Delay=300}"
                                  Style="{DynamicResource ThematicTextBox}"
                                  Width="{DynamicResource StandardControlWidth}">
+                            <TextBox.InputBindings>
+                                <KeyBinding Key="Enter" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=5}, 
+                                                                          Path=DataContext.CalibrationViewModel.CalibrateXYOriginCommand}"/>
+                            </TextBox.InputBindings>
                             <TextBox.ToolTip>
                                 <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
                                     Y position relative to the center of the XYZ stage that the stage will move to and set as the Y zero position.
+                                    <LineBreak/>
+                                    Press Enter to or press the Execute button to execute the command.
                                 </TextBlock>
                             </TextBox.ToolTip>
                         </TextBox>
@@ -110,9 +122,9 @@
                         <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
                             Move to the center of the XY stage with a specified offsets.
                             <LineBreak/>
-                            Set that new position as the origin X and Y positions equal zero).
+                            Set that new position as the origin X and Y positions equal zero.
                             <LineBreak/>
-                            Use this button only after Find Limits.
+                            Use this button only after using the Find Limits button.
                             </TextBlock>
                     </Button.ToolTip>
                 </Button>

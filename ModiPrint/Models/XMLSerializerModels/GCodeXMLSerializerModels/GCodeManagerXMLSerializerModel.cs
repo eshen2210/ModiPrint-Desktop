@@ -30,11 +30,11 @@ namespace ModiPrint.Models.XMLSerializerModels.GCodeXMLSerializerModels
             //Outmost element should be "GCodeManager".
             xmlWriter.WriteStartElement("GCodeManager");
 
-            //RepRap GCode.
-            xmlWriter.WriteElementString("RepRapGCode", gCodeManagerViewModel.RepRapGCodeModel.GCodeStr);
+            //Uploaded g-code.
+            xmlWriter.WriteElementString("UploadedGCode", gCodeManagerViewModel.UploadedGCodeModel.GCodeStr);
 
-            //ModiPrint GCode.
-            xmlWriter.WriteElementString("ModiPrintGCode", gCodeManagerViewModel.ModiPrintGCodeModel.GCodeStr);
+            //Uploaded g-code type.
+            xmlWriter.WriteElementString("UploadedGCodeType", gCodeManagerViewModel.UploadedGCodeType.ToString());
 
             //GCode File Name.
             xmlWriter.WriteElementString("GCodeFileName", gCodeManagerViewModel.GCodeFileName);

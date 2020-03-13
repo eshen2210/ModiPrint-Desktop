@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.IO;
 using ModiPrint.Models.XMLSerializerModels;
+using ModiPrint.Models.GCodeModels;
 using ModiPrint.ViewModels;
 using ModiPrint.ViewModels.GCodeManagerViewModels;
 
@@ -42,11 +43,13 @@ namespace ModiPrint.Models.XMLSerializerModels.GCodeXMLSerializerModels
 
                     switch (xmlReader.Name)
                     {
-                        case "RepRapGCode":
-                            gCodeManagerViewModel.RepRapGCode = xmlReader.ReadElementContentAsString();
+                        case "UploadedGCode":
+                            gCodeManagerViewModel.UploadedGCodeModel.GCodeStr = xmlReader.ReadElementContentAsString();
+                            gCodeManagerViewModel.UpdateRepRapIDList();
+                            gCodeManagerViewModel.OnGCodeFileUploaded();
                             break;
-                        case "ModiPrintGCode":
-                            gCodeManagerViewModel.ModiPrintGCode = xmlReader.ReadElementContentAsString();
+                        case "UploadedGCodeType":
+                            gCodeManagerViewModel.UploadedGCodeType = (GCodeType)Enum.Parse(typeof(GCodeType), xmlReader.ReadElementContentAsString(), false);
                             break;
                         case "GCodeFileName":
                             gCodeManagerViewModel.GCodeFileName = xmlReader.ReadElementContentAsString();

@@ -5,6 +5,8 @@
                     xmlns:vc="clr-namespace:ModiPrint.Utilities.IValueConverters"
                     xmlns:ToggleSwitch="clr-namespace:ToggleSwitch;assembly=ToggleSwitch"
                     xmlns:vControl="clr-namespace:ModiPrint.Views.ControlViews"
+                    xmlns:cf="clr-namespace:ModiPrint.Utilities.ControlFunctions"
+                    xmlns:mPrintheadType="clr-namespace:ModiPrint.Models.PrinterModels.PrintheadModels.PrintheadTypeModels"
                     x:Name="GlobalResourceDictionary">
    
 
@@ -40,6 +42,9 @@
     <SolidColorBrush x:Key="PrimaryColor">Teal</SolidColorBrush>
     <SolidColorBrush x:Key="SecondaryColor">Turquoise</SolidColorBrush>
     <SolidColorBrush x:Key="TertiaryColor">Gold</SolidColorBrush>
+    
+    <!--TextBox Delay-->
+    <System:Int32 x:Key="TextBoxDelay">350</System:Int32>
     
     <!--ToolTipService Values-->
     <System:Int32 x:Key="ToolTipServiceShowDuration">120000</System:Int32>
@@ -149,6 +154,64 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+    <!--#endregion-->
+
+    <!--#region XYZ Control TextBox-->
+    <InputBindingCollection x:Key="MovementOnEnter" x:Shared="False">
+        <KeyBinding Key="Enter" Command="{Binding ManualMovementCommand}"/>
+    </InputBindingCollection>
+
+    <InputBindingCollection x:Key="MotorPrintContinuousOnEnter" x:Shared="False">
+        <KeyBinding Key="Enter" Command="{Binding ManualMotorPrintWithMovementCommand}"/>
+    </InputBindingCollection>
+
+    <InputBindingCollection x:Key="MotorPrintDropletOnEnter" x:Shared="False">
+        <KeyBinding Key="Enter" Command="{Binding ManualMotorDropletPrintCommand}"/>
+    </InputBindingCollection>
+
+    <InputBindingCollection x:Key="ValvePrintContinuousOnEnter" x:Shared="False">
+        <KeyBinding Key="Enter" Command="{Binding ManualValvePrintWithMovementCommand}"/>
+    </InputBindingCollection>
+
+    <InputBindingCollection x:Key="ValvePrintDropletOnEnter" x:Shared="False">
+        <KeyBinding Key="Enter" Command="{Binding ManualValveDropletPrintCommand}"/>
+    </InputBindingCollection>
+
+    <Style x:Key="XYZControlTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource ThematicTextBox}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding AxesPrintStyle}" Value="Movement Only">
+                <Setter Property="cf:Attach.InputBindings" Value="{StaticResource MovementOnEnter}"/>
+            </DataTrigger>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding AxesPrintStyle}" Value="Continuous Print"/>
+                    <Condition Binding="{Binding ActivePrintheadType}" Value="{x:Static mPrintheadType:PrintheadType.Motorized}"/>
+                </MultiDataTrigger.Conditions>
+                <Setter Property="cf:Attach.InputBindings" Value="{StaticResource MotorPrintContinuousOnEnter}"/>
+            </MultiDataTrigger>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding AxesPrintStyle}" Value="Droplet Print"/>
+                    <Condition Binding="{Binding ActivePrintheadType}" Value="{x:Static mPrintheadType:PrintheadType.Motorized}"/>
+                </MultiDataTrigger.Conditions>
+                <Setter Property="cf:Attach.InputBindings" Value="{StaticResource MotorPrintDropletOnEnter}"/>
+            </MultiDataTrigger>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding AxesPrintStyle}" Value="Continuous Print"/>
+                    <Condition Binding="{Binding ActivePrintheadType}" Value="{x:Static mPrintheadType:PrintheadType.Valve}"/>
+                </MultiDataTrigger.Conditions>
+                <Setter Property="cf:Attach.InputBindings" Value="{StaticResource ValvePrintContinuousOnEnter}"/>
+            </MultiDataTrigger>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding AxesPrintStyle}" Value="Droplet Print"/>
+                    <Condition Binding="{Binding ActivePrintheadType}" Value="{x:Static mPrintheadType:PrintheadType.Valve}"/>
+                </MultiDataTrigger.Conditions>
+                <Setter Property="cf:Attach.InputBindings" Value="{StaticResource ValvePrintDropletOnEnter}"/>
+            </MultiDataTrigger>
+        </Style.Triggers>
     </Style>
     <!--#endregion-->
 

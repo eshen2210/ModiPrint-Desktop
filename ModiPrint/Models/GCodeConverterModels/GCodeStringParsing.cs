@@ -57,5 +57,42 @@ namespace ModiPrint.Models.GCodeConverterModels
 
             return returnString;
         }
+
+        /// <summary>
+        /// Remove ';' and all characters following.
+        /// </summary>
+        /// <param name="gCodeLine"></param>
+        public static string[] RemoveGCodeComments(string[] gCodeLine)
+        {
+            List<string> phrasesList = new List<string>();
+
+            //Count the number of phrases that are not comments.
+            for (int i = 0; i < gCodeLine.Length; i++)
+            {
+                if (gCodeLine[i].Contains(';'))
+                {
+                    gCodeLine[i] = gCodeLine[i].Substring(0, gCodeLine[i].IndexOf(';'));
+                    if (!String.IsNullOrWhiteSpace(gCodeLine[i]))
+                    {
+                        phrasesList.Add(gCodeLine[i]);
+                    }
+                    break;
+                }
+
+                if (!String.IsNullOrWhiteSpace(gCodeLine[i]))
+                {
+                    phrasesList.Add(gCodeLine[i]);
+                }
+            }
+
+            //Instantiate, populate, and return a GCode line with no comments.
+            string[] uncommentedGCodeLine = new string[phrasesList.Count];
+            for (int i = 0; i < uncommentedGCodeLine.Length; i++)
+            {
+                uncommentedGCodeLine[i] = gCodeLine[i];
+            }
+
+            return uncommentedGCodeLine;
+        }
     }
 }

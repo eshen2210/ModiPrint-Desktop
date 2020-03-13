@@ -49,25 +49,7 @@
                                 <ControlTemplate.Triggers>
                                     <MultiDataTrigger>
                                         <MultiDataTrigger.Conditions>
-                                            <Condition Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.Printing}"/>
-                                            <Condition Binding="{Binding AbortPrompt}" Value="false"/>
-                                        </MultiDataTrigger.Conditions>
-                                        <MultiDataTrigger.Setters>
-                                            <Setter Property="Visibility" Value="Visible"/>
-                                        </MultiDataTrigger.Setters>
-                                    </MultiDataTrigger>
-                                    <MultiDataTrigger>
-                                        <MultiDataTrigger.Conditions>
-                                            <Condition Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.PrintSequencePaused}"/>
-                                            <Condition Binding="{Binding AbortPrompt}" Value="false"/>
-                                        </MultiDataTrigger.Conditions>
-                                        <MultiDataTrigger.Setters>
-                                            <Setter Property="Visibility" Value="Visible"/>
-                                        </MultiDataTrigger.Setters>
-                                    </MultiDataTrigger>
-                                    <MultiDataTrigger>
-                                        <MultiDataTrigger.Conditions>
-                                            <Condition Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.MicrocontrollerPaused}"/>
+                                            <Condition Binding="{Binding IsSerialCommunicationReadyToPrint}" Value="true"/>
                                             <Condition Binding="{Binding AbortPrompt}" Value="false"/>
                                         </MultiDataTrigger.Conditions>
                                         <MultiDataTrigger.Setters>
@@ -187,7 +169,7 @@
                                         <DataTrigger Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.Manual}">
                                             <Setter Property="Visibility" Value="Visible"/>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding PrintStats}" Value="{x:Static vmPrint:PrintStatus.Calibration}">
+                                        <DataTrigger Binding="{Binding PrintStatus}" Value="{x:Static vmPrint:PrintStatus.Calibration}">
                                             <Setter Property="Visibility" Value="Visible"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding IsReadyToPrint}" Value="false">
@@ -433,10 +415,10 @@
 
                             <Style x:Key="GCodeReadyCheckToolTipStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ThematicToolTipTextBlock}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsModiPrintGCodeReadyToPrint}" Value="True">
-                                        <Setter Property="Text" Value="GCode is uploaded/converted and ready for print."/>
+                                    <DataTrigger Binding="{Binding IsGCodeReadyToPrint}" Value="True">
+                                        <Setter Property="Text" Value="G-code is uploaded/converted."/>
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsModiPrintGCodeReadyToPrint}" Value="False">
+                                    <DataTrigger Binding="{Binding IsGCodeReadyToPrint}" Value="False">
                                         <Setter Property="Text" Value="A .mdpt file needs to be uploaded or a .gcode file needs to be converted from the Print menu."/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -445,7 +427,7 @@
                             <Style x:Key="SerialConnectionReadyCheckToolTipStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ThematicToolTipTextBlock}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsSerialCommunicationReadyToPrint}" Value="True">
-                                        <Setter Property="Text" Value="Serial connection established and ready for print."/>
+                                        <Setter Property="Text" Value="Serial connection established."/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding IsSerialCommunicationReadyToPrint}" Value="False">
                                         <Setter Property="Text" Value="Serial connection needs to be established. Connect the microcontroller to a serial port and establish a conenction from the Control menu."/>
@@ -456,7 +438,7 @@
                             <Style x:Key="PrintheadSetReadyCheckToolTipStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ThematicToolTipTextBlock}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsActivePrintheadReadyToPrint}" Value="True">
-                                        <Setter Property="Text" Value="Printhead is set and ready for print."/>
+                                        <Setter Property="Text" Value="Printhead is set."/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding IsActivePrintheadReadyToPrint}" Value="False">
                                         <Setter Property="Text" Value="Printhead needs to be set to establish a starting location. Set the printhead from the Control menu."/>
@@ -473,10 +455,10 @@
                             <Image.Style>
                                 <Style TargetType="Image">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsModiPrintGCodeReadyToPrint}" Value="True">
+                                        <DataTrigger Binding="{Binding IsGCodeReadyToPrint}" Value="True">
                                             <Setter Property="Source" Value="/Resources/PrintSequenceControl/GCodeEnabled.png"/>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding IsModiPrintGCodeReadyToPrint}" Value="False">
+                                        <DataTrigger Binding="{Binding IsGCodeReadyToPrint}" Value="False">
                                             <Setter Property="Source" Value="/Resources/PrintSequenceControl/GCodeDisabled.png"/>
                                         </DataTrigger>
                                     </Style.Triggers>

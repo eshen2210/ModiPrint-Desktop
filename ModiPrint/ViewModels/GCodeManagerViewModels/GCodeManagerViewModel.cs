@@ -17,14 +17,13 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ModiPrint.Models.GCodeModels;
 using ModiPrint.Models.GCodeConverterModels;
-using ModiPrint.Models.GCodeConverterModels.ReportingModels;
 using ModiPrint.Models.PrintModels;
 
 namespace ModiPrint.ViewModels.GCodeManagerViewModels
 {
-    //Handles event that is fired when converted GCode is changed.
-    public delegate void ModiPrintGCodeChangedEventHandler(object sender);
-
+    //Handles event that is fired when g-code file is uploaded.
+    public delegate void GCodeFileUploadedEventHandler(object sender);
+    
     /// <summary>
     /// To Do: This should not handle application logic such as converting GCode
     /// </summary>
@@ -32,41 +31,22 @@ namespace ModiPrint.ViewModels.GCodeManagerViewModels
     {
         #region Fields and Properties
         //GCode and utilities related to the conversion of GCode.
-        private GCodeModel _repRapGCodeModel;
-        public GCodeModel RepRapGCodeModel
-        {
-            get { return _repRapGCodeModel; }
-        }
-        private GCodeModel _modiPrintGCodeModel;
-        public GCodeModel ModiPrintGCodeModel
-        {
-            get { return _modiPrintGCodeModel; }
-        }
         private GCodeFileManagerModel _gCodeFileManagerModel;
-        private GCodeConverterBGWModel _gCodeConverterBGWModel;
-
-        //GCode of the RepRap flavor.
-        public string RepRapGCode
+        public GCodeModel UploadedGCodeModel
         {
-            get { return _repRapGCodeModel.GCodeStr; }
+            get { return _gCodeFileManagerModel.UploadedGCodeModel; }
+        }
+        public GCodeType UploadedGCodeType
+        {
+            get { return _gCodeFileManagerModel.UploadedGCodeType; }
             set
             {
-                _repRapGCodeModel.GCodeStr = value;
-                OnPropertyChanged("RepRapGCode");
+                _gCodeFileManagerModel.UploadedGCodeType = value;
+                OnPropertyChanged("UploadedGCodeType");
             }
         }
+        private GCodeConverterModel _gCodeConverterModel;
 
-        //GCode converted from RepRap GCode.
-        public string ModiPrintGCode
-        {
-            get { return _modiPrintGCodeModel.GCodeStr; }
-            set
-            {
-                _modiPrintGCodeModel.GCodeStr = value;
-                OnModiPrintGCodeChanged();
-                OnPropertyChanged("ModiPrintGCode");
-            }
-        }
 
         //GCode file name of the most recently uploaded or uploaded GCode file.
         private string _gCodeFileName = "";
@@ -76,72 +56,137 @@ namespace ModiPrint.ViewModels.GCodeManagerViewModels
             set
             {
                 _gCodeFileName = value;
+                OnGCodeFileUploaded();
                 OnPropertyChanged("GCodeFileName");
             }
         }
 
-        //These properties indicate the progress made during GCode conversion.
-        
-        //Name of the task being done.
-        private string _taskName;
-        public string TaskName
+        //Status of the g-code converter such as % progress to conversion completion.
+        private string _gCodeConverterStatus = "";
+        public string GCodeConverterStatus
         {
-            get { return _taskName; }
+            get { return _gCodeConverterStatus; }
+            set
+            {
+                _gCodeConverterStatus = value;
+                OnPropertyChanged("GCodeConverterStatus");
+            }
         }
 
-        //Percentage of the task completed.
-        private int _percentCompleted;
-        public int PercentCompleted
+        //Event that is fired when a g-code file is uploaded.
+        public event GCodeFileUploadedEventHandler GCodeFileUploaded;
+        public void OnGCodeFileUploaded()
         {
-            get { return _percentCompleted; }
+            if (GCodeFileUploaded != null)
+            { GCodeFileUploaded(this); }
         }
 
-        //Event that is fired when converted GCode is changed.
-        public event ModiPrintGCodeChangedEventHandler ModiPrintGCodeChanged;
-        private void OnModiPrintGCodeChanged()
+        //List of all T commands in the uploaded g-code file.
+        //Used to populate possible option for the RepRapID parameter in Materials.
+        private List<string> _repRapIDList;
+        public List<string> RepRapIDList
         {
-            if (ModiPrintGCodeChanged != null)
-            { ModiPrintGCodeChanged(this); }
+            get { return _repRapIDList; }
         }
         #endregion
 
         #region Contructor
-        public GCodeManagerViewModel(GCodeModel RepRapGCodeModel, GCodeModel ModiPrintGCodeModel, GCodeFileManagerModel GCodeFileManagerModel, GCodeConverterBGWModel GCodeConverterBGWModel)
+        public GCodeManagerViewModel(GCodeFileManagerModel GCodeFileManagerModel, GCodeConverterModel GCodeConverterModel)
         {
-            _repRapGCodeModel = RepRapGCodeModel;
-            _modiPrintGCodeModel = ModiPrintGCodeModel;
             _gCodeFileManagerModel = GCodeFileManagerModel;
-            _gCodeConverterBGWModel = GCodeConverterBGWModel;
+            _gCodeConverterModel = GCodeConverterModel;
 
-            _gCodeConverterBGWModel.GCodeConverterBGWTerminated += new GCodeConverterBGWTerminatedEventHandler(GCodeConverterBGWTerminated);
+            _gCodeConverterModel.ParametersModel.LineConverted += new GCodeConverterLineConvertedEventHandler(UpdateGCodeConverterStatus);
         }
         #endregion
 
         #region Methods
         /// <summary>
-        /// Called when ProgressUpdatedLineCount event is triggered in the GCodeConverter.
-        /// Updates the progress bar that is reporting on GCode conversion progress.
+        /// TUpdates the g-code converter status.
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="lineConvertedEventArgs"></param>
-        private void GCodeConverterBGWReportProgressLineCount(object sender, LineConvertedEventArgs lineConvertedEventArgs)
+        /// <param name="progress"></param>
+        private void UpdateGCodeConverterStatus(object sender, string progress)
         {
-            _taskName = lineConvertedEventArgs.TaskName;
-            _percentCompleted = lineConvertedEventArgs.PercentCompleted;
-            OnPropertyChanged("TaskName");
-            OnPropertyChanged("PercentCompleted");
+            GCodeConverterStatus = progress;
+        }
+        
+        /// <summary>
+        /// Return RepRap flavor g-code from the uploaded g-code file.
+        /// Will return an empty string if the uploaded g-code file is not RepRap flavor.
+        /// </summary>
+        /// <returns></returns>
+        public string GetRepRapGCode()
+        {
+            if (UploadedGCodeType == GCodeType.RepRap)
+            {
+                return _gCodeFileManagerModel.UploadedGCodeModel.GCodeStr;
+            }
+            else if (UploadedGCodeType == GCodeType.ModiPrint)
+            {
+                return "";
+            }
+            else
+            {
+                return "";
+            }
         }
 
         /// <summary>
-        /// Triggered on the event BGWConverterTerminated.
-        /// Updates ModiPrintGCode upon the end of the GCode conversion.
+        /// Return ModiPrint g-code from the uploaded g-code file.
+        /// A lengthy conversion process may occur.
+        /// Will return an empty string with no uploaded g-code file.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="convertedGCode"></param>
-        private void GCodeConverterBGWTerminated(object sender, string convertedGCode)
+        /// <returns></returns>
+        public string GetModiPrintGCode()
         {
-            _modiPrintGCodeModel.GCodeStr = convertedGCode;
-            OnPropertyChanged("ModiPrintGCode");
+            if (UploadedGCodeType == GCodeType.RepRap)
+            {
+                //Retrieve the converted g-code from the converter BGW.
+                return _gCodeConverterModel.ConvertGCode(_gCodeFileManagerModel.UploadedGCodeModel.GCodeStr);
+            }
+            else if (UploadedGCodeType == GCodeType.ModiPrint)
+            {
+                return _gCodeFileManagerModel.UploadedGCodeModel.GCodeStr;
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        /// <summary>
+        /// Retrieve a list of T commands from RepRap g-code.
+        /// </summary>
+        /// <returns></returns>
+        public void UpdateRepRapIDList()
+        {
+            //Return parameter.
+            _repRapIDList = new List<string>();
+
+            //Delimit the g-code string by lines then spaces.
+            string[][] repRapGCodeArr = GCodeStringParsing.GCodeTo2DArr(_gCodeFileManagerModel.UploadedGCodeModel.GCodeStr);
+
+            //Move through each g-code line.
+            for (int line = 0; (line < repRapGCodeArr.Length) && (repRapGCodeArr != null); line++)
+            {
+                if (repRapGCodeArr[line] != null
+                && !String.IsNullOrWhiteSpace(repRapGCodeArr[line][0]))
+                {
+                    //Remove comments from the g-code line.
+                    string[] uncommentedRepRapLine = GCodeStringParsing.RemoveGCodeComments(repRapGCodeArr[line]);
+
+                    if ((uncommentedRepRapLine != null)
+                     && (uncommentedRepRapLine.Length != 0)
+                     && (!String.IsNullOrWhiteSpace(uncommentedRepRapLine[0])) 
+                     && (uncommentedRepRapLine[0][0] == 'T'))
+                    {
+                        _repRapIDList.Add(uncommentedRepRapLine[0]);
+                    }
+                }
+            }
+
+            OnPropertyChanged("RepRapIDList");
         }
         #endregion
 
@@ -168,10 +213,9 @@ namespace ModiPrint.ViewModels.GCodeManagerViewModels
         public void ExecuteUploadGCodeFileCommand(object notUsed)
         {
             _gCodeFileName = _gCodeFileManagerModel.UploadGCodeFile();
+            UpdateRepRapIDList();
             OnPropertyChanged("GCodeFileName");
-            OnPropertyChanged("RepRapGCode");
-            OnPropertyChanged("ModiPrintGCode");
-            _convertGCodeCommand.RaiseCanExecuteChanged();
+            OnPropertyChanged("UploadedGCodeType");
         }
 
         /// <summary>
@@ -195,37 +239,7 @@ namespace ModiPrint.ViewModels.GCodeManagerViewModels
 
         public void ExecuteSaveModiPrintGCodeFileCommand(object notUsed)
         {
-            _gCodeFileManagerModel.SaveGCodeFile(_modiPrintGCodeModel, ".mdpt", "ModiPrint GCode Files (.mdpt)|*.mdpt", ref _gCodeFileName);
-            OnPropertyChanged("ModiPrintGCodeFileName");
-            OnPropertyChanged("ModiPrintGCode");
-        }
-
-        /// <summary>
-        /// Converts RepRap GCode into ModiPrint GCode based on user input parameters.
-        /// </summary>
-        private RelayCommand<object> _convertGCodeCommand;
-        public ICommand ConvertGCodeCommand
-        {
-            get
-            {
-                if (_convertGCodeCommand == null)
-                { _convertGCodeCommand = new RelayCommand<object>(ExecuteConvertGCodeCommand, CanExecuteConvertGCodeCommand); }
-                return _convertGCodeCommand;
-            }
-        }
-
-        public bool CanExecuteConvertGCodeCommand(object notUsed)
-        {
-            return (!String.IsNullOrWhiteSpace(_gCodeFileName))
-                && (!String.IsNullOrWhiteSpace(_repRapGCodeModel.GCodeStr)
-                && (_gCodeConverterBGWModel.IsBusy == false)) ? true : false;
-        }
-
-        public void ExecuteConvertGCodeCommand(object notUsed)
-        {
-            _gCodeConverterBGWModel.StartConversion(_repRapGCodeModel.GCodeStr);
-            while (_gCodeConverterBGWModel.GCodeConverterMainModel == null) { } //Wait for the class to instantiate before trying to subscribe to its event.
-            _gCodeConverterBGWModel.GCodeConverterMainModel.ParametersModel.LineConverted += new GCodeConverterLineConvertedEventHandler(GCodeConverterBGWReportProgressLineCount);
+            _gCodeFileManagerModel.SaveGCodeFile(GetModiPrintGCode(), ".mdpt", "ModiPrint GCode Files (.mdpt)|*.mdpt", ref _gCodeFileName);
         }
         #endregion
     }

@@ -123,18 +123,15 @@
     <Compile Include="Models\GCodeConverterModels\ProcessModels\ProcessG00Models\WriteG00.cs" />
     <Compile Include="Models\GCodeConverterModels\GCodeStringParsing.cs" />
     <Compile Include="Models\ManualControlModels\CalibrationModel.cs" />
-    <Compile Include="Models\GCodeConverterModels\GCodeConverterBGWModel.cs" />
     <Compile Include="Models\GCodeConverterModels\ParametersModel.cs" />
     <Compile Include="Models\GCodeConverterModels\ProcessModels\ProcessG00Models\CoordinateModel.cs" />
-    <Compile Include="Models\GCodeConverterModels\GCodeConverterMainModel.cs" />
+    <Compile Include="Models\GCodeConverterModels\GCodeConverterModel.cs" />
     <Compile Include="Models\GCodeConverterModels\ProcessModels\ProcessG00Models\G00Calculator.cs" />
     <Compile Include="Models\GCodeConverterModels\ProcessModels\ProcessG00Models\ProcessG00CommandModel.cs" />
-    <Compile Include="Models\GCodeConverterModels\ProcessModels\ProcessGCodeModel.cs" />
     <Compile Include="Models\GCodeConverterModels\ProcessModels\WriteSetEquipmentModels\WriteSetAxisModel.cs" />
     <Compile Include="Models\GCodeConverterModels\ProcessModels\ProcessTCommandModels\ProcessTCommandModel.cs" />
     <Compile Include="Models\GCodeConverterModels\ProcessModels\ProcessTCommandModels\SetWritePrintheadModel.cs" />
     <Compile Include="Models\GCodeConverterModels\ProcessModels\WriteSetEquipmentModels\WriteSetPrintheadModel.cs" />
-    <Compile Include="Models\GCodeConverterModels\ReportingModels\LineConvertedEventArgs.cs" />
     <Compile Include="Models\GCodeModels\GCodeFileManagerModel.cs" />
     <Compile Include="Models\ManualControlModels\ManualControlModel.cs" />
     <Compile Include="Models\PrinterModels\MicrocontrollerModels\PinModels\AnalogInPinModel.cs" />
@@ -194,6 +191,7 @@
     <Compile Include="Models\XMLSerializerModels\XMLDeserializerInitializeModel.cs" />
     <Compile Include="Models\XMLSerializerModels\XMLConverterModel.cs" />
     <Compile Include="Models\XMLSerializerModels\XMLSerializerInitializeModel.cs" />
+    <Compile Include="Utilities\ControlFunctions\Attach.cs" />
     <Compile Include="Utilities\ControlFunctions\AutoScrollBehavior.cs" />
     <Compile Include="Utilities\IValueConverters\BoolToImageConverter.cs" />
     <Compile Include="Utilities\IValueConverters\EnumerationsToStringConverter.cs" />
@@ -1005,6 +1003,9 @@
   <ItemGroup>
     <Resource Include="Resources\MainWindow\Load.png" />
     <Resource Include="Resources\MainWindow\LoadMouseOver.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\General\Retract.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
