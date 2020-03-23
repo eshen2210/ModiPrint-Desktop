@@ -101,5 +101,23 @@ namespace ModiPrint.Models.GCodeConverterModels
 
             return uncommentedGCodeLine;
         }
+
+        /// <summary>
+        /// Renive ';' and all characters following.
+        /// </summary>
+        /// <param name="gCodeLine"></param>
+        /// <returns></returns>
+        public static string RemoveGCodeComments(string gCodeLine)
+        {
+            if (gCodeLine.Contains(';'))
+            {
+                return gCodeLine.Substring(0, gCodeLine.IndexOf(';'));
+            }
+            else
+            {
+                //No comment found.
+                return gCodeLine;
+            }
+        }
     }
 }

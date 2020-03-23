@@ -117,7 +117,7 @@ namespace ModiPrint.ViewModels.PrintViewModels.PrintStyleViewModels
         //How quickly the print magnitude changes in relation to the distance from the gradient geometry. 
         //In units of percent per mm.
         //For example, with a RateOfChange of -30, then a Valve Printhead will have an OpenTime that decreases by 30% for every mm away from the Point/Line/Plane.
-        //A positive value will result in an increasing OpenTime / EDispenseDistance as the Printhead moves away from the geometry.
+        //A positive value will result in an increasing OpenTime or EDispenseDistance as the Printhead moves away from the geometry.
         public double PercentPerMm
         {
             get { return _dropletPrintStyleModel.PercentPerMm; }

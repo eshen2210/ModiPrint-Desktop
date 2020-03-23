@@ -370,9 +370,20 @@ namespace ModiPrint.Models.SerialCommunicationModels
                                 OnSerialCommunicationPrintSequencePaused()); //Pause a print sequence if an error was read.
                             }
 
-                            if ((incomingMessage[0] != SerialMessageCharacters.SerialErrorCharacter)
-                             || ((incomingMessage[0] == SerialMessageCharacters.SerialErrorCharacter) && (_shouldProcessNextError == true)))
+                            //Update the serial messages UI.
+                            if (incomingMessage[0] != SerialMessageCharacters.SerialErrorCharacter)
                             {
+                                //Triggers the appropriate message received event.
+                                SerialMessageEventArgs serialMessageEventArgs = new SerialMessageEventArgs(incomingMessage);
+
+                                Application.Current.Dispatcher.Invoke(() =>
+                                OnSerialCommunicationMessageReceived(serialMessageEventArgs));
+                            }
+                            else if ((incomingMessage[0] == SerialMessageCharacters.SerialErrorCharacter) && (_shouldProcessNextError == true))
+                            {
+                                //Pause the print sequence because of unexpected error.
+                                _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(SerialMessageCharacters.SerialPrintPauseCharacter.ToString());
+
                                 //Triggers the appropriate message received event.
                                 SerialMessageEventArgs serialMessageEventArgs = new SerialMessageEventArgs(incomingMessage);
 
@@ -471,6 +482,12 @@ namespace ModiPrint.Models.SerialCommunicationModels
         /// </summary>
         public void SerialConnect(string portName)
         {
+            //Disconnect if a port is already open.
+            if (_serialPort.IsOpen == true)
+            {
+                SerialDisconnect();
+            }
+            
             //Set port name.
             _serialPort.PortName = portName;
 

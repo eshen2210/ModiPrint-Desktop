@@ -107,6 +107,9 @@ namespace ModiPrint.Models.SerialCommunicationModels
         /// <returns></returns>
         public List<string> InterpretCommandSet(string commandSet)
         {
+            //Remove comments before processing.
+            commandSet = GCodeStringParsing.RemoveGCodeComments(commandSet);
+            
             //The first character of the command set is reserved for the command set serial character.
             if ((commandSet.Length >= 7)
              && (commandSet.Substring(1, 6) == "Center"))
@@ -499,12 +502,12 @@ namespace ModiPrint.Models.SerialCommunicationModels
         /// <returns></returns>
         private List<string> InterpretPause(string commandSet)
         {
-            //Remove "*Pause" from the beginning of the command set.
+            //Remove "*Pause " from the beginning of the command set.
             commandSet = commandSet.Substring(6);
 
             //Length of time to pause this thread.
             //In milliseconds.
-            int pauseTime = (int)ParseDouble(commandSet);
+            int pauseTime = int.Parse(commandSet);
 
             //Pause the thread.
             Thread.Sleep(pauseTime);

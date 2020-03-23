@@ -64,7 +64,7 @@
             <TextBlock Text="Gradient Strength"
                         Style="{DynamicResource ThematicTextBlock}"
                         Width="{DynamicResource WideControlWidth}"/>
-            <TextBox Text="{Binding Path=PercentPerMm, Mode=TwoWay, StringFormat={}{0}%,
+            <TextBox Text="{Binding Path=PercentPerMm, Mode=TwoWay, StringFormat=N2,
                                     UpdateSourceTrigger=PropertyChanged}"
                      Style="{DynamicResource ThematicTextBox}"
                      Width="{DynamicResource StandardControlWidth}">

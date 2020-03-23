@@ -166,7 +166,7 @@ namespace ModiPrint.ViewModels.SerialCommunicationViewModels
 
         public bool CanSerialConnectCommand(string portName)
         {
-            return IsPortOpen == true ? false : true;
+            return true;
         }
 
         public void ExecuteSerialConnectCommand(string portName)

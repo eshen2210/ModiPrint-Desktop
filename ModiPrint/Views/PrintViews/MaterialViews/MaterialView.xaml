@@ -100,7 +100,7 @@
                                                             AncestorLevel=2,
                                                             AncestorType={x:Type UserControl}}, 
                                                             Path=DataContext.GCodeManagerViewModel.RepRapIDList}"
-                                          SelectedValuePath="{Binding RepRapID}"
+                                      SelectedValue="{Binding RepRapID, Mode=TwoWay}"
                                       Height="{DynamicResource StandardControlHeight}"    
                                       Width="{DynamicResource WideControlWidth}"
                                           Style="{DynamicResource ThematicComboBox}">
