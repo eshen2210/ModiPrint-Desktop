@@ -49,6 +49,20 @@ namespace ModiPrint.ViewModels.PrintViewModels
             }
         }
 
+        //List of all T commands in the uploaded g-code file.
+        //Used to populate possible option for the RepRapID parameter in Materials.
+        //If a RepRapID uses one of these values, 
+        private ObservableCollection<string> _availibleRepRapIDList = new ObservableCollection<string>();
+        public ObservableCollection<string> AvailibleRepRapIDList
+        {
+            get { return _availibleRepRapIDList; }
+            set
+            {
+                _availibleRepRapIDList = value;
+                OnPropertyChanged("AvailibleRepRapIDList");
+            }
+        }
+
         //Returns true if there are two or more Materials.
         public bool CanRemoveMaterial
         {
@@ -66,7 +80,14 @@ namespace ModiPrint.ViewModels.PrintViewModels
             foreach (MaterialModel materialModel in _printModel.MaterialModelList)
             {
                 int newIndex = _printModel.MaterialModelList.Count - 1;
-                _materialViewModelList.Add(new MaterialViewModel(_printModel.MaterialModelList[newIndex]));
+                _materialViewModelList.Add(new MaterialViewModel(_printModel.MaterialModelList[newIndex], this));
+            }
+
+            //Subscribe to all events in each materialViewModel.
+            foreach (MaterialViewModel materialViewModel in _materialViewModelList)
+            {
+                materialViewModel.RepRapIDSelected += new RepRapIDSelectedEventHandler(RemoveAvailibleRepRapID);
+                materialViewModel.RepRapIDCleared += new RepRapIDClearedEventHandler(AddAvailibleRepRapID);
             }
         }
         #endregion
@@ -79,7 +100,9 @@ namespace ModiPrint.ViewModels.PrintViewModels
         {
             _printModel.AddMaterial();
             int newIndex = _printModel.MaterialModelList.Count - 1;
-            _materialViewModelList.Add(new MaterialViewModel(_printModel.MaterialModelList[newIndex]));
+            _materialViewModelList.Add(new MaterialViewModel(_printModel.MaterialModelList[newIndex], this));
+            _materialViewModelList[_materialViewModelList.Count - 1].RepRapIDSelected += new RepRapIDSelectedEventHandler(RemoveAvailibleRepRapID);
+            _materialViewModelList[_materialViewModelList.Count - 1].RepRapIDCleared += new RepRapIDClearedEventHandler(AddAvailibleRepRapID);
             OnPropertyChanged("MaterialsCreatedCount");
             OnPropertyChanged("CanRemoveMaterial");
         }
@@ -92,7 +115,9 @@ namespace ModiPrint.ViewModels.PrintViewModels
         {
             _printModel.AddMaterial(materialName);
             int newIndex = _printModel.MaterialModelList.Count - 1;
-            _materialViewModelList.Add(new MaterialViewModel(_printModel.MaterialModelList[newIndex]));
+            _materialViewModelList.Add(new MaterialViewModel(_printModel.MaterialModelList[newIndex], this));
+            _materialViewModelList[_materialViewModelList.Count - 1].RepRapIDSelected += new RepRapIDSelectedEventHandler(RemoveAvailibleRepRapID);
+            _materialViewModelList[_materialViewModelList.Count - 1].RepRapIDCleared += new RepRapIDClearedEventHandler(AddAvailibleRepRapID);
             OnPropertyChanged("MaterialViewModelList");
             OnPropertyChanged("MaterialsCreatedCount");
             OnPropertyChanged("CanRemoveMaterial");
@@ -139,6 +164,51 @@ namespace ModiPrint.ViewModels.PrintViewModels
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Add an entry to AvailibleRepRapIDList.
+        /// </summary>
+        /// <param name="repRapID"></param>
+        private void AddAvailibleRepRapID(string repRapID)
+        {
+            if (!String.IsNullOrWhiteSpace(repRapID))
+            {
+                if (!_availibleRepRapIDList.Contains(repRapID))
+                {
+                    _availibleRepRapIDList.Add(repRapID);
+                }
+            }
+            OnPropertyChanged("AvailibleRepRapIDList");
+        }
+
+        /// <summary>
+        /// Remove an entry from AvailibleRepRapIDList.
+        /// </summary>
+        /// <param name="repRapID"></param>
+        private void RemoveAvailibleRepRapID(string repRapID)
+        {
+            _availibleRepRapIDList.Remove(repRapID);
+            OnPropertyChanged("AvailibleRepRapIDList");
+        }
+
+        /// <summary>
+        /// Calls OnPropertyChanged on AvailibleRepRapIDList.
+        /// </summary>
+        public void UpdateAvailibleRepRapIDList()
+        {
+            OnPropertyChanged("AvailibleRepRapIDList");
+        }
+
+        /// <summary>
+        /// Clears RepRap ID properties on all Materials.
+        /// </summary>
+        public void ClearAllRepRapIDs()
+        {
+            foreach (MaterialViewModel materialViewModel in _materialViewModelList)
+            {
+                materialViewModel.RepRapID = "";
+            }
         }
 
         /// <summary>
@@ -201,6 +271,7 @@ namespace ModiPrint.ViewModels.PrintViewModels
 
         public void ExecuteRemoveMaterialCommand(string materialName)
         {
+            FindMaterial(materialName).RepRapID = "";
             RemoveMaterial(materialName);
         }
         #endregion

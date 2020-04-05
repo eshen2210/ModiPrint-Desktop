@@ -193,6 +193,7 @@
     <Compile Include="Models\XMLSerializerModels\XMLSerializerInitializeModel.cs" />
     <Compile Include="Utilities\ControlFunctions\Attach.cs" />
     <Compile Include="Utilities\ControlFunctions\AutoScrollBehavior.cs" />
+    <Compile Include="Utilities\ControlFunctions\InputBindingManager.cs" />
     <Compile Include="Utilities\IValueConverters\BoolToImageConverter.cs" />
     <Compile Include="Utilities\IValueConverters\EnumerationsToStringConverter.cs" />
     <Compile Include="Utilities\IValueConverters\EnumerationsToVisibilityMultiConverter.cs" />
@@ -377,6 +378,9 @@
     </Compile>
     <Compile Include="Views\StatusAndControlViews\CalibrationViews\FindLimitSettings.xaml.cs">
       <DependentUpon>FindLimitSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StatusAndControlViews\CalibrationViews\HomeSettings.xaml.cs">
+      <DependentUpon>HomeSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\StatusAndControlViews\CalibrationViews\SetOriginSettings.xaml.cs">
       <DependentUpon>SetOriginSettings.xaml</DependentUpon>
@@ -619,6 +623,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\StatusAndControlViews\CalibrationViews\FindLimitSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\StatusAndControlViews\CalibrationViews\HomeSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

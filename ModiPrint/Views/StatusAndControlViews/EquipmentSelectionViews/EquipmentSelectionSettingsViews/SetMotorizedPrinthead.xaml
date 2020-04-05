@@ -93,8 +93,7 @@
                         <TextBlock Text="MaxSpeed"
                                    Style="{DynamicResource ThematicTextBlock}"
                                    Width="{DynamicResource WideControlWidth}"/>
-                        <TextBox Text="{Binding Path=MaxSpeed, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"
+                        <TextBox Text="{Binding Path=MaxSpeed, Mode=TwoWay}"
                                  Style="{DynamicResource ThematicTextBox}"
                                  Width="{DynamicResource StandardControlWidth}">
                             <TextBox.InputBindings>
@@ -124,8 +123,7 @@
                         <TextBlock Text="Acceleration"
                                    Style="{DynamicResource ThematicTextBlock}"
                                    Width="{DynamicResource WideControlWidth}"/>
-                        <TextBox Text="{Binding Path=Acceleration, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged}"
+                        <TextBox Text="{Binding Path=Acceleration, Mode=TwoWay}"
                                    Style="{DynamicResource ThematicTextBox}"
                                    Width="{DynamicResource StandardControlWidth}">
                             <TextBox.InputBindings>

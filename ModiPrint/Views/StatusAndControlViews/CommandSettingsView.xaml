@@ -39,18 +39,12 @@
                         Margin="5, 5, 5, 5"/>
                 </DataTemplate>
 
-                <DataTemplate x:Key="FindLimitSettings">
-                    <vCalibration:FindLimitSettings
+                <DataTemplate x:Key="HomeSettings">
+                    <vCalibration:HomeSettings
                         DataContext="{Binding }"
                         Margin="5, 5, 5, 5"/>
                 </DataTemplate>
 
-                <DataTemplate x:Key="SetOriginSettings">
-                    <vCalibration:SetOriginSettings
-                        DataContext="{Binding }"
-                        Margin="5, 5, 5, 5"/>
-                </DataTemplate>
-                
                 <DataTemplate x:Key="XPlusSettings">
                     <vAxesPrintSettings:XPlus
                         DataContext="{Binding }"
@@ -147,11 +141,8 @@
                             <DataTrigger Binding="{Binding Menu}" Value="SetValve">
                                 <Setter Property="ContentTemplate" Value="{StaticResource SetValvePrintheadSettings}"/>
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding Menu}" Value="FindLimit">
-                                <Setter Property="ContentTemplate" Value="{StaticResource FindLimitSettings}"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Menu}" Value="SetOrigin">
-                                <Setter Property="ContentTemplate" Value="{StaticResource SetOriginSettings}"/>
+                            <DataTrigger Binding="{Binding Menu}" Value="Home">
+                                <Setter Property="ContentTemplate" Value="{StaticResource HomeSettings}"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding Menu}" Value="X+">
                                 <Setter Property="ContentTemplate" Value="{StaticResource XPlusSettings}"/>

@@ -56,9 +56,10 @@
         <!--#endregion-->
         
         <!--#region Axes Tab-->
-        <TabControl ItemsSource="{Binding AxisViewModelList}"
-                    Style="{DynamicResource ThematicTabControl}">
-            
+        <TabControl Name="AxesTabControl"
+                    ItemsSource="{Binding AxisViewModelList}"
+                    Style="{DynamicResource ThematicTabControl}"
+                    SelectionChanged="AxesTabControl_SelectionChanged">
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal"
@@ -253,8 +254,7 @@
                                 <TextBlock Text="Max Speed"
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource WideControlWidth}"/>
-                                <TextBox Text="{Binding Path=MaxSpeed, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"
+                                <TextBox Text="{Binding Path=MaxSpeed, Mode=TwoWay}"
                                          Style="{DynamicResource ThematicTextBox}"
                                          Width="{DynamicResource WideControlWidth}">
                                     <TextBox.ToolTip>
@@ -289,8 +289,7 @@
                                 <TextBlock Text="Max Acceleration"
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource WideControlWidth}"/>
-                                <TextBox Text="{Binding Path=MaxAcceleration, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged}"
+                                <TextBox Text="{Binding Path=MaxAcceleration, Mode=TwoWay}"
                                          Style="{DynamicResource ThematicTextBox}"
                                          Width="{DynamicResource WideControlWidth}">
                                     <TextBox.ToolTip>
@@ -325,8 +324,7 @@
                                 <TextBlock Text="Distance per Step"
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource WideControlWidth}"/>
-                                <TextBox Text="{Binding Path=UmPerStep, Mode=TwoWay,
-                                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"
+                                <TextBox Text="{Binding Path=UmPerStep, Mode=TwoWay}"
                                          Style="{DynamicResource ThematicTextBox}"
                                          Width="{DynamicResource WideControlWidth}"/>
                                 <TextBlock Text="um"
@@ -354,8 +352,7 @@
                                 <TextBlock Text="Step Pulse Time"
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource WideControlWidth}"/>
-                                <TextBox Text="{Binding Path=StepPulseTime, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"
+                                <TextBox Text="{Binding Path=StepPulseTime, Mode=TwoWay}"
                                          Style="{DynamicResource ThematicTextBox}"
                                          Width="{DynamicResource WideControlWidth}"/>
                                 <TextBlock Text="us"
@@ -432,8 +429,7 @@
                                 <TextBlock Text="Max Position"
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource WideControlWidth}"/>
-                                <TextBox Text="{Binding Path=MaxPosition, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
+                                <TextBox Text="{Binding Path=MaxPosition, Mode=TwoWay}"
                                          Style="{DynamicResource ThematicTextBox}"
                                          Width="{DynamicResource WideControlWidth}"/>
                                 <TextBlock Text="mm From Origin"
@@ -459,8 +455,7 @@
                                 <TextBlock Text="Min Position"
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource WideControlWidth}"/>
-                                <TextBox Text="{Binding Path=MinPosition, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
+                                <TextBox Text="{Binding Path=MinPosition, Mode=TwoWay}"
                                          Style="{DynamicResource ThematicTextBox}"
                                          Width="{DynamicResource WideControlWidth}"/>
                                 <TextBlock Text="mm From Origin"

@@ -33,8 +33,7 @@
                     <TextBlock Text="Dispense Distance"
                                Style="{DynamicResource ThematicTextBlock}"
                                Width="{DynamicResource WideControlWidth}"/>
-                    <TextBox Text="{Binding Path=MotorizedDispenseDistance, Mode=TwoWay, 
-                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
+                    <TextBox Text="{Binding Path=MotorizedDispenseDistance, Mode=TwoWay}"
                              Style="{DynamicResource ThematicTextBox}"
                              Width="{DynamicResource StandardControlWidth}">
                         <TextBox.ToolTip>
@@ -58,8 +57,7 @@
                     <TextBlock Text="Dispense Max Speed"
                                Style="{DynamicResource ThematicTextBlock}"
                                Width="{DynamicResource WideControlWidth}"/>
-                    <TextBox Text="{Binding Path=MotorizedDispenseMaxSpeed, Mode=TwoWay, 
-                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"
+                    <TextBox Text="{Binding Path=MotorizedDispenseMaxSpeed, Mode=TwoWay}"
                              Style="{DynamicResource ThematicTextBox}"
                              Width="{DynamicResource StandardControlWidth}">
                         <TextBox.ToolTip>
@@ -85,8 +83,7 @@
                     <TextBlock Text="Dispense Acceleration"
                                Style="{DynamicResource ThematicTextBlock}"
                                Width="{DynamicResource WideControlWidth}"/>
-                    <TextBox Text="{Binding Path=MotorizedDispenseAcceleration, Mode=TwoWay, 
-                                        UpdateSourceTrigger=PropertyChanged}"
+                    <TextBox Text="{Binding Path=MotorizedDispenseAcceleration, Mode=TwoWay}"
                              Style="{DynamicResource ThematicTextBox}"
                              Width="{DynamicResource StandardControlWidth}">
                         <TextBox.ToolTip>
@@ -112,8 +109,7 @@
                     <TextBlock Text="Interpolate Distance"
                                Style="{DynamicResource ThematicTextBlock}"
                                Width="{DynamicResource WideControlWidth}"/>
-                    <TextBox Text="{Binding Path=InterpolateDistance, Mode=TwoWay, 
-                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
+                    <TextBox Text="{Binding Path=InterpolateDistance, Mode=TwoWay}"
                              Style="{DynamicResource ThematicTextBox}"
                              Width="{DynamicResource StandardControlWidth}">
                         <TextBox.ToolTip>

@@ -36,8 +36,7 @@
                                    Style="{DynamicResource ThematicTextBlock}"
                                    Width="{DynamicResource StandardControlWidth}"/>
                         <TextBox Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=5}, 
-                                                Path= DataContext.CalibrationViewModel.XCalibrationSpeed, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"
+                                                Path= DataContext.CalibrationViewModel.XCalibrationSpeed, Mode=TwoWay}"
                                  Style="{DynamicResource ThematicTextBox}"
                                  Width="{DynamicResource StandardControlWidth}">
                             <TextBox.InputBindings>
@@ -71,8 +70,7 @@
                                    Style="{DynamicResource ThematicTextBlock}"
                                    Width="{DynamicResource StandardControlWidth}"/>
                         <TextBox Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=5}, 
-                                                Path= DataContext.CalibrationViewModel.YCalibrationSpeed, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"
+                                                Path= DataContext.CalibrationViewModel.YCalibrationSpeed, Mode=TwoWay}"
                                  Style="{DynamicResource ThematicTextBox}"
                                  Width="{DynamicResource StandardControlWidth}">
                             <TextBox.InputBindings>
@@ -106,8 +104,7 @@
                                    Style="{DynamicResource ThematicTextBlock}"
                                    Width="{DynamicResource StandardControlWidth}"/>
                         <TextBox Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=5}, 
-                                                Path= DataContext.CalibrationViewModel.ZCalibrationSpeed, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
+                                                Path= DataContext.CalibrationViewModel.ZCalibrationSpeed, Mode=TwoWay}"
                                  Style="{DynamicResource ThematicTextBox}"
                                  Width="{DynamicResource StandardControlWidth}">
                             <TextBox.InputBindings>

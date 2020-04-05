@@ -59,8 +59,10 @@
         <!--#endregion-->
             
         <!--#region Printhead Tabs-->
-        <TabControl ItemsSource="{Binding PrintheadViewModelList}"
-                    Style="{DynamicResource ThematicTabControl}">
+        <TabControl Name="PrintheadTabControl"
+                    ItemsSource="{Binding PrintheadViewModelList}"
+                    Style="{DynamicResource ThematicTabControl}"
+                    SelectionChanged="PrintheadTabControl_SelectionChanged">
             <TabControl.Resources>
                 <ResourceDictionary>
                     <ResourceDictionary.MergedDictionaries>
@@ -141,8 +143,7 @@
                                 <TextBlock Text="X Offset"
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource StandardControlWidth}"/>
-                                <TextBox Text="{Binding Path=XOffset, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
+                                <TextBox Text="{Binding Path=XOffset, Mode=TwoWay}"
                                          Style="{DynamicResource ThematicTextBox}"
                                          Width="{DynamicResource WideControlWidth}">
                                     <TextBox.ToolTip>
@@ -169,8 +170,7 @@
                                 <TextBlock Text="Y Offset"
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource StandardControlWidth}"/>
-                                <TextBox Text="{Binding Path=YOffset, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
+                                <TextBox Text="{Binding Path=YOffset, Mode=TwoWay}"
                                          Style="{DynamicResource ThematicTextBox}"
                                          Width="{DynamicResource WideControlWidth}">
                                     <TextBox.ToolTip>
@@ -197,8 +197,7 @@
                                 <TextBlock Text="Z Offset"
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource StandardControlWidth}"/>
-                                <TextBox Text="{Binding Path=AttachedZAxisViewModel.MaxPosition, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
+                                <TextBox Text="{Binding Path=AttachedZAxisViewModel.MaxPosition, Mode=TwoWay}"
                                          Style="{DynamicResource ThematicTextBox}"
                                          Width="{DynamicResource WideControlWidth}">
                                     <TextBox.ToolTip>

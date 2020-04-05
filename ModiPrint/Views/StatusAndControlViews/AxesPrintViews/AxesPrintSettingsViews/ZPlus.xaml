@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:ModiPrint.Views.StatusAndControlViews.AxesPrintViews.AxesPrintSettingsViews"
              xmlns:vPrintSettingsParameter="clr-namespace:ModiPrint.Views.StatusAndControlViews.AxesPrintViews.PrintSettingsParameterViews"
              xmlns:vPrintSettingsExecute="clr-namespace:ModiPrint.Views.StatusAndControlViews.AxesPrintViews.PrintSettingsExecuteViews"
+             xmlns:uc="clr-namespace:ModiPrint.Utilities.ControlFunctions"
              mc:Ignorable="d">
 
     <Grid HorizontalAlignment="Center">
@@ -37,10 +38,10 @@
                         <TextBlock Text="Move Z"
                                    Style="{DynamicResource ThematicTextBlock}"
                                    Width="{DynamicResource WideControlWidth}"/>
-                        <TextBox Text="{Binding Path=ZMoveAxisPositiveDistance, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
+                        <TextBox Text="{Binding Path=ZMoveAxisPositiveDistance, Mode=TwoWay}"
                                  Style="{DynamicResource XYZControlTextBox}"
-                                 Width="{DynamicResource StandardControlWidth}">
+                                 Width="{DynamicResource StandardControlWidth}"
+                                 uc:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text">
                             <TextBox.ToolTip>
                                 <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
                                     Distance to be traversed by the actuator.

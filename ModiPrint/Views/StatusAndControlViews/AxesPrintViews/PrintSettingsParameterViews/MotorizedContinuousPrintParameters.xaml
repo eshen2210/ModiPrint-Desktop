@@ -17,8 +17,7 @@
             <TextBlock Text="E Dispense Per Distance"
                        Style="{DynamicResource ThematicTextBlock}"
                        Width="{DynamicResource WideControlWidth}"/>
-            <TextBox Text="{Binding Path=EMoveAxisPositiveDistance, Mode=TwoWay, 
-                                    UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
+            <TextBox Text="{Binding Path=EMoveAxisPositiveDistance, Mode=TwoWay}"
                      Style="{DynamicResource ThematicTextBox}"
                      Width="{DynamicResource StandardControlWidth}">
                 <TextBox.ToolTip>

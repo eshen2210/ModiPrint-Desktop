@@ -24,5 +24,10 @@ namespace ModiPrint.Views.PrintViews.MaterialViews
         {
             InitializeComponent();
         }
+
+        private void MaterialTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            MaterialTabControl.Focus();
+        }
     }
 }

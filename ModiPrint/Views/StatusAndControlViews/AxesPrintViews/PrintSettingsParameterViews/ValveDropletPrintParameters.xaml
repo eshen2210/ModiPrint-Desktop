@@ -17,8 +17,7 @@
             <TextBlock Text="Valve Open Time"
                        Style="{DynamicResource ThematicTextBlock}"
                        Width="{DynamicResource WideControlWidth}"/>
-            <TextBox Text="{Binding Path=ValveOpenTime, Mode=TwoWay, 
-                                    UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
+            <TextBox Text="{Binding Path=ValveOpenTime, Mode=TwoWay}"
                      Style="{DynamicResource XYZControlTextBox}"
                      Width="{DynamicResource StandardControlWidth}">
                 <TextBox.ToolTip>
@@ -46,8 +45,7 @@
             <TextBlock Text="Interpolate Distance"
                        Style="{DynamicResource ThematicTextBlock}"
                        Width="{DynamicResource WideControlWidth}"/>
-            <TextBox Text="{Binding Path=InterpolateDistance, Mode=TwoWay, 
-                                    UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
+            <TextBox Text="{Binding Path=InterpolateDistance, Mode=TwoWay}"
                      Style="{DynamicResource XYZControlTextBox}"
                      Width="{DynamicResource StandardControlWidth}">
                 <TextBox.ToolTip>

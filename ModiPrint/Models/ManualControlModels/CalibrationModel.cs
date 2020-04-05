@@ -141,11 +141,14 @@ namespace ModiPrint.Models.ManualControlModels
             _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(yMoveAwayFromLimit);
 
             //At the end, switch the Z actuator to the Printhead used at the beginning of the print.
-            AxisModel zAxisFinalModel = _printerModel.FindAxis(_realTimeStatusDataModel.ZRealTimeStatusAxisModel.Name);
-            int zFinalLimitPinID = (zAxisFinalModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : zAxisFinalModel.AttachedLimitSwitchGPIOPinModel.PinID;
-            string switchZFinal = _writeSetAxisModel.WriteSetAxis(zAxisFinalModel.AxisID, zAxisFinalModel.AttachedMotorStepGPIOPinModel.PinID, zAxisFinalModel.AttachedMotorDirectionGPIOPinModel.PinID, 
-                    zAxisFinalModel.StepPulseTime, zFinalLimitPinID, zCalibrationSpeed, zAxisFinalModel.MaxAcceleration, zAxisFinalModel.MmPerStep);
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(switchZFinal);
+            if (_realTimeStatusDataModel.ZRealTimeStatusAxisModel.Name != "Unset")
+            {
+                AxisModel zAxisFinalModel = _printerModel.FindAxis(_realTimeStatusDataModel.ZRealTimeStatusAxisModel.Name);
+                int zFinalLimitPinID = (zAxisFinalModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : zAxisFinalModel.AttachedLimitSwitchGPIOPinModel.PinID;
+                string switchZFinal = _writeSetAxisModel.WriteSetAxis(zAxisFinalModel.AxisID, zAxisFinalModel.AttachedMotorStepGPIOPinModel.PinID, zAxisFinalModel.AttachedMotorDirectionGPIOPinModel.PinID,
+                        zAxisFinalModel.StepPulseTime, zFinalLimitPinID, zCalibrationSpeed, zAxisFinalModel.MaxAcceleration, zAxisFinalModel.MmPerStep);
+                _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(switchZFinal);
+            }
 
             OnCalibrationBegun();
         }

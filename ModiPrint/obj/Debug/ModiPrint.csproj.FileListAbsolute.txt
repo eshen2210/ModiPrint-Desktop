@@ -307,3 +307,5 @@ F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\CalibrationViews\FindLimitSettings.g.cs
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\CalibrationViews\FindLimitSettings.baml
 F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\ModiPrint.csprojResolveAssemblyReference.cache
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\CalibrationViews\HomeSettings.g.cs
+F:\Yea\Maximum Science\Bioprinter\ModiPrint Desktop\ModiPrint-Desktop\ModiPrint\obj\Debug\Views\StatusAndControlViews\CalibrationViews\HomeSettings.baml

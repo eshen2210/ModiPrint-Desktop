@@ -24,5 +24,10 @@ namespace ModiPrint.Views.PrinterViews
         {
             InitializeComponent();
         }
+
+        private void PrinterSettingsTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            PrinterSettingsTabControl.Focus();
+        }
     }
 }

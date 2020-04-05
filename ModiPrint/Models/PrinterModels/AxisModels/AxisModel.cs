@@ -155,6 +155,11 @@ namespace ModiPrint.Models.PrinterModels.AxisModels
             //The X Axes are defaulted to false.
             //This allows the X Axis to move right during positive direction operations.
             _isDirectionInverted = ((_axisID == 'Y') || (_axisID == 'Z')) ? true : false;
+
+            //Z actuators have a finer distance per step. Z actuators also move slower.
+            _mmPerStep = (_name[0] == 'Z') ? 0.0025 : 0.005;
+            _maxSpeed = (_name[0] == 'Z') ? 5 : 40;
+            _maxAcceleration = (_name[0] == 'Z') ? 100 : 2000;
         }
         #endregion
 

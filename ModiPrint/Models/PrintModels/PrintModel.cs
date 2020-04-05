@@ -53,17 +53,7 @@ namespace ModiPrint.Models.PrintModels
         public void AddMaterial()
         {
             string newName = "Material " + ++_materialsCreatedCount;
-            //RepRapID starts at 0 then increments one for each Material created.
-            string newMaterialRepRapID = "T" + (_materialsCreatedCount - 1); 
-
-            if (_materialsCreatedCount < 10000)
-            {
-                _materialModelList.Add(new MaterialModel(newName, _printerModel));
-                _materialModelList[_materialModelList.Count - 1].RepRapID = newMaterialRepRapID;
-            }
-            else if (_materialsCreatedCount >= 10000)
-            { System.Windows.MessageBox.Show("Why the hell did you create 10000 materials?"); }
-            //To Do: Dat error message.
+            _materialModelList.Add(new MaterialModel(newName, _printerModel));
         }
 
         /// <summary>
@@ -75,16 +65,7 @@ namespace ModiPrint.Models.PrintModels
         /// </remarks>
         public void AddMaterial(string newMaterialName)
         {
-            //RepRapID starts at 0 then increments one for each Material created.
-            string newMaterialRepRapID = "T" + (_materialsCreatedCount - 1);
-
-            if (_materialsCreatedCount < 10000)
-            {
-                _materialModelList.Add(new MaterialModel(newMaterialName, _printerModel));
-                _materialModelList[_materialModelList.Count - 1].RepRapID = newMaterialRepRapID;
-            }
-            else if (_materialsCreatedCount >= 10000)
-            { System.Windows.MessageBox.Show("Why the hell did you create 10000 materials?"); }
+            _materialModelList.Add(new MaterialModel(newMaterialName, _printerModel));
         }
 
         /// <summary>

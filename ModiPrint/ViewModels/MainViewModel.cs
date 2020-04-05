@@ -189,7 +189,7 @@ namespace ModiPrint.ViewModels
             _uploadedGCodeModel = new GCodeModel();
             _gCodeFileManagerModel = new GCodeFileManagerModel(_uploadedGCodeModel, _errorListViewModel);
             _gCodeConverterModel = new GCodeConverterModel(_printerModel, _printModel, _realTimeStatusDataModel, _errorListViewModel);
-            _gcodeManagerViewModel = new GCodeManagerViewModel(_gCodeFileManagerModel, _gCodeConverterModel);
+            _gcodeManagerViewModel = new GCodeManagerViewModel(_gCodeFileManagerModel, _gCodeConverterModel, _printViewModel);
 
             //Printing.
             _printExecuteViewModel = new PrintExecuteViewModel(_gcodeManagerViewModel, _realTimeStatusDataModel, _calibrationViewModel, _serialCommunicationViewModel, _serialCommunicationOutgoingMessagesModel, _serialMessageDisplayViewModel);

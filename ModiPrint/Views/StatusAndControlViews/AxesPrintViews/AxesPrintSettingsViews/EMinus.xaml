@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:ModiPrint.Views.StatusAndControlViews.AxesPrintViews.AxesPrintSettingsViews"
              xmlns:cf="clr-namespace:ModiPrint.Utilities.ControlFunctions"
              xmlns:mPrintheadType="clr-namespace:ModiPrint.Models.PrinterModels.PrintheadModels.PrintheadTypeModels"
+             xmlns:uc="clr-namespace:ModiPrint.Utilities.ControlFunctions"
              mc:Ignorable="d">
 
     <Grid HorizontalAlignment="Center">
@@ -37,10 +38,10 @@
                     <TextBlock Text="Move E"
                                Style="{DynamicResource ThematicTextBlock}"
                                Width="{DynamicResource WideControlWidth}"/>
-                    <TextBox Text="{Binding Path=EMoveAxisNegativeDistance, Mode=TwoWay, 
-                                            UpdateSourceTrigger=PropertyChanged, StringFormat=N5}"
+                    <TextBox Text="{Binding Path=EMoveAxisNegativeDistance, Mode=TwoWay}"
                              Style="{DynamicResource ThematicTextBox}"
-                             Width="{DynamicResource StandardControlWidth}">
+                             Width="{DynamicResource StandardControlWidth}"
+                             uc:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text">
                         <TextBox.InputBindings>
                             <KeyBinding Key="Enter" Command="{Binding ManualMotorPrintWithoutMovementCommand}"/>
                         </TextBox.InputBindings>

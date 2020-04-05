@@ -9,7 +9,9 @@
              xmlns:vPrinthead="clr-namespace:ModiPrint.Views.PrinterViews.PrintheadViews"
              mc:Ignorable="d">
 
-    <TabControl Style="{DynamicResource ThematicTabControl}">
+    <TabControl Name="PrinterSettingsTabControl"
+                Style="{DynamicResource ThematicTabControl}"
+                SelectionChanged="PrinterSettingsTabControl_SelectionChanged">
         
         <!--XYZ Stage-->
         <TabItem>

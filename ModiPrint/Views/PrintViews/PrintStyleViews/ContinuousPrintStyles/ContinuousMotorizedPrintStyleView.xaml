@@ -26,8 +26,7 @@
                 <TextBlock Text="Dispense Distance Per mm Movement"
                            Style="{DynamicResource ThematicTextBlock}"
                            Width="{DynamicResource ExtraWideControlWidth}"/>
-                <TextBox Text="{Binding Path=MotorizedDispensePerMmMovement, Mode=TwoWay, 
-                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
+                <TextBox Text="{Binding Path=MotorizedDispensePerMmMovement, Mode=TwoWay}"
                          Style="{DynamicResource ThematicTextBox}"
                          Width="{DynamicResource StandardControlWidth}">
                     <TextBox.ToolTip>
@@ -53,8 +52,7 @@
                 <TextBlock Text="Retraction Distance"
                            Style="{DynamicResource ThematicTextBlock}"
                            Width="{DynamicResource ExtraWideControlWidth}"/>
-                <TextBox Text="{Binding Path=MotorizedDispenseRetractionDistance, Mode=TwoWay, 
-                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N4}"
+                <TextBox Text="{Binding Path=MotorizedDispenseRetractionDistance, Mode=TwoWay}"
                          Style="{DynamicResource ThematicTextBox}"
                          Width="{DynamicResource StandardControlWidth}">
                     <TextBox.ToolTip>

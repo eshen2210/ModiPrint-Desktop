@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Windows.Input;
 using ModiPrint.Models.PrintModels.PrintStyleModels;
 using ModiPrint.Models.PrintModels.MaterialModels;
 using ModiPrint.ViewModels.PrinterViewModels.PrintheadViewModels;
@@ -11,6 +12,12 @@ using ModiPrint.ViewModels.PrintViewModels.PrintStyleViewModels;
 
 namespace ModiPrint.ViewModels.PrintViewModels.MaterialViewModels
 {
+    //Fires when a RepRap ID is selected.
+    public delegate void RepRapIDSelectedEventHandler(string repRapID);
+
+    //Fires when a RepRap ID is cleared.
+    public delegate void RepRapIDClearedEventHandler(string repRapID);
+    
     /// <summary>
     /// ViewModel that interfaces MaterialModel with the GUI.
     /// </summary>
@@ -23,6 +30,7 @@ namespace ModiPrint.ViewModels.PrintViewModels.MaterialViewModels
         {
             get { return _materialModel; }
         }
+        private PrintViewModel _printViewModel;
 
         //Name of this Material.
         public string Name
@@ -36,8 +44,27 @@ namespace ModiPrint.ViewModels.PrintViewModels.MaterialViewModels
             get { return _materialModel.RepRapID; }
             set
             {
+                string previousRepRapID = _materialModel.RepRapID;
                 _materialModel.RepRapID = value;
+
+                if (!String.IsNullOrWhiteSpace(value))
+                {
+                    OnRepRapIDSelected(value);
+                }
+                OnRepRapIDCleared(previousRepRapID);
                 OnPropertyChanged("RepRapID");
+            }
+        }
+
+        //List of availible RepRapIDs.
+        private ObservableCollection<string> _availibleRepRapIDList;
+        public ObservableCollection<string> AvailibleRepRapIDList
+        {
+            get
+            {
+                _availibleRepRapIDList = new ObservableCollection<string>(_printViewModel.AvailibleRepRapIDList);
+                if (!String.IsNullOrWhiteSpace(RepRapID)) { _availibleRepRapIDList.Add(RepRapID); }
+                return _availibleRepRapIDList;
             }
         }
 
@@ -48,7 +75,7 @@ namespace ModiPrint.ViewModels.PrintViewModels.MaterialViewModels
             get { return _printheadViewModel; }
             set
             {
-                if (value != null) //To Do: This value is null sometimes when I'm at the MaterialView and switch to another View
+                if (value != null)
                 {
                     _materialModel.PrintheadModel = value.PrintheadModel;
                     _printheadViewModel = value;
@@ -168,10 +195,55 @@ namespace ModiPrint.ViewModels.PrintViewModels.MaterialViewModels
         }
         #endregion
 
+        #region Events
+        //Event that is fired when the RepRapID is selected.
+        public event RepRapIDSelectedEventHandler RepRapIDSelected;
+        public void OnRepRapIDSelected(string repRapID)
+        {
+            if (RepRapIDSelected != null)
+            { RepRapIDSelected(repRapID); }
+        }
+
+        //Event that is fired when the RepRapID is cleared.
+        public event RepRapIDClearedEventHandler RepRapIDCleared;
+        public void OnRepRapIDCleared(string repRapID)
+        {
+            if (RepRapIDCleared != null)
+            { RepRapIDCleared(repRapID); }
+        }
+        #endregion
+
         #region Constructor
-        public MaterialViewModel(MaterialModel MaterialModel)
+        public MaterialViewModel(MaterialModel MaterialModel, PrintViewModel PrintViewModel)
         {
             _materialModel = MaterialModel;
+            _printViewModel = PrintViewModel;
+        }
+        #endregion
+
+        #region Commands
+        /// <summary>
+        /// Clears the RepRap ID field for this Material.
+        /// </summary>
+        private RelayCommand<string> _clearRepRapIDCommand;
+        public ICommand ClearRepRapIDCommand
+        {
+            get
+            {
+                if (_clearRepRapIDCommand == null)
+                { _clearRepRapIDCommand = new RelayCommand<string>(ExecuteClearRepRapIDCommand, CanExecuteClearRepRapIDCommand); }
+                return _clearRepRapIDCommand;
+            }
+        }
+
+        public bool CanExecuteClearRepRapIDCommand(object notUsed)
+        {
+            return true;
+        }
+
+        public void ExecuteClearRepRapIDCommand(object notUsed)
+        {
+            RepRapID = "";
         }
         #endregion
     }

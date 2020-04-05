@@ -64,8 +64,10 @@
         </Border>
         <!--#endregion-->
         
-        <TabControl ItemsSource="{Binding MaterialViewModelList}"
-                    Style="{DynamicResource ThematicTabControl}">
+        <TabControl Name="MaterialTabControl"
+                    ItemsSource="{Binding MaterialViewModelList}"
+                    Style="{DynamicResource ThematicTabControl}"
+                    SelectionChanged="MaterialTabControl_SelectionChanged">
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal"
@@ -96,14 +98,11 @@
                                            Width="{DynamicResource StandardControlWidth}"
                                            Style="{DynamicResource ThematicTextBlock}"/>
                             </StackPanel>
-                            <ComboBox ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, 
-                                                            AncestorLevel=2,
-                                                            AncestorType={x:Type UserControl}}, 
-                                                            Path=DataContext.GCodeManagerViewModel.RepRapIDList}"
+                            <ComboBox ItemsSource="{Binding AvailibleRepRapIDList}"
                                       SelectedValue="{Binding RepRapID, Mode=TwoWay}"
                                       Height="{DynamicResource StandardControlHeight}"    
                                       Width="{DynamicResource WideControlWidth}"
-                                          Style="{DynamicResource ThematicComboBox}">
+                                      Style="{DynamicResource ThematicComboBox}">
                                 <ComboBox.ToolTip>
                                     <TextBlock Style="{DynamicResource ThematicToolTipTextBlock}">
                                         The RepRap T command that's associated with this material.
@@ -116,6 +115,26 @@
                                     </TextBlock>
                                 </ComboBox.ToolTip>
                             </ComboBox>
+
+                            <Button Command="{Binding ClearRepRapIDCommand}"
+                                    CommandParameter="AttachedMotorStepGPIOPinViewModel"
+                                    Height="{DynamicResource StandardControlHeight}">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <vControl:OpaqueClickableImage x:Name="Image" Source="/Resources/ImageButtons/Clear.png"/>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="true">
+                                                <Setter TargetName="Image" Property="Source"
+                                                        Value="/Resources/ImageButtons/ClearMouseOver.png"/>
+                                            </Trigger>
+                                            <Trigger Property="IsPressed" Value="true">
+                                                <Setter TargetName="Image" Property="Source"
+                                                        Value="/Resources/ImageButtons/Clear.png"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
                         </StackPanel>
                         <!--#endregion-->
 
@@ -266,8 +285,7 @@
                                 <TextBlock Text="Junction Dev."
                                            Style="{DynamicResource ThematicTextBlock}"
                                            Width="{DynamicResource StandardControlWidth}"/>
-                                <TextBox Text="{Binding Path=JunctionDeviation, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N3}"
+                                <TextBox Text="{Binding Path=JunctionDeviation, Mode=TwoWay}"
                                          Style="{DynamicResource ThematicTextBox}"
                                          Width="{DynamicResource WideControlWidth}">
                                     <TextBox.ToolTip>
@@ -301,8 +319,7 @@
                                     <TextBlock Text="XY Print Speed"
                                                Width="{DynamicResource StandardControlWidth}"
                                                Style="{DynamicResource ThematicTextBlock}"/>
-                                    <TextBox Text="{Binding Path=XYPrintSpeed, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"
+                                    <TextBox Text="{Binding Path=XYPrintSpeed, Mode=TwoWay}"
                                              Width="{DynamicResource WideControlWidth}" 
                                              Style="{DynamicResource ThematicTextBox}">
                                         <TextBox.ToolTip>
@@ -328,8 +345,7 @@
                                     <TextBlock Text="XY Acceleration"
                                                Width="{DynamicResource StandardControlWidth}" 
                                                Style="{DynamicResource ThematicTextBlock}"/>
-                                    <TextBox Text="{Binding Path=XYPrintAcceleration, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged}"
+                                    <TextBox Text="{Binding Path=XYPrintAcceleration, Mode=TwoWay}"
                                              Width="{DynamicResource WideControlWidth}"
                                              Style="{DynamicResource ThematicTextBox}">
                                         <TextBox.ToolTip>
@@ -355,8 +371,7 @@
                                     <TextBlock Text="Z Print Speed"
                                                Width="{DynamicResource StandardControlWidth}"
                                                Style="{DynamicResource ThematicTextBlock}"/>
-                                    <TextBox Text="{Binding Path=ZPrintSpeed, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"
+                                    <TextBox Text="{Binding Path=ZPrintSpeed, Mode=TwoWay}"
                                              Width="{DynamicResource WideControlWidth}" 
                                              Style="{DynamicResource ThematicTextBox}">
                                         <TextBox.ToolTip>
@@ -382,8 +397,7 @@
                                     <TextBlock Text="Z Acceleration"
                                                Width="{DynamicResource StandardControlWidth}" 
                                                Style="{DynamicResource ThematicTextBlock}"/>
-                                    <TextBox Text="{Binding Path=ZPrintAcceleration, Mode=TwoWay, 
-                                                        UpdateSourceTrigger=PropertyChanged}"
+                                    <TextBox Text="{Binding Path=ZPrintAcceleration, Mode=TwoWay}"
                                              Width="{DynamicResource WideControlWidth}"
                                              Style="{DynamicResource ThematicTextBox}">
                                         <TextBox.ToolTip>

@@ -18,6 +18,7 @@ using System.Windows.Shapes;
 using ModiPrint.Models.GCodeModels;
 using ModiPrint.Models.GCodeConverterModels;
 using ModiPrint.Models.PrintModels;
+using ModiPrint.ViewModels.PrintViewModels;
 
 namespace ModiPrint.ViewModels.GCodeManagerViewModels
 {
@@ -46,7 +47,7 @@ namespace ModiPrint.ViewModels.GCodeManagerViewModels
             }
         }
         private GCodeConverterModel _gCodeConverterModel;
-
+        private PrintViewModel _printViewModel;
 
         //GCode file name of the most recently uploaded or uploaded GCode file.
         private string _gCodeFileName = "";
@@ -72,7 +73,9 @@ namespace ModiPrint.ViewModels.GCodeManagerViewModels
                 OnPropertyChanged("GCodeConverterStatus");
             }
         }
+        #endregion
 
+        #region Events
         //Event that is fired when a g-code file is uploaded.
         public event GCodeFileUploadedEventHandler GCodeFileUploaded;
         public void OnGCodeFileUploaded()
@@ -80,21 +83,14 @@ namespace ModiPrint.ViewModels.GCodeManagerViewModels
             if (GCodeFileUploaded != null)
             { GCodeFileUploaded(this); }
         }
-
-        //List of all T commands in the uploaded g-code file.
-        //Used to populate possible option for the RepRapID parameter in Materials.
-        private List<string> _repRapIDList;
-        public List<string> RepRapIDList
-        {
-            get { return _repRapIDList; }
-        }
         #endregion
 
         #region Contructor
-        public GCodeManagerViewModel(GCodeFileManagerModel GCodeFileManagerModel, GCodeConverterModel GCodeConverterModel)
+        public GCodeManagerViewModel(GCodeFileManagerModel GCodeFileManagerModel, GCodeConverterModel GCodeConverterModel, PrintViewModel PrintViewModel)
         {
             _gCodeFileManagerModel = GCodeFileManagerModel;
             _gCodeConverterModel = GCodeConverterModel;
+            _printViewModel = PrintViewModel;
 
             _gCodeConverterModel.ParametersModel.LineConverted += new GCodeConverterLineConvertedEventHandler(UpdateGCodeConverterStatus);
         }
@@ -162,7 +158,7 @@ namespace ModiPrint.ViewModels.GCodeManagerViewModels
         public void UpdateRepRapIDList()
         {
             //Return parameter.
-            _repRapIDList = new List<string>();
+            _printViewModel.AvailibleRepRapIDList = new ObservableCollection<string>();
 
             //Delimit the g-code string by lines then spaces.
             string[][] repRapGCodeArr = GCodeStringParsing.GCodeTo2DArr(_gCodeFileManagerModel.UploadedGCodeModel.GCodeStr);
@@ -181,12 +177,12 @@ namespace ModiPrint.ViewModels.GCodeManagerViewModels
                      && (!String.IsNullOrWhiteSpace(uncommentedRepRapLine[0])) 
                      && (uncommentedRepRapLine[0][0] == 'T'))
                     {
-                        _repRapIDList.Add(uncommentedRepRapLine[0]);
+                        _printViewModel.AvailibleRepRapIDList.Add(uncommentedRepRapLine[0]);
                     }
                 }
             }
 
-            OnPropertyChanged("RepRapIDList");
+            _printViewModel.UpdateAvailibleRepRapIDList();
         }
         #endregion
 
@@ -213,6 +209,7 @@ namespace ModiPrint.ViewModels.GCodeManagerViewModels
         public void ExecuteUploadGCodeFileCommand(object notUsed)
         {
             _gCodeFileName = _gCodeFileManagerModel.UploadGCodeFile();
+            _printViewModel.ClearAllRepRapIDs();
             UpdateRepRapIDList();
             OnPropertyChanged("GCodeFileName");
             OnPropertyChanged("UploadedGCodeType");

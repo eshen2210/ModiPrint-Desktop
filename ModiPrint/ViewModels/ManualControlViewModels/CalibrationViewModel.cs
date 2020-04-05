@@ -84,56 +84,30 @@ namespace ModiPrint.ViewModels.ManualControlViewModels
         #region Commands
         /// <summary>
         /// Sends outgoing commands that retracts all Z Axes and moves X and Y Axes to the limit switches.
+        /// Then moves the X and Y axes to the center of the print surface and set min and max positions such that the current position is the origin.
         /// </summary>
-        private RelayCommand<object> _calibrateXYAndZMaxCommand;
-        public ICommand CalibrateXYAndZMaxCommand
+        private RelayCommand<object> _homeCommand;
+        public ICommand HomeCommand
         {
             get
             {
-                if (_calibrateXYAndZMaxCommand == null)
-                { _calibrateXYAndZMaxCommand = new RelayCommand<object>(ExecuteCalibrateXYAndZMaxCommand, CanExecuteCalibrateXYAndZMaxCommand); }
-                return _calibrateXYAndZMaxCommand;
+                if (_homeCommand == null)
+                { _homeCommand = new RelayCommand<object>(ExecuteHomeCommand, CanExecuteHomeCommand); }
+                return _homeCommand;
             }
         }
 
-        public bool CanExecuteCalibrateXYAndZMaxCommand(object notUsed)
+        public bool CanExecuteHomeCommand(object notUsed)
         {
             return true;
         }
 
-        public void ExecuteCalibrateXYAndZMaxCommand(object notUsed)
+        public void ExecuteHomeCommand(object notUsed)
         {
             _calibrationModel.CalibrateXYAndZMax(_xCalibrationSpeed, _yCalibrationSpeed, _zCalibrationSpeed);
-
-            _manualControlViewModel.Menu = "Base";
-        }
-
-        /// <summary>
-        /// Sends outgoing commands that moves the X and Y axes to the center of the print surface and set min and max positions such that the current position is the origin.
-        /// </summary>
-        private RelayCommand<object> _calibrateXYOriginCommand;
-        public ICommand CalibrateXYOriginCommand
-        {
-            get
-            {
-                if (_calibrateXYOriginCommand == null)
-                { _calibrateXYOriginCommand = new RelayCommand<object>(ExecuteCalibrateXYOriginCommand, CanExecuteCalibrateXYOriginCommand); }
-                return _calibrateXYOriginCommand;
-            }
-        }
-
-        public bool CanExecuteCalibrateXYOriginCommand(object notUsed)
-        {
-            return true;
-        }
-
-        public void ExecuteCalibrateXYOriginCommand(object notUsed)
-        {
             _calibrationModel.CalibrateXYOrigin(_xDistanceFromCenter, _yDistanceFromCenter);
-
             _manualControlViewModel.Menu = "Base";
         }
-
 
         /// <summary>
         /// Sends outgoing commands that mark the position of the currently active Printhead's point to printing (centered and closest to the print surface).

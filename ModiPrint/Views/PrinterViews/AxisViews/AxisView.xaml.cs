@@ -25,5 +25,10 @@ namespace ModiPrint.Views.PrinterViews.AxisViews
         {
             InitializeComponent();
         }
+
+        private void AxesTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            AxesTabControl.Focus();
+        }
     }
 }

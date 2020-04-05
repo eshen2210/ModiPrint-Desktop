@@ -117,7 +117,7 @@
 
                 <TextBox Grid.Column="0" 
                          Name="tbManualCommand"
-                         Text="{Binding ManualSerialSendMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Text="{Binding ManualSerialSendMessage, Mode=TwoWay}"
                          Height="{DynamicResource StandardControlHeight}"
                          Style="{DynamicResource ThematicTextBox}">
                     <TextBox.ToolTip>
