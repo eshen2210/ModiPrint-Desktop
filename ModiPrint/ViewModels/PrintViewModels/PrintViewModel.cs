@@ -15,6 +15,9 @@ using ModiPrint.ViewModels.SerialCommunicationViewModels;
 
 namespace ModiPrint.ViewModels.PrintViewModels
 {
+    //Fires when a RepRapID from any Material is changed.
+    public delegate void PrintViewModelRepRapIDChanged(object sender);
+
     public class PrintViewModel : ViewModel
     {
         #region Fields and Properties
@@ -49,7 +52,7 @@ namespace ModiPrint.ViewModels.PrintViewModels
             }
         }
 
-        //List of all T commands in the uploaded g-code file.
+        //List of all T commands in the uploaded g-code file that is not in use.
         //Used to populate possible option for the RepRapID parameter in Materials.
         //If a RepRapID uses one of these values, 
         private ObservableCollection<string> _availibleRepRapIDList = new ObservableCollection<string>();
@@ -63,10 +66,28 @@ namespace ModiPrint.ViewModels.PrintViewModels
             }
         }
 
+        //Number of all T commands in the uploaded g-code file.
+        private int _repRapIDCount = 0;
+        public int RepRapIDCount
+        {
+            get { return _repRapIDCount; }
+            set { _repRapIDCount = value; }
+        }
+
         //Returns true if there are two or more Materials.
         public bool CanRemoveMaterial
         {
             get { return (_materialViewModelList.Count > 1) ? true : false; }
+        }
+        #endregion
+
+        #region Events
+        //Events that is fired when a RepRapID from any Material is changed.
+        public event PrintViewModelRepRapIDChanged PrintViewModelRepRapIDChanged;
+        private void OnPrintViewModelRepRapIDChanged(object sender)
+        {
+            if (PrintViewModelRepRapIDChanged != null)
+            { PrintViewModelRepRapIDChanged(this); }
         }
         #endregion
 
@@ -180,6 +201,7 @@ namespace ModiPrint.ViewModels.PrintViewModels
                 }
             }
             OnPropertyChanged("AvailibleRepRapIDList");
+            OnPrintViewModelRepRapIDChanged(this);
         }
 
         /// <summary>
@@ -190,6 +212,7 @@ namespace ModiPrint.ViewModels.PrintViewModels
         {
             _availibleRepRapIDList.Remove(repRapID);
             OnPropertyChanged("AvailibleRepRapIDList");
+            OnPrintViewModelRepRapIDChanged(this);
         }
 
         /// <summary>
@@ -209,6 +232,23 @@ namespace ModiPrint.ViewModels.PrintViewModels
             {
                 materialViewModel.RepRapID = "";
             }
+        }
+
+        /// <summary>
+        /// Returns true if all availible RepRapIDs from the gcode file is set in Materials.
+        /// </summary>
+        public bool AvailibleRepRapIDSet()
+        {
+            int setRepRapIDs = 0;
+            foreach (MaterialViewModel material in _materialViewModelList)
+            {
+                if (!String.IsNullOrWhiteSpace(material.RepRapID))
+                {
+                    setRepRapIDs++;
+                }
+            }
+
+            return (setRepRapIDs == _repRapIDCount) ? true : false;
         }
 
         /// <summary>

@@ -241,7 +241,7 @@ namespace ModiPrint.Models.SerialCommunicationModels
                             break;
                         case MessageType.ResumeMicrocontroller:
                             SendMessage(_serialCommunicationOutgoingMessagesModel.RetrieveNextProspectiveOutgoingMessage());
-                            _serialCommunicationOutgoingMessagesModel.RemoveNextPauseMicrocontroller(); //To Do: Dunno why this line is necessary but it is. Somehow an extra pause hardware char gets generated durign pausing.
+                            _serialCommunicationOutgoingMessagesModel.RemoveNextPauseMicrocontroller(); //To Do: Dunno why this line is necessary but it is. Somehow an extra pause hardware char gets generated during pausing.
                             OnSerialCommunicationMicrocontrollerResumed();
                             goto MethodStart;
                         default:

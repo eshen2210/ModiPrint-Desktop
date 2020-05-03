@@ -164,24 +164,28 @@ namespace ModiPrint.ViewModels.GCodeManagerViewModels
             string[][] repRapGCodeArr = GCodeStringParsing.GCodeTo2DArr(_gCodeFileManagerModel.UploadedGCodeModel.GCodeStr);
 
             //Move through each g-code line.
-            for (int line = 0; (line < repRapGCodeArr.Length) && (repRapGCodeArr != null); line++)
+            if (repRapGCodeArr != null)
             {
-                if (repRapGCodeArr[line] != null
-                && !String.IsNullOrWhiteSpace(repRapGCodeArr[line][0]))
+                for (int line = 0; (line < repRapGCodeArr.Length) && (repRapGCodeArr != null); line++)
                 {
-                    //Remove comments from the g-code line.
-                    string[] uncommentedRepRapLine = GCodeStringParsing.RemoveGCodeComments(repRapGCodeArr[line]);
-
-                    if ((uncommentedRepRapLine != null)
-                     && (uncommentedRepRapLine.Length != 0)
-                     && (!String.IsNullOrWhiteSpace(uncommentedRepRapLine[0])) 
-                     && (uncommentedRepRapLine[0][0] == 'T'))
+                    if (repRapGCodeArr[line] != null
+                    && !String.IsNullOrWhiteSpace(repRapGCodeArr[line][0]))
                     {
-                        _printViewModel.AvailibleRepRapIDList.Add(uncommentedRepRapLine[0]);
+                        //Remove comments from the g-code line.
+                        string[] uncommentedRepRapLine = GCodeStringParsing.RemoveGCodeComments(repRapGCodeArr[line]);
+
+                        if ((uncommentedRepRapLine != null)
+                         && (uncommentedRepRapLine.Length != 0)
+                         && (!String.IsNullOrWhiteSpace(uncommentedRepRapLine[0]))
+                         && (uncommentedRepRapLine[0][0] == 'T'))
+                        {
+                            _printViewModel.AvailibleRepRapIDList.Add(uncommentedRepRapLine[0]);
+                        }
                     }
                 }
             }
 
+            _printViewModel.RepRapIDCount = _printViewModel.AvailibleRepRapIDList.Count;
             _printViewModel.UpdateAvailibleRepRapIDList();
         }
         #endregion

@@ -12,7 +12,7 @@ using ModiPrint.Models.SerialCommunicationModels;
 using ModiPrint.Models.RealTimeStatusModels;
 using ModiPrint.Models.PrinterModels.PrintheadModels.PrintheadTypeModels;
 using ModiPrint.Models.ManualControlModels;
-using ModiPrint.ViewModels.PrintViewModels;
+using ModiPrint.ViewModels.PrintViewModels.MaterialViewModels;
 using ModiPrint.ViewModels.GCodeManagerViewModels;
 using ModiPrint.ViewModels.SerialCommunicationViewModels;
 using ModiPrint.ViewModels.ManualControlViewModels;
@@ -45,6 +45,7 @@ namespace ModiPrint.ViewModels.PrintViewModels
         private SerialCommunicationViewModel _serialCommunicationViewModel;
         private RealTimeStatusDataModel _realTimeStatusDataModel;
         private CalibrationViewModel _calibrationViewModel;
+        private PrintViewModel _printViewModel;
 
         //Contains function for outputting and receiving messages from the serial communicator.
         private SerialCommunicationOutgoingMessagesModel _serialCommunicationOutgoingMessagesModel;
@@ -94,7 +95,18 @@ namespace ModiPrint.ViewModels.PrintViewModels
 
         public bool IsGCodeReadyToPrint
         {
-            get { return !String.IsNullOrWhiteSpace(_gCodeManagerViewModel.UploadedGCodeModel.GCodeStr); }
+            get
+            {
+                if ((!String.IsNullOrWhiteSpace(_gCodeManagerViewModel.UploadedGCodeModel.GCodeStr)
+                 && (_printViewModel.AvailibleRepRapIDSet() == true)))
+                {
+                    return true;    
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
 
         public bool IsSerialCommunicationReadyToPrint
@@ -112,7 +124,7 @@ namespace ModiPrint.ViewModels.PrintViewModels
         public PrintExecuteViewModel(GCodeManagerViewModel GCodeManagerViewModel, 
             RealTimeStatusDataModel RealTimeStatusDataModel, CalibrationViewModel CalibrationViewModel,
             SerialCommunicationViewModel SerialCommunicationViewModel, SerialCommunicationOutgoingMessagesModel SerialCommunicationOutgoingMessagesModel, 
-            SerialMessageDisplayViewModel SerialMessageDisplayViewModel)
+            SerialMessageDisplayViewModel SerialMessageDisplayViewModel, PrintViewModel PrintViewModel)
         {
             _gCodeManagerViewModel = GCodeManagerViewModel;
             _realTimeStatusDataModel = RealTimeStatusDataModel;
@@ -120,8 +132,10 @@ namespace ModiPrint.ViewModels.PrintViewModels
             _serialCommunicationViewModel = SerialCommunicationViewModel;
             _serialCommunicationOutgoingMessagesModel = SerialCommunicationOutgoingMessagesModel;
             _serialMessageDisplayViewModel = SerialMessageDisplayViewModel;
+            _printViewModel = PrintViewModel;
 
             _gCodeManagerViewModel.GCodeFileUploaded += new GCodeFileUploadedEventHandler(UpdateUploadedGCode);
+            _printViewModel.PrintViewModelRepRapIDChanged += new PrintViewModelRepRapIDChanged(UpdateRepRapIDSet);
 
             _serialCommunicationViewModel.SerialCommunicationMainModel.SerialConnectionChanged += new SerialConnectionChangedEventHandler(UpdateSerialConnection);
             _serialCommunicationViewModel.SerialCommunicationMainModel.SerialCommunicationCompleted += new SerialCommunicationCompletedEventHandler(UpdatePrintFinished);
@@ -155,6 +169,16 @@ namespace ModiPrint.ViewModels.PrintViewModels
         /// </summary>
         /// <param name="sender"></param>
         private void UpdateUploadedGCode(object sender)
+        {
+            OnPropertyChanged("IsGCodeReadyToPrint");
+            OnPropertyChanged("IsReadyToPrint");
+        }
+
+        /// <summary>
+        /// Linked to 
+        /// </summary>
+        /// <param name="sender"></param>
+        private void UpdateRepRapIDSet(object sender)
         {
             OnPropertyChanged("IsGCodeReadyToPrint");
             OnPropertyChanged("IsReadyToPrint");

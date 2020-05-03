@@ -37,6 +37,9 @@ namespace ModiPrint.Models.ManualControlModels
 
         //Contains functions to queue outgoing messages for the serial port.
         SerialCommunicationOutgoingMessagesModel _serialCommunicationOutgoingMessagesModel;
+
+        //Reports errors.
+        ErrorListViewModel _errorListViewModel;
         #endregion
 
         #region Constructor
@@ -48,6 +51,8 @@ namespace ModiPrint.Models.ManualControlModels
 
             ParametersModel parametersModel = new ParametersModel(_printerModel, null);
             _writeSetAxisModel = new WriteSetAxisModel(parametersModel);
+
+            _errorListViewModel = ErrorListViewModel;
         }
         #endregion
 
@@ -65,114 +70,111 @@ namespace ModiPrint.Models.ManualControlModels
         /// <summary>
         /// Sends outgoing commands that retracts all Z Axes and moves X and Y Axes to the limit switches.
         /// </summary>
-        public void CalibrateXYAndZMax(double xCalibrationSpeed, double yCalibrationSpeed, double zCalibrationSpeed)
+        public void Home(double xCalibrationSpeed, double yCalibrationSpeed, double zCalibrationSpeed, double xDistanceFromCenter, double yDistanceFromCenter)
         {
-            //Retract Z Axes.
-            RetractAllZ(zCalibrationSpeed);
-
-            //Z Axes should be in default positions.
-            AxisModel zAxisModel = _printerModel.ZAxisModelList[_printerModel.ZAxisModelList.Count - 1]; 
-            double zPosition = zAxisModel.MaxPosition - GlobalValues.LimitBuffer;
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(SerialMessageCharacters.SerialCommandSetCharacter + "SetMinMaxPos " + "Z" + zPosition);
-
-            //Set X Axis to calibration speeds.
-            AxisModel xAxis = _printerModel.AxisModelList[0];
-            int xLimitPinID = (xAxis.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : xAxis.AttachedLimitSwitchGPIOPinModel.PinID;
-            string switchX = _writeSetAxisModel.WriteSetAxis(xAxis.AxisID, xAxis.AttachedMotorStepGPIOPinModel.PinID, xAxis.AttachedMotorDirectionGPIOPinModel.PinID, xAxis.StepPulseTime, 
-                xLimitPinID, xCalibrationSpeed, xAxis.MaxAcceleration, xAxis.MmPerStep);
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(switchX);
-
-            //Set Y Axis to max speeds.
-            AxisModel yAxis = _printerModel.AxisModelList[1];
-            int yLimitPinID = (yAxis.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : yAxis.AttachedLimitSwitchGPIOPinModel.PinID;
-            string switchY = _writeSetAxisModel.WriteSetAxis(yAxis.AxisID, yAxis.AttachedMotorStepGPIOPinModel.PinID, yAxis.AttachedMotorDirectionGPIOPinModel.PinID, yAxis.StepPulseTime,
-                yLimitPinID, yCalibrationSpeed, yAxis.MaxAcceleration, yAxis.MmPerStep);
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(switchY);
-
-            //Hit the min and max limit switches on X.
-            double unused = 0;
-            string xPositive = GCodeLinesConverter.GCodeLinesListToString(
-                WriteG00.WriteAxesMovement(
-                xAxis.MmPerStep, 0, 0,
-                5000, 0, 0,
-                xAxis.IsDirectionInverted, false, false,
-                ref unused, ref unused, ref unused));
-            string xNegative = GCodeLinesConverter.GCodeLinesListToString(
-                WriteG00.WriteAxesMovement(
-                xAxis.MmPerStep, 0, 0,
-                -5000, 0, 0,
-                xAxis.IsDirectionInverted, false, false,
-                ref unused, ref unused, ref unused));
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(xPositive);
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(xNegative);
-
-            //Move away from the limit switch.
-            string xMoveAwayFromLimit = GCodeLinesConverter.GCodeLinesListToString(
-                WriteG00.WriteAxesMovement(
-                xAxis.MmPerStep, 0, 0,
-                GlobalValues.LimitBuffer, 0, 0,
-                xAxis.IsDirectionInverted, false, false,
-                ref unused, ref unused, ref unused));
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(xMoveAwayFromLimit);
-
-            //Hit the min and max limit switches on Y.
-            string yPositive = GCodeLinesConverter.GCodeLinesListToString(
-                WriteG00.WriteAxesMovement(
-                0, yAxis.MmPerStep, 0,
-                0, 5000, 0,
-                yAxis.IsDirectionInverted, false, false,
-                ref unused, ref unused, ref unused));
-            string yNegative = GCodeLinesConverter.GCodeLinesListToString(
-                WriteG00.WriteAxesMovement(
-                0, yAxis.MmPerStep, 0,
-                0, -5000, 0,
-                yAxis.IsDirectionInverted, false, false,
-                ref unused, ref unused, ref unused));
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(yPositive);
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(yNegative);
-
-            //Move away from the limit switch.
-            string yMoveAwayFromLimit = GCodeLinesConverter.GCodeLinesListToString(
-                WriteG00.WriteAxesMovement(
-                0, yAxis.MmPerStep, 0,
-                0, GlobalValues.LimitBuffer, 0,
-                yAxis.IsDirectionInverted, false, false,
-                ref unused, ref unused, ref unused));
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(yMoveAwayFromLimit);
-
-            //At the end, switch the Z actuator to the Printhead used at the beginning of the print.
-            if (_realTimeStatusDataModel.ZRealTimeStatusAxisModel.Name != "Unset")
+            try
             {
-                AxisModel zAxisFinalModel = _printerModel.FindAxis(_realTimeStatusDataModel.ZRealTimeStatusAxisModel.Name);
-                int zFinalLimitPinID = (zAxisFinalModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : zAxisFinalModel.AttachedLimitSwitchGPIOPinModel.PinID;
-                string switchZFinal = _writeSetAxisModel.WriteSetAxis(zAxisFinalModel.AxisID, zAxisFinalModel.AttachedMotorStepGPIOPinModel.PinID, zAxisFinalModel.AttachedMotorDirectionGPIOPinModel.PinID,
-                        zAxisFinalModel.StepPulseTime, zFinalLimitPinID, zCalibrationSpeed, zAxisFinalModel.MaxAcceleration, zAxisFinalModel.MmPerStep);
-                _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(switchZFinal);
+                //Retract Z Axes.
+                RetractAllZ(zCalibrationSpeed);
+
+                //Z Axes should be in default positions.
+                AxisModel zAxisModel = _printerModel.ZAxisModelList[_printerModel.ZAxisModelList.Count - 1];
+                double zPosition = zAxisModel.MaxPosition - GlobalValues.LimitBuffer;
+                _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(SerialMessageCharacters.SerialCommandSetCharacter + "SetMinMaxPos " + "Z" + zPosition);
+
+                //Set X Axis to calibration speeds.
+                AxisModel xAxis = _printerModel.AxisModelList[0];
+                int xLimitPinID = (xAxis.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : xAxis.AttachedLimitSwitchGPIOPinModel.PinID;
+                string switchX = _writeSetAxisModel.WriteSetAxis(xAxis.AxisID, xAxis.AttachedMotorStepGPIOPinModel.PinID, xAxis.AttachedMotorDirectionGPIOPinModel.PinID, xAxis.StepPulseTime,
+                    xLimitPinID, xCalibrationSpeed, xAxis.MaxAcceleration, xAxis.MmPerStep);
+                _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(switchX);
+
+                //Set Y Axis to max speeds.
+                AxisModel yAxis = _printerModel.AxisModelList[1];
+                int yLimitPinID = (yAxis.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : yAxis.AttachedLimitSwitchGPIOPinModel.PinID;
+                string switchY = _writeSetAxisModel.WriteSetAxis(yAxis.AxisID, yAxis.AttachedMotorStepGPIOPinModel.PinID, yAxis.AttachedMotorDirectionGPIOPinModel.PinID, yAxis.StepPulseTime,
+                    yLimitPinID, yCalibrationSpeed, yAxis.MaxAcceleration, yAxis.MmPerStep);
+                _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(switchY);
+
+                //Hit the min and max limit switches on X.
+                double unused = 0;
+                string xPositive = GCodeLinesConverter.GCodeLinesListToString(
+                    WriteG00.WriteAxesMovement(
+                    xAxis.MmPerStep, 0, 0,
+                    5000, 0, 0,
+                    xAxis.IsDirectionInverted, false, false,
+                    ref unused, ref unused, ref unused));
+                string xNegative = GCodeLinesConverter.GCodeLinesListToString(
+                    WriteG00.WriteAxesMovement(
+                    xAxis.MmPerStep, 0, 0,
+                    -5000, 0, 0,
+                    xAxis.IsDirectionInverted, false, false,
+                    ref unused, ref unused, ref unused));
+                _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(xPositive);
+                _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(xNegative);
+
+                //Move away from the limit switch.
+                string xMoveAwayFromLimit = GCodeLinesConverter.GCodeLinesListToString(
+                    WriteG00.WriteAxesMovement(
+                    xAxis.MmPerStep, 0, 0,
+                    GlobalValues.LimitBuffer, 0, 0,
+                    xAxis.IsDirectionInverted, false, false,
+                    ref unused, ref unused, ref unused));
+                _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(xMoveAwayFromLimit);
+
+                //Hit the min and max limit switches on Y.
+                string yPositive = GCodeLinesConverter.GCodeLinesListToString(
+                    WriteG00.WriteAxesMovement(
+                    0, yAxis.MmPerStep, 0,
+                    0, 5000, 0,
+                    yAxis.IsDirectionInverted, false, false,
+                    ref unused, ref unused, ref unused));
+                string yNegative = GCodeLinesConverter.GCodeLinesListToString(
+                    WriteG00.WriteAxesMovement(
+                    0, yAxis.MmPerStep, 0,
+                    0, -5000, 0,
+                    yAxis.IsDirectionInverted, false, false,
+                    ref unused, ref unused, ref unused));
+                _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(yPositive);
+                _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(yNegative);
+
+                //Move away from the limit switch.
+                string yMoveAwayFromLimit = GCodeLinesConverter.GCodeLinesListToString(
+                    WriteG00.WriteAxesMovement(
+                    0, yAxis.MmPerStep, 0,
+                    0, GlobalValues.LimitBuffer, 0,
+                    yAxis.IsDirectionInverted, false, false,
+                    ref unused, ref unused, ref unused));
+                _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(yMoveAwayFromLimit);
+
+                //Set X Axis to max speeds.
+                string switchXMax = _writeSetAxisModel.WriteSetAxis(xAxis);
+                _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(switchXMax);
+
+                //Set Y Axis to max speeds.
+                string switchYMax = _writeSetAxisModel.WriteSetAxis(yAxis);
+                _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(switchYMax);
+
+                //Center the X and Y actuators.
+                _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(SerialMessageCharacters.SerialCommandSetCharacter + "Center X" + xDistanceFromCenter + " Y" + yDistanceFromCenter);
+                _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(SerialMessageCharacters.SerialCommandSetCharacter + "OriginXY");
+
+                //At the end, switch the Z actuator to the Printhead used at the beginning of the print.
+                if (_realTimeStatusDataModel.ZRealTimeStatusAxisModel.Name != "Unset")
+                {
+                    AxisModel zAxisFinalModel = _printerModel.FindAxis(_realTimeStatusDataModel.ZRealTimeStatusAxisModel.Name);
+                    int zFinalLimitPinID = (zAxisFinalModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : zAxisFinalModel.AttachedLimitSwitchGPIOPinModel.PinID;
+                    string switchZFinal = _writeSetAxisModel.WriteSetAxis(zAxisFinalModel.AxisID, zAxisFinalModel.AttachedMotorStepGPIOPinModel.PinID, zAxisFinalModel.AttachedMotorDirectionGPIOPinModel.PinID,
+                            zAxisFinalModel.StepPulseTime, zFinalLimitPinID, zCalibrationSpeed, zAxisFinalModel.MaxAcceleration, zAxisFinalModel.MmPerStep);
+                    _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(switchZFinal);
+                }
+
+                OnCalibrationBegun();
             }
-
-            OnCalibrationBegun();
-        }
-
-        /// <summary>
-        /// Center X and Y and set the new position as the origin for X and Y.
-        /// </summary>
-        public void CalibrateXYOrigin(double xDistanceFromCenter, double yDistanceFromCenter)
-        {
-            //Set X Axis to max speeds.
-            AxisModel xAxis = _printerModel.AxisModelList[0];
-            string switchX = _writeSetAxisModel.WriteSetAxis(xAxis);
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(switchX);
-
-            //Set Y Axis to max speeds.
-            AxisModel yAxis = _printerModel.AxisModelList[1];
-            string switchY = _writeSetAxisModel.WriteSetAxis(yAxis);
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(switchY);
-
-            //Center the X and Y actuators.
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(SerialMessageCharacters.SerialCommandSetCharacter + "Center X" + xDistanceFromCenter + " Y" + yDistanceFromCenter);
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(SerialMessageCharacters.SerialCommandSetCharacter + "OriginXY");
-
-            OnCalibrationBegun();
+            catch
+            {
+                _errorListViewModel.AddError("", "Unkown error when homing");
+            }
         }
 
         /// <summary>
@@ -183,27 +185,38 @@ namespace ModiPrint.Models.ManualControlModels
         /// </summary>
         public void CalibratePrintheadOffset()
         {
-            //Set Offset values for the current Printhead.
-            PrintheadModel printheadModel = _printerModel.FindPrinthead(_realTimeStatusDataModel.ActivePrintheadModel.Name);
-            printheadModel.XOffset = _realTimeStatusDataModel.XRealTimeStatusAxisModel.Position;
-            printheadModel.YOffset = _realTimeStatusDataModel.YRealTimeStatusAxisModel.Position;
+            try
+            {
+                //Set Offset values for the current Printhead.
+                PrintheadModel printheadModel = _printerModel.FindPrinthead(_realTimeStatusDataModel.ActivePrintheadModel.Name);
+                printheadModel.XOffset = _realTimeStatusDataModel.XRealTimeStatusAxisModel.Position;
+                printheadModel.YOffset = _realTimeStatusDataModel.YRealTimeStatusAxisModel.Position;
 
-            //Set current Z Axis MinPosition to 0.
-            string setZMin = SerialMessageCharacters.SerialCommandSetCharacter + "SetMinMaxPos ZN0";
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(setZMin);
+                //Set current Z Axis MinPosition to 0.
+                string setZMin = SerialMessageCharacters.SerialCommandSetCharacter + "SetMinMaxPos ZN0";
+                _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(setZMin);
 
-            //Maximize Z Axis speeds.
-            string setZMaxSpeed = _writeSetAxisModel.WriteSetAxis(printheadModel.AttachedZAxisModel);
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(setZMaxSpeed);
+                //Maximize Z Axis speeds.
+                string setZMaxSpeed = _writeSetAxisModel.WriteSetAxis(printheadModel.AttachedZAxisModel);
+                _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(setZMaxSpeed);
 
-            //The next Z Limit Switch hit will calibrate minmax positions.
-            _realTimeStatusDataModel.ShouldZCalibrate = true;
+                //The next Z Limit Switch hit will calibrate minmax positions.
+                _realTimeStatusDataModel.ShouldZCalibrate = true;
 
-            //Retracts the Z Axis up to a short distance away from the Limit Switch (does not hit the Limit Switch).
-            string retractZ = SerialMessageCharacters.SerialCommandSetCharacter + "RetractZLimit";
-            _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(retractZ);
+                //Retracts the Z Axis up to a short distance away from the Limit Switch (does not hit the Limit Switch).
+                string retractZ = SerialMessageCharacters.SerialCommandSetCharacter + "RetractZLimit";
+                _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(retractZ);
 
-            OnCalibrationBegun();
+                OnCalibrationBegun();
+            }
+            catch when (_realTimeStatusDataModel.ActivePrintheadModel == null)
+            {
+                _errorListViewModel.AddError("", "No printhead is set. Printhead must be set before calibrating printhead offset.");
+            }
+            catch
+            {
+                _errorListViewModel.AddError("", "Unkown error when calibrating printhead offset.");
+            }
         }
 
         /// <summary>
@@ -219,7 +232,6 @@ namespace ModiPrint.Models.ManualControlModels
                     zLimitPinID, zCalibrationSpeed, zAxis.MaxAcceleration, zAxis.MmPerStep);
                 _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(switchZ);
                 _serialCommunicationOutgoingMessagesModel.AppendProspectiveOutgoingMessage(SerialMessageCharacters.SerialCommandSetCharacter + "RetractZLimit");
-;               
             }
         }
         #endregion

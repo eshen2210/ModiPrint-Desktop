@@ -17,7 +17,7 @@ namespace ModiPrint.ViewModels.PrintViewModels.MaterialViewModels
 
     //Fires when a RepRap ID is cleared.
     public delegate void RepRapIDClearedEventHandler(string repRapID);
-    
+
     /// <summary>
     /// ViewModel that interfaces MaterialModel with the GUI.
     /// </summary>
@@ -198,7 +198,7 @@ namespace ModiPrint.ViewModels.PrintViewModels.MaterialViewModels
         #region Events
         //Event that is fired when the RepRapID is selected.
         public event RepRapIDSelectedEventHandler RepRapIDSelected;
-        public void OnRepRapIDSelected(string repRapID)
+        private void OnRepRapIDSelected(string repRapID)
         {
             if (RepRapIDSelected != null)
             { RepRapIDSelected(repRapID); }
@@ -206,7 +206,7 @@ namespace ModiPrint.ViewModels.PrintViewModels.MaterialViewModels
 
         //Event that is fired when the RepRapID is cleared.
         public event RepRapIDClearedEventHandler RepRapIDCleared;
-        public void OnRepRapIDCleared(string repRapID)
+        private void OnRepRapIDCleared(string repRapID)
         {
             if (RepRapIDCleared != null)
             { RepRapIDCleared(repRapID); }

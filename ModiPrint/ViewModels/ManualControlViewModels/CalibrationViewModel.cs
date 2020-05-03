@@ -104,8 +104,7 @@ namespace ModiPrint.ViewModels.ManualControlViewModels
 
         public void ExecuteHomeCommand(object notUsed)
         {
-            _calibrationModel.CalibrateXYAndZMax(_xCalibrationSpeed, _yCalibrationSpeed, _zCalibrationSpeed);
-            _calibrationModel.CalibrateXYOrigin(_xDistanceFromCenter, _yDistanceFromCenter);
+            _calibrationModel.Home(_xCalibrationSpeed, _yCalibrationSpeed, _zCalibrationSpeed, _xDistanceFromCenter, _yDistanceFromCenter);
             _manualControlViewModel.Menu = "Base";
         }
 

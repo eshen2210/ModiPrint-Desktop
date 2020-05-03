@@ -180,7 +180,7 @@ namespace ModiPrint.ViewModels
             _realTimeStatusDataViewModel = new RealTimeStatusDataViewModel(_realTimeStatusDataModel, _printerViewModel, _serialCommunicationMainModel.SerialCommunicationCommandSetsModel, _errorListViewModel);
 
             //Manual Commmands and Calibration.
-            _manualControlModel = new ManualControlModel(_printerModel, _serialCommunicationOutgoingMessagesModel, _realTimeStatusDataModel);
+            _manualControlModel = new ManualControlModel(_printerModel, _serialCommunicationOutgoingMessagesModel, _realTimeStatusDataModel, _errorListViewModel);
             _calibrationModel = new CalibrationModel(_realTimeStatusDataModel, _printerModel, _serialCommunicationOutgoingMessagesModel, _errorListViewModel);
             _manualControlViewModel = new ManualControlViewModel(_manualControlModel, _realTimeStatusDataViewModel, _printerViewModel);
             _calibrationViewModel = new CalibrationViewModel(_calibrationModel, _manualControlViewModel, _realTimeStatusDataViewModel, _printerViewModel);
@@ -192,7 +192,7 @@ namespace ModiPrint.ViewModels
             _gcodeManagerViewModel = new GCodeManagerViewModel(_gCodeFileManagerModel, _gCodeConverterModel, _printViewModel);
 
             //Printing.
-            _printExecuteViewModel = new PrintExecuteViewModel(_gcodeManagerViewModel, _realTimeStatusDataModel, _calibrationViewModel, _serialCommunicationViewModel, _serialCommunicationOutgoingMessagesModel, _serialMessageDisplayViewModel);
+            _printExecuteViewModel = new PrintExecuteViewModel(_gcodeManagerViewModel, _realTimeStatusDataModel, _calibrationViewModel, _serialCommunicationViewModel, _serialCommunicationOutgoingMessagesModel, _serialMessageDisplayViewModel, _printViewModel);
 
             //Settings.
             _saveLoadViewModel = new SaveLoadViewModel(_gcodeManagerViewModel, _printerViewModel, _printViewModel, _errorListViewModel);

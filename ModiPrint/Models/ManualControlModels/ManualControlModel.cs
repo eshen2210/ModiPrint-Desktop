@@ -31,6 +31,9 @@ namespace ModiPrint.Models.ManualControlModels
         //Contains information on the state of printer information during operation.
         RealTimeStatusDataModel _realTimeStatusDataModel;
 
+        //Handles errors.
+        ErrorListViewModel _errorListViewModel;
+
         //Contains functions to generate commands.
         WriteSetPrintheadModel _writeSetPrintheadModel;
         WriteSetAxisModel _writeSetAxisModel;
@@ -38,11 +41,12 @@ namespace ModiPrint.Models.ManualControlModels
 
         #region Constructor
         public ManualControlModel(PrinterModel PrinterModel, SerialCommunicationOutgoingMessagesModel SerialCommunicationOutgoingMessagesModel,
-            RealTimeStatusDataModel RealTimeStatusDataModel)
+            RealTimeStatusDataModel RealTimeStatusDataModel, ErrorListViewModel ErrorListViewModel)
         {
             _printerModel = PrinterModel;
             _serialCommunicationOutgoingMessagesModel = SerialCommunicationOutgoingMessagesModel;
             _realTimeStatusDataModel = RealTimeStatusDataModel;
+            _errorListViewModel = ErrorListViewModel;
 
             ParametersModel parametersModel = new ParametersModel(_printerModel, null);
 
@@ -236,22 +240,33 @@ namespace ModiPrint.Models.ManualControlModels
         /// <param name="acceleration"></param>
         public void ProcessManualSetAxisCommand(string axisName, double maxSpeed, double acceleration)
         {
-            List<string> outgoingMessagesList = new List<string>();
+            try
+            {
+                List<string> outgoingMessagesList = new List<string>();
 
-            AxisModel axisModel = _printerModel.FindAxis(axisName);
+                AxisModel axisModel = _printerModel.FindAxis(axisName);
 
-            int limitPinID = (axisModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : axisModel.AttachedLimitSwitchGPIOPinModel.PinID;
+                int limitPinID = (axisModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : axisModel.AttachedLimitSwitchGPIOPinModel.PinID;
 
-            string setAxisString = _writeSetAxisModel.WriteSetAxis(axisModel.AxisID, axisModel.AttachedMotorStepGPIOPinModel.PinID, axisModel.AttachedMotorDirectionGPIOPinModel.PinID,
-                axisModel.StepPulseTime, limitPinID, maxSpeed, acceleration, axisModel.MmPerStep);
+                string setAxisString = _writeSetAxisModel.WriteSetAxis(axisModel.AxisID, axisModel.AttachedMotorStepGPIOPinModel.PinID, axisModel.AttachedMotorDirectionGPIOPinModel.PinID,
+                    axisModel.StepPulseTime, limitPinID, maxSpeed, acceleration, axisModel.MmPerStep);
 
-            //If switching Z Axes, then retract the current Z Axis first.
-            if (axisModel.AxisID == 'Z')
-            { outgoingMessagesList.Add(SerialMessageCharacters.SerialCommandSetCharacter + "RetractZ"); }
+                //If switching Z Axes, then retract the current Z Axis first.
+                if (axisModel.AxisID == 'Z')
+                { outgoingMessagesList.Add(SerialMessageCharacters.SerialCommandSetCharacter + "RetractZ"); }
 
-            outgoingMessagesList.Add(setAxisString);
+                outgoingMessagesList.Add(setAxisString);
 
-            _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(outgoingMessagesList);
+                _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(outgoingMessagesList);
+            }
+            catch (NullReferenceException e)
+            {
+                _errorListViewModel.AddError("", "Actuator needs to be set in Printer Settings before setting the actuator in Control Menu.");
+            }
+            catch
+            {
+                _errorListViewModel.AddError("", "Unknown error while setting valve printhead.");
+            }
         }
 
         /// <summary>
@@ -262,27 +277,38 @@ namespace ModiPrint.Models.ManualControlModels
         /// <param name="acceleration"></param>
         public void ProcessManualSetMotorizedPrintheadCommand(string printheadName, double maxSpeed, double acceleration)
         {
-            List<string> outgoingMessagesList = new List<string>();
+            try
+            {
+                List<string> outgoingMessagesList = new List<string>();
 
-            PrintheadModel printheadModel = _printerModel.FindPrinthead(printheadName);
-            MotorizedPrintheadTypeModel motorizedPrintheadTypeModel = (MotorizedPrintheadTypeModel)printheadModel.PrintheadTypeModel;
+                PrintheadModel printheadModel = _printerModel.FindPrinthead(printheadName);
+                MotorizedPrintheadTypeModel motorizedPrintheadTypeModel = (MotorizedPrintheadTypeModel)printheadModel.PrintheadTypeModel;
 
-            int printheadLimitPinID = (motorizedPrintheadTypeModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : motorizedPrintheadTypeModel.AttachedLimitSwitchGPIOPinModel.PinID;
-            string setPrintheadString = _writeSetPrintheadModel.WriteSetMotorDrivenPrinthead(motorizedPrintheadTypeModel.AttachedMotorStepGPIOPinModel.PinID, motorizedPrintheadTypeModel.AttachedMotorDirectionGPIOPinModel.PinID,
-                motorizedPrintheadTypeModel.StepPulseTime, printheadLimitPinID, maxSpeed, acceleration, motorizedPrintheadTypeModel.MmPerStep);
-            outgoingMessagesList.Add(setPrintheadString);
+                int printheadLimitPinID = (motorizedPrintheadTypeModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : motorizedPrintheadTypeModel.AttachedLimitSwitchGPIOPinModel.PinID;
+                string setPrintheadString = _writeSetPrintheadModel.WriteSetMotorDrivenPrinthead(motorizedPrintheadTypeModel.AttachedMotorStepGPIOPinModel.PinID, motorizedPrintheadTypeModel.AttachedMotorDirectionGPIOPinModel.PinID,
+                    motorizedPrintheadTypeModel.StepPulseTime, printheadLimitPinID, maxSpeed, acceleration, motorizedPrintheadTypeModel.MmPerStep);
+                outgoingMessagesList.Add(setPrintheadString);
 
-            //Send GCode for the Z Axis attached to the Printhead.
-            AxisModel axisModel = printheadModel.AttachedZAxisModel;
+                //Send GCode for the Z Axis attached to the Printhead.
+                AxisModel axisModel = printheadModel.AttachedZAxisModel;
 
-            int zAxisLimitPinID = (axisModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : axisModel.AttachedLimitSwitchGPIOPinModel.PinID;
-            string setAxisString = _writeSetAxisModel.WriteSetAxis(axisModel.AxisID, axisModel.AttachedMotorStepGPIOPinModel.PinID, axisModel.AttachedMotorDirectionGPIOPinModel.PinID,
-                axisModel.StepPulseTime, zAxisLimitPinID, axisModel.MaxSpeed, axisModel.MaxAcceleration, axisModel.MmPerStep);
+                int zAxisLimitPinID = (axisModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : axisModel.AttachedLimitSwitchGPIOPinModel.PinID;
+                string setAxisString = _writeSetAxisModel.WriteSetAxis(axisModel.AxisID, axisModel.AttachedMotorStepGPIOPinModel.PinID, axisModel.AttachedMotorDirectionGPIOPinModel.PinID,
+                    axisModel.StepPulseTime, zAxisLimitPinID, axisModel.MaxSpeed, axisModel.MaxAcceleration, axisModel.MmPerStep);
 
-            //Retract Z Axis before changing Printheads.
-            outgoingMessagesList.Add(SerialMessageCharacters.SerialCommandSetCharacter + "RetractZ");
-            outgoingMessagesList.Add(setAxisString);
-            _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(outgoingMessagesList);
+                //Retract Z Axis before changing Printheads.
+                outgoingMessagesList.Add(SerialMessageCharacters.SerialCommandSetCharacter + "RetractZ");
+                outgoingMessagesList.Add(setAxisString);
+                _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(outgoingMessagesList);
+            }
+            catch (NullReferenceException e)
+            {
+                _errorListViewModel.AddError("", "Printhead or z actuator needs to be set in Printer Settings before setting printhead in Control Menu.");
+            }
+            catch
+            {
+                _errorListViewModel.AddError("", "Unknown error while setting valve printhead.");
+            }
         }
 
         /// <summary>
@@ -291,22 +317,33 @@ namespace ModiPrint.Models.ManualControlModels
         /// <param name="printheadName"></param>
         public void ProcessManualSetValvePrintheadCommand(string printheadName)
         {
-            List<string> outgoingMessagesList = new List<string>();
+            try
+            {
+                List<string> outgoingMessagesList = new List<string>();
 
-            PrintheadModel printheadModel = _printerModel.FindPrinthead(printheadName);
-            ValvePrintheadTypeModel valvePrintheadTypeModel = (ValvePrintheadTypeModel)printheadModel.PrintheadTypeModel;
-            string setPrintheadString = _writeSetPrintheadModel.WriteSetValvePrinthead(valvePrintheadTypeModel.AttachedValveGPIOPinModel.PinID);
-            outgoingMessagesList.Add(setPrintheadString);
+                PrintheadModel printheadModel = _printerModel.FindPrinthead(printheadName);
+                ValvePrintheadTypeModel valvePrintheadTypeModel = (ValvePrintheadTypeModel)printheadModel.PrintheadTypeModel;
+                string setPrintheadString = _writeSetPrintheadModel.WriteSetValvePrinthead(valvePrintheadTypeModel.AttachedValveGPIOPinModel.PinID);
+                outgoingMessagesList.Add(setPrintheadString);
 
-            //Send GCode for the Z Axis attached to the Printhead.
-            AxisModel axisModel = printheadModel.AttachedZAxisModel;
-            int zAxisLimitPinID = (axisModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : axisModel.AttachedLimitSwitchGPIOPinModel.PinID;
-            string setAxisString = _writeSetAxisModel.WriteSetAxis(axisModel.AxisID, axisModel.AttachedMotorStepGPIOPinModel.PinID, axisModel.AttachedMotorDirectionGPIOPinModel.PinID,
-                axisModel.StepPulseTime, zAxisLimitPinID, axisModel.MaxSpeed, axisModel.MaxAcceleration, axisModel.MmPerStep);
+                //Send GCode for the Z Axis attached to the Printhead.
+                AxisModel axisModel = printheadModel.AttachedZAxisModel;
+                int zAxisLimitPinID = (axisModel.AttachedLimitSwitchGPIOPinModel == null) ? GlobalValues.PinIDNull : axisModel.AttachedLimitSwitchGPIOPinModel.PinID;
+                string setAxisString = _writeSetAxisModel.WriteSetAxis(axisModel.AxisID, axisModel.AttachedMotorStepGPIOPinModel.PinID, axisModel.AttachedMotorDirectionGPIOPinModel.PinID,
+                    axisModel.StepPulseTime, zAxisLimitPinID, axisModel.MaxSpeed, axisModel.MaxAcceleration, axisModel.MmPerStep);
 
-            outgoingMessagesList.Add(SerialMessageCharacters.SerialCommandSetCharacter + "RetractZ");
-            outgoingMessagesList.Add(setAxisString);
-            _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(outgoingMessagesList);
+                outgoingMessagesList.Add(SerialMessageCharacters.SerialCommandSetCharacter + "RetractZ");
+                outgoingMessagesList.Add(setAxisString);
+                _serialCommunicationOutgoingMessagesModel.QueueNextProspectiveOutgoingMessage(outgoingMessagesList);
+            }
+            catch (NullReferenceException e)
+            {
+                _errorListViewModel.AddError("", "Printhead or z actuator needs to be set in Printer Settings before setting printhead in Control Menu.");
+            }
+            catch
+            {
+                _errorListViewModel.AddError("", "Unknown error while setting valve printhead.");
+            }
         }
         #endregion
     }
