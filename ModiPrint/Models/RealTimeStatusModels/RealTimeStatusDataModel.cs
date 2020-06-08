@@ -304,7 +304,7 @@ namespace ModiPrint.Models.RealTimeStatusModels
         {
             lock(_taskQueuedMessagesList)
             {
-                return _taskQueuedMessagesList[0];
+                return (_taskQueuedMessagesList.Count > 0) ? _taskQueuedMessagesList[0] : "";
             }
         }
 
@@ -315,7 +315,10 @@ namespace ModiPrint.Models.RealTimeStatusModels
         {
             lock(_taskQueuedMessagesList)
             {
-                _taskQueuedMessagesList.RemoveAt(0);
+                if (_taskQueuedMessagesList.Count > 0)
+                {
+                    _taskQueuedMessagesList.RemoveAt(0);
+                }
             }
         }
 

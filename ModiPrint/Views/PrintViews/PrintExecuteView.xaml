@@ -419,7 +419,7 @@
                                         <Setter Property="Text" Value="G-code is uploaded/converted."/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding IsGCodeReadyToPrint}" Value="False">
-                                        <Setter Property="Text" Value="A .mdpt file needs to be uploaded or a .gcode file needs to be converted from the Print menu."/>
+                                        <Setter Property="Text" Value="A .mdpt or a .gcode file needs to be uploaded at the Print Settings menu. If a .gcode file is uploaded, all T# tool head IDs must be set in RepRapID parameters under seach material."/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>

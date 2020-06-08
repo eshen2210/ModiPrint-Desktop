@@ -46,11 +46,7 @@ namespace ModiPrint.ViewModels.PrintViewModels.MaterialViewModels
             {
                 string previousRepRapID = _materialModel.RepRapID;
                 _materialModel.RepRapID = value;
-
-                if (!String.IsNullOrWhiteSpace(value))
-                {
-                    OnRepRapIDSelected(value);
-                }
+                OnRepRapIDSelected(value);
                 OnRepRapIDCleared(previousRepRapID);
                 OnPropertyChanged("RepRapID");
             }

@@ -97,8 +97,9 @@ namespace ModiPrint.ViewModels.PrintViewModels
         {
             get
             {
-                if ((!String.IsNullOrWhiteSpace(_gCodeManagerViewModel.UploadedGCodeModel.GCodeStr)
-                 && (_printViewModel.AvailibleRepRapIDSet() == true)))
+                if ((!String.IsNullOrWhiteSpace(_gCodeManagerViewModel.UploadedGCodeModel.GCodeStr))
+                 && ((_printViewModel.AvailibleRepRapIDSet() == true)
+                  || (_gCodeManagerViewModel.UploadedGCodeType == GCodeType.ModiPrint)))
                 {
                     return true;    
                 }

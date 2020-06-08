@@ -25,9 +25,6 @@ namespace ModiPrint.ViewModels.GCodeManagerViewModels
     //Handles event that is fired when g-code file is uploaded.
     public delegate void GCodeFileUploadedEventHandler(object sender);
     
-    /// <summary>
-    /// To Do: This should not handle application logic such as converting GCode
-    /// </summary>
     public class GCodeManagerViewModel : ViewModel
     {
         #region Fields and Properties
