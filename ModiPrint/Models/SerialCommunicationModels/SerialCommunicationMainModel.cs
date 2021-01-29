@@ -552,17 +552,17 @@ namespace ModiPrint.Models.SerialCommunicationModels
             if (_serialPort.IsOpen == false)
             {
                 //Should never reach this point.
-                _errorReporterViewModel.ReportError("Serial Communication", "Serial Port Is Not Open");
+                _errorReporterViewModel.ReportError("Serial Communications Failed: Serial Port Is Not Open", "Ensure That The Device Is Securely Connected");
                 SerialDisconnect();
             }
             else if (exception.InnerException is TimeoutException)
             {
-                _errorReporterViewModel.ReportError("Serial Communication", "Serial Port Timeout");
+                _errorReporterViewModel.ReportError("Serial Communication Failed: Serial Port Timeout", "Ensure That The Device Is Securely Connected");
                 SerialDisconnect();
             }
             else
             {
-                _errorReporterViewModel.ReportError("Serial Communication", exception.Message);
+                _errorReporterViewModel.ReportError("Serial Communication Failed: Unspecified Error, Contact The Developer To Report This Error", exception.Message);
                 SerialDisconnect();
             }
         }

@@ -69,7 +69,7 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessTCommandMod
             catch
             {
                 //Should never reach this point.
-                _parametersModel.ErrorReporterViewModel.ReportError("GCodeConverter", "Unspecified Error, Please Check Code");
+                _parametersModel.ErrorReporterViewModel.ReportError("G-Code Conversion Failed: Should Not Happen, Please Report This Error To The Developer", "Unspecified Error");
             }
 
             return convertedGCode;

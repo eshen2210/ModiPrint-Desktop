@@ -306,7 +306,7 @@ namespace ModiPrint.Models.GCodeConverterModels.CorneringModels
                         //Should not happen.
 
                         continuousMovement[j].VelocityProfileType = VelocityProfileType.Unset;
-                        _parametersModel.ErrorReporterViewModel.ReportError("GCodeConverter: Junction Calculations Error", "LL:" + continuousMovement[j].GCodeIndex + " ");
+                        _parametersModel.ErrorReporterViewModel.ReportError("G-Code Conversion Failed: Junction Calculations Error, Should Not Happen, Please Report This Error To The Developer", "ContinuousMovementIndex: " + continuousMovement[j].GCodeIndex + " ");
                     }
                 }
 

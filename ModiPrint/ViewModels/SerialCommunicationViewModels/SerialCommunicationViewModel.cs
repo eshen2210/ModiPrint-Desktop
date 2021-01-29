@@ -178,7 +178,7 @@ namespace ModiPrint.ViewModels.SerialCommunicationViewModels
             }
             else
             {
-                _serialCommunicationMainModel.ErrorReporterViewModel.ReportError("Serial Communication", "Could Not Connect To Serial Port");
+                _serialCommunicationMainModel.ErrorReporterViewModel.ReportError("Serial Communication Failed: Could Not Connect", "Ensure The Device Is Securely Connected");
             }
             OnPropertyChanged("IsPortOpen");
             _serialConnectCommand.RaiseCanExecuteChanged();

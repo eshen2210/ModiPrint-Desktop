@@ -961,9 +961,6 @@
     <Resource Include="Resources\PrintSequenceControl\PrintheadEnabled.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\McCloskeyLabLogo.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\GithubLogo.png" />
   </ItemGroup>
   <ItemGroup>
@@ -1014,6 +1011,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\General\Retract.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\McCloskeyLabLogo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -220,14 +220,14 @@ namespace ModiPrint.Models.GCodeConverterModels
             else if (repRapLine[0] == "G20")
             {
                 string repRapLineStr = GCodeStringParsing.GCodeLineArrToStr(repRapLine);
-                _parametersModel.ErrorReporterViewModel.ReportError("GCode Converter: Inches Not Supported, set RepRap param to milimeters", repRapLineStr);
+                _parametersModel.ErrorReporterViewModel.ReportError("G-Code Conversion Failed: Inches Not Supported, Set RepRap Parameters to Milimeters", "G-Code Line: " + repRapLineStr);
                 return null;
             }
             //ModiPrint will throw errors for unrecognized commands.
             else
             {
                 string repRapLineStr = GCodeStringParsing.GCodeLineArrToStr(repRapLine);
-                _parametersModel.ErrorReporterViewModel.ReportError("GCode Converter: Unrecognized Command", repRapLineStr);
+                _parametersModel.ErrorReporterViewModel.ReportError("G-Code Conversion Failed: Unrecognized Command, Ensure .gcode File Does Not Contain Unsupported G-Code.", "G-Code Line: " + repRapLineStr);
                 return null;
             }
 

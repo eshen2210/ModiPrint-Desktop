@@ -20,7 +20,7 @@
                 </Button.Template>
             </Button>
 
-            <Button Command="{Binding McCloskeyLabHyperlinkCommand}">
+            <Button Command="{Binding GithubHyperlinkCommand}">
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
                         <vControl:OpaqueClickableImage x:Name="Image" Source="/Resources/GithubLogo.png"/>

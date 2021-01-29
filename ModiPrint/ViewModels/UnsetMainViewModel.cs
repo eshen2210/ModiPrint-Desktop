@@ -36,19 +36,43 @@ namespace ModiPrint.ViewModels
             get
             {
                 if (_mcCloskeyLabHyperlinkCommand == null)
-                { _mcCloskeyLabHyperlinkCommand = new RelayCommand<object>(ExecuteMcCloskeyLabHyperLinkCommand, CanExecuteMcCloskeyLabHyperLinkCommand); }
+                { _mcCloskeyLabHyperlinkCommand = new RelayCommand<object>(ExecuteMcCloskeyLabHyperlinkCommand, CanExecuteMcCloskeyLabHyperlinkCommand); }
                 return _mcCloskeyLabHyperlinkCommand;
             }
         }
 
-        public bool CanExecuteMcCloskeyLabHyperLinkCommand(object notUsed)
+        public bool CanExecuteMcCloskeyLabHyperlinkCommand(object notUsed)
         {
             return true;
         }
 
-        public void ExecuteMcCloskeyLabHyperLinkCommand(object notUsed)
+        public void ExecuteMcCloskeyLabHyperlinkCommand(object notUsed)
         {
             Process.Start("http://www.kara-mccloskey.squarespace.com/");
+        }
+
+        /// <summary>
+        /// Hyperlinks to the ModiPrint Github repository.
+        /// </summary>
+        private RelayCommand<object> _githubHyperlinkCommand;
+        public ICommand GithubHyperlinkCommand
+        {
+            get
+            {
+                if (_githubHyperlinkCommand == null)
+                { _githubHyperlinkCommand = new RelayCommand<object>(ExecuteGithubHyperlinkCommand, CanExecuteGithubHyperlinkCommand); }
+                return _githubHyperlinkCommand;
+            }
+        }
+
+        public bool CanExecuteGithubHyperlinkCommand(object notUsed)
+        {
+            return true;
+        }
+
+        public void ExecuteGithubHyperlinkCommand(object notUsed)
+        {
+            Process.Start("https://github.com/eshen2210/ModiPrint-Desktop/");
         }
         #endregion
     }

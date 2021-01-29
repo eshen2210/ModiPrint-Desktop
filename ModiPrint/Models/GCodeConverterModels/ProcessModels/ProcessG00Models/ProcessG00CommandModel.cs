@@ -100,18 +100,18 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
                 }
                 catch when (currentMaterial.PrintheadModel == null)
                 {
-                    _parametersModel.ErrorReporterViewModel.ReportError("GCodeConverter: Printer Unset", currentMaterial.Name + " Printhead Unset");
+                    _parametersModel.ErrorReporterViewModel.ReportError("G-Code Conversion Failed: Printhead Needs To Be Set Prior To G-Code Conversion", "Material Name " + currentMaterial.Name);
                     convertedGCodeLinesList = null;
                 }
                 catch when (currentMaterial.PrintheadModel.AttachedZAxisModel == null)
                 {
-                    _parametersModel.ErrorReporterViewModel.ReportError("GCodeConverter: Printer Unset", currentMaterial.PrintheadModel.Name + "Z Axis Unset");
+                    _parametersModel.ErrorReporterViewModel.ReportError("G-Code Conversion Failed: Z Actuator Parameter Needs To Be Set Prior To G-Code Conversion", "Material Name " + currentMaterial.PrintheadModel.Name);
                     convertedGCodeLinesList = null;
                 }
                 catch
                 {
                     //Should never reach this point.
-                    _parametersModel.ErrorReporterViewModel.ReportError("GCodeConverter", "Unspecified Error, Please Check GCode");
+                    _parametersModel.ErrorReporterViewModel.ReportError("G-Code Conversion Failed: Should Not Happen, Please Contact The Developer To Report This Error", "Unspecified Error");
                 }
             }
 
@@ -154,7 +154,7 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
                     default:
                         string gCodeLineStr = GCodeStringParsing.GCodeLineArrToStr(gCodeLine);
                         string movementCommand = (_parametersModel.IsPrinting ? "G01" : "G00"); //Not using global values for these because they are RepRap commands.
-                        _parametersModel.ErrorReporterViewModel.ReportError("GCodeConverter: Unrecognized " + movementCommand + " Command", "SL:" + _parametersModel.RepRapLine + " " + gCodeLineStr);
+                        _parametersModel.ErrorReporterViewModel.ReportError("G-Code Conversion Failed: Unrecognized " + movementCommand + " Command", "G-Code Line: " + _parametersModel.RepRapLine + " " + gCodeLineStr);
                         return false;
                 }
             }
@@ -282,18 +282,18 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessG00Models
             }
             catch when (currentMaterial.PrintStyle == PrintStyle.Unset) //Print Style unset.
             {
-                _parametersModel.ErrorReporterViewModel.ReportError("GCode Converter: Material Unset", currentMaterial.Name + " Print Style Unset");
+                _parametersModel.ErrorReporterViewModel.ReportError("G-Code Conversion Failed: Material Print Style Not Set", "Material Name: " + currentMaterial.Name);
                 convertedGCodeLinesList = null;
             }
             catch when (currentMaterial.PrintheadModel.PrintheadType == PrintheadType.Unset) //Printhead Type unset.
             {
-                _parametersModel.ErrorReporterViewModel.ReportError("GCode Converter: Printer Unset", currentMaterial.PrintheadModel.Name + " Printhead Type Unset");
+                _parametersModel.ErrorReporterViewModel.ReportError("G-Code Conversion Failed: Printhead Type Not Set in Printer Settings", "Printhead Name: " + currentMaterial.PrintheadModel.Name);
                 convertedGCodeLinesList = null;
             }
             catch
             {
                 //Should never reach this point.
-                _parametersModel.ErrorReporterViewModel.ReportError("GCodeConverter", "Unspecified Error, Please Check Code");
+                _parametersModel.ErrorReporterViewModel.ReportError("G-Code Conversion Failed: Should Not Happen", "Unspecified Error");
                 convertedGCodeLinesList = null;
             }
 

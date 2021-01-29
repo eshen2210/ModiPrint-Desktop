@@ -188,32 +188,32 @@ namespace ModiPrint.Models.GCodeConverterModels.ProcessModels.ProcessTCommandMod
             catch when ((matchingMaterial == null) || (currentMaterial == null)) //Catch unset Material.
             {
                 //Catching and error reporting should have happened earlier.
-                _parametersModel.ErrorReporterViewModel.ReportError("GCode Converter: Print Unset", "Material Unset");
+                _parametersModel.ErrorReporterViewModel.ReportError("G-Code Conversion Failed: Print Settings Incorrectly Set, Should Not Happen", "Material Null");
                 return null;
             }
             catch when (matchingMaterial == null)
             {
-                _parametersModel.ErrorReporterViewModel.ReportError("GCode Converter: Print Unset", "T Command Not Found: " + repRapTCommand);
+                _parametersModel.ErrorReporterViewModel.ReportError("G-Code Conversion Failed: Print Settings Incorrectly Set, No Matching G-Code ID Found: ", "G-Code Command: " + repRapTCommand);
             }
             catch when (matchingMaterial.PrintheadModel == null) //Catch unset Printhead.
             {
-                _parametersModel.ErrorReporterViewModel.ReportError("GCode Converter: Print Unset", "No Matching Material for RepRap ID " + '"' + matchingMaterial.RepRapID + '"');
+                _parametersModel.ErrorReporterViewModel.ReportError("G-Code Conversion Failed: Print Settings Incorrectly Set, Printhead Not Set In Material Settings ", "G-Code Command: " + matchingMaterial.RepRapID);
                 return null;
             }
             catch when (currentMaterial.PrintheadModel == null) //Catch unset Printhead.
             {
-                _parametersModel.ErrorReporterViewModel.ReportError("GCode Converter: Print Unset", "No Matching Material for RepRap ID " + '"' + currentMaterial.RepRapID + '"');
+                _parametersModel.ErrorReporterViewModel.ReportError("G-Code Conversion Failed: Printhead Settings Incorrectly Set In Material Settings ", "G-Code Command: " + currentMaterial.RepRapID);
                 return null;
             }
             catch when (matchingMaterial.PrintheadModel.AttachedZAxisModel == null) //Catch unset Z Axis.
             {
-                _parametersModel.ErrorReporterViewModel.ReportError("GCode Converter: Printer Unset", matchingMaterial.PrintheadModel.Name + " Z Axis Unset");
+                _parametersModel.ErrorReporterViewModel.ReportError("G-Code Conversion Failed: Printer Settings For Z Actuator Parameter ", "Printhead Name: " + matchingMaterial.PrintheadModel.Name);
                 return null;
             }
             catch
             {
                 //Should never reach this point.
-                _parametersModel.ErrorReporterViewModel.ReportError("GCodeConverter", "Unspecified Error, Please Check Code");
+                _parametersModel.ErrorReporterViewModel.ReportError("G-Code Conversion Failed: Should Not Happen, Please Contact The Developer To Report This Error", "Unspecified Error");
             }
 
             return convertedGCodeLinesList;
